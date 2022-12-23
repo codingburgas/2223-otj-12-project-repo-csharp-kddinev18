@@ -5,37 +5,103 @@
 
 body {
     font-family: Epilogue;
+    margin: 10px 100px 0 100px;
 }
 
-.main-nav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-.logo {
-    font-size: 20px;
-    margin: 200px, 200px;
-}
-
-.main-nav li {
-    float: left;
-}
-
-.main-nav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
+a {
     text-decoration: none;
 }
 
-li a:hover:not(.active) {
-    background-color: #111;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.active {
-    background-color: #04AA6D;
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    margin: 0 10px 0 0;
+}
+
+.main-nav {
+    display: flex;
+}
+
+.main-nav div {
+    margin: 0 50px 0 50px;
+    user-select: none;
+    padding: 8px 17px 8px 17px;
+}
+
+.main-nav div:hover {
+    background-color: lightslategray;
+    border-radius:5px;
+}
+
+.last {
+    border: solid;
+    border-radius: 5px;
+    padding: 7px 15px 7px 15px;
+}
+
+@media (max-width: 1200px)
+{
+    @keyframes shrink-nav-bar {
+        0% {
+            margin: 0 50px 0 50px;
+        }
+
+        100% {
+            margin: 0 8px 0 8px;
+        }
+    }
+
+    .main-nav div {
+        animation-name: shrink-nav-bar;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    @keyframes enlarge-nav-bar {
+        0% {
+            margin: 0 8px 0 8px;
+        }
+
+        100% {
+            margin: 0 50px 0 50px;
+        }
+    }
+
+    .main-nav div {
+        animation-name: enlarge-nav-bar;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+    }
+}
+
+@media (max-width: 850px) {
+    .header {
+        flex-direction: column;
+    }
+    .logo-container
+    {
+        margin: 0 0 20px 0;
+    }
+    .main-nav
+    {
+        flex-direction: column;
+        align-items: center;
+    }
+    .last{
+        margin: 0;
+    }
 }
