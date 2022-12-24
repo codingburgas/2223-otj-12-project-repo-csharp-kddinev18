@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - IOT_Home_Security</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/layout.css" />
 </head>
 <body>
     <header class="header">
@@ -13,16 +13,16 @@
             <h1 class="logo-text"><a href="#">HomeSecuriry</a></h1>
         </div>
         <div class="main-nav">
-            <div>Home</div>
-            <div>About</div>
-            <div>Portf</div>
-            <div>Test</div>
-            <div>Contact</div>
+            <div onmouseover="homeButtonHover()" onmouseout="removeDropdown()">Home</div>
+            <div onclick="aboutButtonClick()">About</div>
+            <div onclick="portButtonClick()">Port</div>
+            <div onclick="testButtonClick()">Test</div>
+            <div class="last">Log In</div>
         </div>
     </header>
 
-    <div>
-        asd
+    <div class="exteneded-menu">
+        
     </div>
 
     <div class="container">
@@ -30,7 +30,7 @@
             @RenderBody()
         </main>
     </div>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
