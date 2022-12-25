@@ -40,7 +40,7 @@ a {
 }
 
 .main-nav div {
-	padding: 10px 15px;
+	padding: 10px 20px;
     text-transform: uppercase;
 	text-align: center;
 	display: block;
@@ -48,18 +48,20 @@ a {
 	font-size: .99em;
     margin: 0 20px 0 20px;
     user-select: none;
-    cursor: pointer
+    cursor: pointer;
+    height: 100%;
 }
 
 .main-nav div:hover {
-	color: #718daa;
+    color: #718daa;
+    background-color: #fbfbfb;
+    border-radius: 6px;
 }
 
 .header {
     padding: 7px 30px 7px 20px;
     background-color: #f4f4f4;
-    box-shadow: 0px 0px 14px 0px;
-    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 0px -2px gray;
 }
 .last {
     border: solid;
@@ -70,15 +72,16 @@ a {
 
 .exteneded-menu {
     display: none;
-    background-color: purple;
     overflow: auto;
     width: 100%;
     justify-content: space-between;
+    padding: 30px;
+    background-color: #fbfbfb;
+    box-shadow: 0 4px 0px -2px gray;
 }
 
 .exteneded-menu .image {
-    margin-left: auto;
-    margin: 10px;
+    margin-right: 70px;
 }
 
 .link-rows {
@@ -139,5 +142,8 @@ a {
     .last
     {
         border: none;
+    }
+    .exteneded-menu .image {
+        margin-right: 0;
     }
 }

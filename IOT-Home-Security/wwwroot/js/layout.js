@@ -47,35 +47,36 @@ let testContent = {
             title: "TestTitle2",
             bulets: ["Car Engine", "Milka", "Notebooks", "Kalai"],
         },
+        {
+            title: "TestTitle2",
+            bulets: ["Car Engine", "Milka", "Notebooks", "Kalai"],
+        },
     ],
 };
 
 let extendedMenu = document.querySelector(".exteneded-menu");
 function homeButtonHover() {
-    extendedMenu.style.display = "flex";
-
+    removeDropdown();
     homeContent.content.forEach(displayExtendedMenu);
 }
 
 function aboutButtonHover() {
-    extendedMenu.style.display = "flex";
-
+    removeDropdown();
     aboutContent.content.forEach(displayExtendedMenu);
 }
 
 function portButtonHover() {
-    extendedMenu.style.display = "flex";
-
+    removeDropdown();
     portContent.content.forEach(displayExtendedMenu);
 }
 
 function testButtonHover() {
-    extendedMenu.style.display = "flex";
-
+    removeDropdown();
     testContent.content.forEach(displayExtendedMenu);
 }
 
-function displayExtendedMenu (item) {
+function displayExtendedMenu(item) {
+    extendedMenu.style.display = "flex";
     let linkRows = document.createElement("div");
     linkRows.classList.add("link-rows");
 

@@ -13,15 +13,15 @@
             <h1 class="logo-text"><a href="#">HomeSecuriry</a></h1>
         </div>
         <div class="main-nav">
-            <div onmouseover="homeButtonHover()" onmouseout="removeDropdown()">Home</div>
-            <div onmouseover="aboutButtonHover()" onmouseout="removeDropdown()">About</div>
-            <div onmouseover="portButtonHover()" onmouseout="removeDropdown()">Port</div>
-            <div onmouseover="testButtonHover()" onmouseout="removeDropdown()">Test</div>
+            <div onmouseover="homeButtonHover()">Home</div>
+            <div onmouseover="aboutButtonHover()">About</div>
+            <div onmouseover="portButtonHover()">Port</div>
+            <div onmouseover="testButtonHover()">Test</div>
             <div class="last">Log In</div>
         </div>
     </header>
 
-    <div class="exteneded-menu">
+    <div class="exteneded-menu" onmouseleave="removeDropdown()">
         <img class="image" src="@Url.Content("~/images/img.png")" />
     </div>
 
