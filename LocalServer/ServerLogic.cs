@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Xml.Linq;
 
 namespace LocalServer
 {
@@ -21,21 +23,56 @@ namespace LocalServer
         private static int _success = 0;
         private static int _error = 1;
 
+        private static SqlConnection _sqlConnection;
+        private string _connectionSting = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Test;Integrated Security=True";
+
         public ServerLogic(int port)
         {
             _port = port;
         }
+        private void GetTableNames()
+        {
+            string query = @"SELECT name
+                             FROM sys.tables";
+
+            // A using in which we will execute our query
+            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
+            {
+                // A reader which will store the result of the query
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        _clientsTables.Add(reader[0].ToString(), null);
+                    }
+                }
+            }
+        }
+
         public void ServerSetUp()
         {
-            _tcpListener = new TcpListener(IPAddress.Any, _port);
-            // Starts the server
-            _tcpListener.Start();
-            // Starts accepting clients
-            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
+            try
+            {
+                _sqlConnection = new SqlConnection(_connectionSting);
+                _sqlConnection.Open();
+                GetTableNames();
+
+                _tcpListener = new TcpListener(IPAddress.Any, _port);
+                // Starts the server
+                _tcpListener.Start();
+                // Starts accepting clients
+                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ServerShutDown();
+            }
         }
 
         public void ServerShutDown()
         {
+            _sqlConnection.Close();
             // Stops the server
             _tcpListener.Stop();
             _tcpListener = null;
@@ -59,11 +96,11 @@ namespace LocalServer
             // Add the client newly connect client into the _clients list
             _clients.Add(client);
             // Begin recieving bytes from the client
-            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveUserInput), client);
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
         }
 
-        public static void ReciveUserInput(IAsyncResult asyncResult)
+        public static void ReciveClientInput(IAsyncResult asyncResult)
         {
             TcpClient client = asyncResult.AsyncState as TcpClient;
             int reciever;
@@ -80,6 +117,7 @@ namespace LocalServer
                 }
                 // Get the data
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+                HandleClientInput(client, data);
             }
             catch (Exception ex)
             {
@@ -91,7 +129,36 @@ namespace LocalServer
             {
                 FlushBuffer();
             }
-            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveUserInput), client);
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        private static void HandleClientInput(TcpClient client, string data)
+        {
+            JsonObject JObject = JsonSerializer.Deserialize<JsonObject>(data);
+            ValidateClientData(JObject);
+
+            string columns = String.Empty;
+            foreach (var keyValuePair in JObject)
+            {
+                if (keyValuePair.Key == "TableName")
+                    continue;
+                columns += $"[{keyValuePair.Key}] {keyValuePair.Value} NOT NULL,\n";
+            }
+            string query =
+            $@"CREATE TABLE {JObject["TableName"]}
+                (
+                    ID int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+                    {columns}
+                );";
+        }
+
+        private static void ValidateClientData(JsonObject JObject)
+        {
+            if (_clientsTables.ContainsKey(JObject["TableName"].ToString()))
+                if (JObject["TableName"] == null)
+                    throw new Exception("Can't have more than one client per table");
+            if (!JObject.ContainsKey("TableName"))
+                throw new Exception("Invalid JSON format");
         }
 
         // Clear the buffer
