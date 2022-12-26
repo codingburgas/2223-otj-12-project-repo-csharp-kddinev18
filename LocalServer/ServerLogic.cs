@@ -135,30 +135,59 @@ namespace LocalServer
         private static void HandleClientInput(TcpClient client, string data)
         {
             JsonObject JObject = JsonSerializer.Deserialize<JsonObject>(data);
-            ValidateClientData(JObject);
+            if (!JObject.ContainsKey("TableName"))
+                throw new Exception("Invalid JSON format");
 
-            string columns = String.Empty;
-            foreach (var keyValuePair in JObject)
+            if (!JObject.ContainsKey("OperationType"))
+                throw new Exception("Invalid JSON format");
+
+            if (_clientsTables.ContainsKey(JObject["TableName"].ToString()))
             {
-                if (keyValuePair.Key == "TableName")
-                    continue;
-                columns += $"[{keyValuePair.Key}] {keyValuePair.Value} NOT NULL,\n";
+                if (_clientsTables[JObject["TableName"].ToString()] == null)
+                    _clientsTables[JObject["TableName"].ToString()] = client;
+                else
+                    throw new Exception("Can't have more than one client per table");
             }
-            string query =
-            $@"CREATE TABLE {JObject["TableName"]}
+            if (JObject["OperationType"].ToString() == "Create")
+            {
+                string columns = String.Empty;
+                foreach (var keyValuePair in JObject)
+                {
+                    if (keyValuePair.Key == "TableName" || keyValuePair.Key == "OperationType")
+                        continue;
+                    columns += $"[{keyValuePair.Key}] {keyValuePair.Value} NOT NULL,\n";
+                }
+                string query =
+                $@"CREATE TABLE {JObject["TableName"]}
                 (
                     ID int IDENTITY(1,1) PRIMARY KEY NOT NULL,
                     {columns}
                 );";
-        }
-
-        private static void ValidateClientData(JsonObject JObject)
-        {
-            if (_clientsTables.ContainsKey(JObject["TableName"].ToString()))
-                if (JObject["TableName"] == null)
-                    throw new Exception("Can't have more than one client per table");
-            if (!JObject.ContainsKey("TableName"))
-                throw new Exception("Invalid JSON format");
+                using(SqlCommand cmd = new SqlCommand(query, _sqlConnection))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            else if(JObject["OperationType"].ToString() == "Insert")
+            {
+                string columns = String.Empty;
+                foreach (var keyValuePair in JObject)
+                {
+                    if (keyValuePair.Key == "TableName" || keyValuePair.Key == "OperationType")
+                        continue;
+                    columns += $"\'{keyValuePair.Value}\',";
+                }
+                columns = columns.Remove(columns.Length - 1, 1);
+                string query =
+                $@"INSERT INTO {JObject["TableName"]}
+                VALUES (
+                    {columns}
+                );";
+                using (SqlCommand cmd = new SqlCommand(query, _sqlConnection))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         // Clear the buffer

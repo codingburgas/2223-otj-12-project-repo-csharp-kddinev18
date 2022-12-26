@@ -4,7 +4,10 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            ServerLogic server = new ServerLogic(5400);
+            server.ServerSetUp();
+            Console.ReadKey();
+            server.ServerShutDown();
         }
     }
 }
