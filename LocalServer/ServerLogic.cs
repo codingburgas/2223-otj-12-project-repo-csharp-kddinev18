@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace LocalServer
@@ -61,5 +63,49 @@ namespace LocalServer
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
         }
 
+        public static void ReciveUserInput(IAsyncResult asyncResult)
+        {
+            TcpClient client = asyncResult.AsyncState as TcpClient;
+            int reciever;
+            List<string> args;
+            try
+            {
+                // How many bytes has the user sent
+                reciever = client.Client.EndReceive(asyncResult);
+                // If the bytes are - disconnect the client
+                if (reciever == 0)
+                {
+                    DisconnectClient(client);
+                    return;
+                }
+                // Get the data
+                string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+            }
+            catch (Exception ex)
+            {
+                string response = $"{_error}|{ex.Message}";
+                // send data to the client
+                client.Client.Send(Encoding.ASCII.GetBytes(response));
+            }
+            finally
+            {
+                FlushBuffer();
+            }
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveUserInput), client);
+        }
+
+        // Clear the buffer
+        public static void FlushBuffer()
+        {
+            Array.Clear(_data, 0, _data.Length);
+        }
+
+        public static void DisconnectClient(TcpClient client)
+        {
+            client.Client.Shutdown(SocketShutdown.Both);
+            client.Client.Close();
+            //_dbContexts.Remove(client);
+            _clients.Remove(client);
+        }
     }
 }
