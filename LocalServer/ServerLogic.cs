@@ -121,6 +121,13 @@ namespace LocalServer
             }
             catch (Exception ex)
             {
+                string keyToRemove = _clientsTables.Where(kvp => kvp.Value == client)
+                        .Select(kvp => kvp.Key)
+                        .FirstOrDefault();
+                if(keyToRemove is not null)
+                {
+                    _clientsTables.Remove(keyToRemove);
+                }
                 string response = $"{_error}|{ex.Message}";
                 // send data to the client
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
@@ -150,6 +157,10 @@ namespace LocalServer
             }
             if (JObject["OperationType"].ToString() == "Create")
             {
+                if (_clientsTables.ContainsKey(JObject["TableName"].ToString()))
+                {
+                    throw new Exception("Table exists");
+                }
                 string columns = String.Empty;
                 foreach (var keyValuePair in JObject)
                 {
@@ -160,7 +171,8 @@ namespace LocalServer
                 string query =
                 $@"CREATE TABLE {JObject["TableName"]}
                 (
-                    ID int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+                    Id int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+                    [Time] datetime2 DEFAULT GETDATE(),
                     {columns}
                 );";
                 using(SqlCommand cmd = new SqlCommand(query, _sqlConnection))
@@ -171,22 +183,36 @@ namespace LocalServer
             else if(JObject["OperationType"].ToString() == "Insert")
             {
                 string columns = String.Empty;
+                int container = 0;
+                float container2 = 0;
                 foreach (var keyValuePair in JObject)
                 {
                     if (keyValuePair.Key == "TableName" || keyValuePair.Key == "OperationType")
                         continue;
-                    columns += $"\'{keyValuePair.Value}\',";
+                    if(int.TryParse(keyValuePair.Value.ToString(), out container) || float.TryParse(keyValuePair.Value.ToString(),out container2))
+                    {
+                        columns += $"{keyValuePair.Value},";
+                    }
+                    else
+                    {
+                        columns += $"\'{keyValuePair.Value}\',";
+                    }
                 }
                 columns = columns.Remove(columns.Length - 1, 1);
                 string query =
                 $@"INSERT INTO {JObject["TableName"]}
                 VALUES (
+                    GETDATE(),
                     {columns}
                 );";
                 using (SqlCommand cmd = new SqlCommand(query, _sqlConnection))
                 {
                     cmd.ExecuteNonQuery();
                 }
+            }
+            else
+            {
+                throw new Exception("Not a valid operation");
             }
         }
 
