@@ -39,5 +39,27 @@ namespace LocalServer
             _tcpListener = null;
         }
 
+        public static void AcceptClients(IAsyncResult asyncResult)
+        {
+            // Newly connection client
+            TcpClient client;
+            try
+            {
+                // Connect the client
+                client = _tcpListener.EndAcceptTcpClient(asyncResult);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            // Add the client newly connect client into the _clients list
+            _clients.Add(client);
+            // Begin recieving bytes from the client
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveUserInput), client);
+            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
+        }
+
     }
 }
