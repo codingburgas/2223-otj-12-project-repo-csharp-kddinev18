@@ -1,4 +1,6 @@
-﻿namespace LocalServer
+﻿using LocalServerLogic;
+
+namespace LocalServer
 {
     internal class Program
     {
