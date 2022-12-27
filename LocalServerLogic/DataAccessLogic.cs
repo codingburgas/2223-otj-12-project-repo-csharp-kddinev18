@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,23 +32,33 @@ namespace LocalServerLogic
                     }
                 }
             }
-            if(_clientsTables.ContainsKey("BanList"))
+            if(!_clientsTables.ContainsKey("Devices"))
             {
-                query = "SELECT [IP] FROM BanList";
+                query = "CREATE TABLE Devices (Id int IDENTITY(1,1) PRIMARY KEY NOT NULL, InternetProtocolAddress nvarchar(32) NOT NULL UNIQUE, IsBanned bit NULL)";
                 using (SqlCommand command = new SqlCommand(query, _sqlConnection))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ServerLogic.BanList.Add(reader[0].ToString())
-                        }
-                    }
+                    //return command.ExecuteNonQuery() == 1;
                 }
             }
-            else
+        }
+        public bool IsClientBanned(TcpClient client)
+        {
+            string internetProtocolAddress = ((IPEndPoint)client.Client.RemoteEndPoint).ToString();
+            string query = "SELECT IsBanned FROM Devices WHERE InternetProtocolAddress = @IPAddress";
+            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
             {
-
+                command.Parameters.Add("@IPAddress", SqlDbType.NVarChar).Value = internetProtocolAddress;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if(reader.HasRows)
+                    {
+                        return bool.Parse(reader[0].ToString());
+                    }
+                    else
+                    {
+                        AddClientDevice();
+                    }
+                }
             }
         }
         private void CreateTable()
