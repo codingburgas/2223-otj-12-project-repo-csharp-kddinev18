@@ -74,6 +74,17 @@ namespace LocalServerLogic
             }
         }
 
+        public bool AprooveClients(TcpClient client)
+        {
+            string internetProtocolAddress = ((IPEndPoint)client.Client.RemoteEndPoint).ToString();
+            string query = "INSERT INTO Devices VALUES(@IPAddress, null)";
+            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
+            {
+                command.Parameters.Add("@IPAddress", SqlDbType.NVarChar).Value = internetProtocolAddress;
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
         private void CreateTable()
         {
 

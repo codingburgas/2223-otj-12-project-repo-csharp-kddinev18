@@ -11,7 +11,6 @@ namespace LocalServerLogic
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
         private static Dictionary<TcpClient, bool?> _aproovedClients = new Dictionary<TcpClient, bool?>();
-        public static List<string> BanList { get; set; } = new List<string>();
         // Buffer
         private static byte[] _data = new byte[16777216];
 
@@ -19,6 +18,7 @@ namespace LocalServerLogic
         private static int _success = 0;
         private static int _error = 1;
 
+        private static DataAccessLogic _dataAccess = new DataAccessLogic();;
         public ServerLogic(int port)
         {
             _port = port;
@@ -28,6 +28,8 @@ namespace LocalServerLogic
         {
             try
             {
+                _dataAccess.InitialiseDatabase();
+
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
                 _tcpListener.Start();
@@ -56,7 +58,7 @@ namespace LocalServerLogic
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                if(BanList.Contains(((IPEndPoint)client.Client.RemoteEndPoint).ToString()))
+                if(_dataAccess.IsClientBanned(client).Value == true)
                 {
                     DisconnectClient(client);
                 }
@@ -123,12 +125,13 @@ namespace LocalServerLogic
 
         public void AprooveClient(TcpClient client)
         {
+            _dataAccess.UpdateClients(client, false);
             _aproovedClients[client] = true;
         }
         public void BanClient(TcpClient client)
         {
-            BanList.Add(((IPEndPoint)client.Client.RemoteEndPoint).ToString());
             _aproovedClients.Remove(client);
+            _dataAccess.UpdateClients(client, true);
             DisconnectClient(client);
         }
     }
