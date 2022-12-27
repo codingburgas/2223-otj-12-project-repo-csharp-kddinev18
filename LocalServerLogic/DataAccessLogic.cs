@@ -41,7 +41,7 @@ namespace LocalServerLogic
                 }
             }
         }
-        public bool IsClientBanned(TcpClient client)
+        public bool? IsClientBanned(TcpClient client)
         {
             string internetProtocolAddress = ((IPEndPoint)client.Client.RemoteEndPoint).ToString();
             string query = "SELECT IsBanned FROM Devices WHERE InternetProtocolAddress = @IPAddress";
@@ -56,11 +56,24 @@ namespace LocalServerLogic
                     }
                     else
                     {
-                        AddClientDevice();
+                        if (AddClientDevice(internetProtocolAddress))
+                            return null;
+                        else
+                            throw new Exception("Can not add the client device to the database");
                     }
                 }
             }
         }
+        private bool AddClientDevice(string internetProtocolAddress)
+        {
+            string query = "INSERT INTO Devices VALUES(@IPAddress, null)";
+            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
+            {
+                command.Parameters.Add("@IPAddress", SqlDbType.NVarChar).Value = internetProtocolAddress;
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
         private void CreateTable()
         {
 
