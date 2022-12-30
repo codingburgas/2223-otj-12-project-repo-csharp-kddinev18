@@ -10,7 +10,7 @@ namespace LocalServerLogic
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
-        private static Dictionary<TcpClient, bool?> _aproovedClients = new Dictionary<TcpClient, bool?>();
+
         // Buffer
         private static byte[] _data = new byte[16777216];
 
@@ -27,8 +27,6 @@ namespace LocalServerLogic
         {
             try
             {
-                _dataAccess.InitialiseDatabase();
-
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
                 _tcpListener.Start();
@@ -57,11 +55,6 @@ namespace LocalServerLogic
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                if(_dataAccess.IsClientBanned(client).Value == true)
-                {
-                    DisconnectClient(client);
-                }
-                _aproovedClients.Add(client, null);
             }
             catch (Exception ex)
             {
@@ -78,10 +71,6 @@ namespace LocalServerLogic
         public static void ReciveClientInput(IAsyncResult asyncResult)
         {
             TcpClient client = asyncResult.AsyncState as TcpClient;
-            if (_aproovedClients[client] == null)
-            {
-                throw new Exception("You are not authorised to send data");
-            }
             int reciever;
             try
             {
@@ -120,18 +109,6 @@ namespace LocalServerLogic
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
-        }
-
-        public void AprooveClient(TcpClient client)
-        {
-            _dataAccess.UpdateClients(client, false);
-            _aproovedClients[client] = true;
-        }
-        public void BanClient(TcpClient client)
-        {
-            _aproovedClients.Remove(client);
-            _dataAccess.UpdateClients(client, true);
-            DisconnectClient(client);
         }
     }
 }

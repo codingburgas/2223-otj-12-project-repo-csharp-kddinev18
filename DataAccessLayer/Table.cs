@@ -1,5 +1,7 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace DataAccessLayer
 {
@@ -51,9 +53,43 @@ namespace DataAccessLayer
             }
             Database.Tables.Remove(this);
         }
-        public void Select()
+        public string Select(string columnName, string expression, string value)
         {
+            string columns = String.Empty;
+            foreach (Column column in Columns)
+            {
+                columns += column.Name + ',';
+            }
+            columns = columns.Substring(0, columns.Length - 1);
+            if (!Columns.Select(column => column.Name).Contains(columnName))
+                throw new Exception($"The column with name {columnName} does not exist in table {Name}");
+            if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
+                throw new Exception($"The operation {expression} is not supported");
 
+            string query = $"SELECT {columns} FROM {Name} WHERE {columnName} {expression} @Value";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                int integerContainer = 0;
+                float floatContainer = 0;
+                if (int.TryParse(value, out integerContainer)) 
+                {
+                    command.Parameters.Add("@Value", SqlDbType.Int).Value = integerContainer;
+                }
+                if(float.TryParse(value, out floatContainer))
+                {
+                    command.Parameters.Add("@Value", SqlDbType.Decimal).Value = floatContainer;
+                }
+                if(value == "NULL")
+                {
+                    command.Parameters.AddWithValue("@Value", null);
+                }
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    DataTable table = new DataTable();
+                    table.Load(reader);
+                    return JsonSerializer.Serialize(table);
+                }
+            }
         }
         public void Insert(params string[] data)
         {

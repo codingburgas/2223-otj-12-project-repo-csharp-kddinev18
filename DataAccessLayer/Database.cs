@@ -268,5 +268,13 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public void DiscardData()
+        {
+            foreach (Table table in Tables)
+            {
+                table.DiscardInsertQuery();
+            }
+        }
     }
 }
