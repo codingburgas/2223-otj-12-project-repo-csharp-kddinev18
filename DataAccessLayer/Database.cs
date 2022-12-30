@@ -57,7 +57,7 @@ namespace DataAccessLayer
 
             foreach (Table table in Tables)
             {
-                //LoadForeignKeys(table);
+                LoadForeignKeys(table);
             }
         }
 
@@ -151,6 +151,30 @@ namespace DataAccessLayer
                     else
                     {
                         throw new ArgumentException($"The table {table.Name} does not have a primry key");
+                    }
+                }
+            }
+        }
+
+        private void LoadForeignKeys(Table table)
+        {
+            string query = "SELECT OBJECT_NAME(f.parent_object_id), COL_NAME(fc.parent_object_id,fc.parent_column_id) " +
+                                    "FROM sys.foreign_keys AS f " +
+                                    "JOIN sys.foreign_key_columns AS fc " +
+                                    "ON f.OBJECT_ID = fc.constraint_object_id " +
+                                    "JOIN sys.tables t " +
+                                    "ON t.OBJECT_ID = fc.referenced_object_id " +
+                                    "WHERE OBJECT_NAME (f.referenced_object_id) = @TableName";
+            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
+            {
+                command.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = table.Name;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Table foreignKeyTable = Tables.Where(table => table.Name == reader[0].ToString()).First();
+                        Column foreignKeyColumn = foreignKeyTable.Columns.Where(column => column.Name == reader[1].ToString()).First();
+                        foreignKeyColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY", FindPrimaryKeys(table)));
                     }
                 }
             }
