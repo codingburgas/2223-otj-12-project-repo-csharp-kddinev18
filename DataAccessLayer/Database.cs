@@ -210,7 +210,7 @@ namespace DataAccessLayer
             HashSet<Table> oldInfrastructure = Tables;
 
             SaveTableChanges(newInfrastructure, oldInfrastructure);
-            //SaveColumnChanges(newInfrastructure, oldInfrastructure);
+            SaveColumnChanges(newInfrastructure, oldInfrastructure);
         }
 
         private void SaveTableChanges(HashSet<Table> newInfrastructure, HashSet<Table> oldInfrastructure)
@@ -225,6 +225,30 @@ namespace DataAccessLayer
             foreach (string tableName in removed)
             {
                 oldInfrastructure.Where(table => table.Name == tableName).First().Drop();
+            }
+        }
+
+        private void SaveColumnChanges(HashSet<Table> newInfrastructure, HashSet<Table> oldInfrastructure)
+        {
+            string query = String.Empty;
+            IEnumerable<string> tablesNames = newInfrastructure.Select(table => table.Name).Except(
+                newInfrastructure.Select(table => table.Name).Except(oldInfrastructure.Select(table => table.Name)).Union(
+                    oldInfrastructure.Select(table => table.Name).Except(newInfrastructure.Select(table => table.Name))));
+
+            foreach (string tableName in tablesNames)
+            {
+                Table newTable = newInfrastructure.Where(table => table.Name == tableName).First();
+                Table oldTable = oldInfrastructure.Where(table => table.Name == tableName).First();
+                IEnumerable<string> added = newTable.Columns.Select(column => column.Name).Except(oldTable.Columns.Select(column => column.Name));
+                foreach (string columnName in added)
+                {
+                    query = $"ALTER TABLE [{newTable.Name}] ADD [COLUMN] {newTable.Columns.Where(column => column.Name == columnName).First()}";
+                }
+                IEnumerable<string> removed = newTable.Columns.Select(column => column.Name).Except(oldTable.Columns.Select(column => column.Name));
+                foreach (string columnName in removed)
+                {
+                    query = $"ALTER TABLE [{oldTable.Name}] DROP COLUMN [{columnName}];";
+                }
             }
         }
     }
