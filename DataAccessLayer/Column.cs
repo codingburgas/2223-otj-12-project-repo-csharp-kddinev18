@@ -17,5 +17,38 @@
         {
             Constraints.Add(constraint);
         }
+        public override string ToString()
+        {
+            string container = $"[{Name}] {Type} ";
+            foreach (Tuple<string, object> constraint in Constraints)
+            {
+                switch (constraint.Item1)
+                {
+                    case "NOT NULL":
+                        container += " NOT NULL ";
+                        break;
+                    case "UNIQUE":
+                        container += " UNIQUE ";
+                        break;
+                    case "PRIMARY KEY":
+                        container += " IDENTITY(1,1) PRIMARY KEY ";
+                        break;
+                    case "FOREIGN KEY":
+                        Column foreignKeyColumn = constraint.Item2 as Column;
+                        Table foreignKeyTable = Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
+                        container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ";
+                        break;
+                    case "CHECK":
+                        container += $" CHECK {constraint.Item2 as string} ";
+                        break;
+                    case "DEFAULT":
+                        container += $" DEFAULT {constraint.Item2 as string} ";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return container + ",\n";
+        }
     }
 }
