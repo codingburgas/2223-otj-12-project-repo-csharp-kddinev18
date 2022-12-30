@@ -4,6 +4,8 @@ using System.Text;
 using System.Net.Security;
 using System.Diagnostics;
 using DataAccessLayer;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace LocalServerLogic
 {
@@ -45,7 +47,7 @@ namespace LocalServerLogic
             }
         }
 
-        private static void CreateDefaultDatabaseStructure()
+        private void CreateDefaultDatabaseStructure()
         {
             _database = new Database(_connectionString);
             _database.LoadDatabaseInfrastructure();
@@ -59,9 +61,19 @@ namespace LocalServerLogic
 
                 Column ipv4Address = new Column("IPv4Address", "nvarchar(64)", devicesTable);
                 ipv4Address.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+                ipv4Address.AddConstraint(new Tuple<string, object>("UNIQUE", null));
+
+                Column name = new Column("Name", "nvarchar(64)", devicesTable);
+                name.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+                name.AddConstraint(new Tuple<string, object>("UNIQUE", null));
+
+                Column aprooved = new Column("IsAprooved", "bit", devicesTable);
+                aprooved.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 devicesTable.Columns.Add(deviceId);
                 devicesTable.Columns.Add(ipv4Address);
+                devicesTable.Columns.Add(name);
+                devicesTable.Columns.Add(aprooved);
                 Database.Tables.Add(devicesTable);
             }
             if (!Database.Tables.Select(table => table.Name).Contains("Users"))
@@ -99,7 +111,7 @@ namespace LocalServerLogic
                 userId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 Column deviceId = new Column("DeviceId", "int", permissionTables);
-                userId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
+                deviceId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Devices").First().Columns.Where(column => column.Name == "DeviceId").First()));
                 deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "second"));
                 deviceId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
@@ -126,10 +138,32 @@ namespace LocalServerLogic
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
+
+                string clientName = "TestName";
+                string clientIpAddress = "TestIPAddress";
+
+
+                string jsonString = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
+                List<JsonObject> jObject = JsonSerializer.Deserialize<List<JsonObject>>(jsonString);
+                if (jObject.Count == 0)
+                {
+                    Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientName, "false");
+                    _database.SaveDatabaseData();
+                }
+                else
+                {
+                    if (bool.Parse(jObject.First()["IsAprooved"].ToString()) == false)
+                    {
+                        DisconnectClient(client);
+                        throw new Exception("Client not accepted");
+                    }
+                }
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return;
             }
 
             // Add the client newly connect client into the _clients list

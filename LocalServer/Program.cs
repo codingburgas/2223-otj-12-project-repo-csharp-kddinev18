@@ -1,44 +1,42 @@
 ﻿using DataAccessLayer;
 using LocalServerLogic;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace LocalServer
 {
     internal class Program
     {
+        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ORMTest;Integrated Security=True;MultipleActiveResultSets=true";
+
         static void Main(string[] args)
         {
             /*ServerLogic server = new ServerLogic(5400);
             server.ServerSetUp();
             Console.ReadKey();
             server.ServerShutDown();*/
-            Database database = new Database(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ORMTest;Integrated Security=True;MultipleActiveResultSets=true");
-            database.LoadDatabaseInfrastructure();
-            Table userTables = new Table("Users");
+            Database _database = new Database(_connectionString);
+            _database.LoadDatabaseInfrastructure();
 
-            Column userId = new Column("UserId", "int", userTables);
-            userId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "first"));
-            userId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+            string clientName = "TestName";
+            string clientIpAddress = "TestIPAddress";
 
-            Column userId2 = new Column("UserId2", "int", userTables);
-            userId2.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "second"));
-            userId2.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
-            Column userName = new Column("UserName", "nvarchar(64)", userTables);
-            userName.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-            Column email = new Column("Email", "nvarchar(128)", userTables);
-            email.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-            Column password = new Column("Password", "nvarchar(128)", userTables);
-            password.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-            userTables.Columns.Add(userId);
-            userTables.Columns.Add(userId2);
-            userTables.Columns.Add(userName);
-            userTables.Columns.Add(email);
-            userTables.Columns.Add(password);
-            Database.Tables.Add(userTables);
-            database.SaveDatabaseInfrastructure();
+            string jsonString = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
+            List<JsonObject> jObject = JsonSerializer.Deserialize<List<JsonObject>>(jsonString);
+            if (jObject.Count == 0)
+            {
+                Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientName, "false");
+                _database.SaveDatabaseData();
+            }
+            else
+            {
+                if (bool.Parse(jObject.First()["IsAprooved"].ToString()) == false)
+                {
+                    Console.WriteLine("NOOOO");
+                }
+            }
+            _database.CloseConnection();
         }
     }
 }

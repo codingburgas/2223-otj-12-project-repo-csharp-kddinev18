@@ -90,13 +90,17 @@ namespace DataAccessLayer
                 {
                     command.Parameters.Add("@Value", SqlDbType.Int).Value = integerContainer;
                 }
-                if (float.TryParse(value, out floatContainer))
+                else if (float.TryParse(value, out floatContainer))
                 {
                     command.Parameters.Add("@Value", SqlDbType.Decimal).Value = floatContainer;
                 }
-                if (value == "NULL")
+                else if (value == "NULL")
                 {
                     command.Parameters.AddWithValue("@Value", null);
+                }
+                else
+                {
+                    command.Parameters.Add("@Value", SqlDbType.NVarChar).Value = value;
                 }
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

@@ -32,7 +32,7 @@
                         break;
                     case "PRIMARY KEY":
                         if(constraint.Item2 as string != "first" && constraint.Item2 as string != "second")
-                            container += " IDENTITY(1,1) PRIMARY KEY";
+                            container += " IDENTITY(1,1) ";
                         break;
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;
