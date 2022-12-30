@@ -18,7 +18,6 @@ namespace LocalServerLogic
         private static int _success = 0;
         private static int _error = 1;
 
-        private static DataAccessLogic _dataAccess = new DataAccessLogic();;
         public ServerLogic(int port)
         {
             _port = port;
