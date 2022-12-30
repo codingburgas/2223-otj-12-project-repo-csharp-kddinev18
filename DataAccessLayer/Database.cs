@@ -7,8 +7,8 @@ namespace DataAccessLayer
     {
         public static HashSet<Table> Tables { get; set; }
 
-        private SqlConnection _sqlConnection;
-        private string _connectionString;
+        private static SqlConnection _sqlConnection;
+        private static string _connectionString;
         public void InitializeDatabase(string connectionString)
         {
             Tables = new HashSet<Table>();
@@ -19,7 +19,7 @@ namespace DataAccessLayer
                 _sqlConnection.Open();
             }
         }
-        public SqlConnection GetConnection()
+        public static SqlConnection GetConnection()
         {
             return _sqlConnection;
         }

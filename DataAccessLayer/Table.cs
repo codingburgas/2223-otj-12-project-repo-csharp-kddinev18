@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace DataAccessLayer
 {
@@ -12,6 +13,19 @@ namespace DataAccessLayer
             Name = name;
             Columns = new HashSet<Column>();
         }
-
+        public void Create()
+        {
+            string columns = String.Empty;
+            foreach (Column column in Columns)
+            {
+                columns += column.ToString();
+            }
+            string query = $"CREATE TABLE [{Name}] \n(\n{columns});";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                command.ExecuteNonQuery();
+            }
+            Database.Tables.Add(this);
+        }
     }
 }
