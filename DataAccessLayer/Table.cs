@@ -27,5 +27,18 @@ namespace DataAccessLayer
             }
             Database.Tables.Add(this);
         }
+        public void Drop()
+        {
+            string query = $"DROP TABLE [{Name}];";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                command.ExecuteNonQuery();
+            }
+            Database.Tables.Remove(this);
+        }
+        public void Select()
+        {
+
+        }
     }
 }
