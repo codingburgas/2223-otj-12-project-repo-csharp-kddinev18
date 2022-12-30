@@ -202,5 +202,30 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public void SaveDatabaseInfrastructure()
+        {
+            HashSet<Table> newInfrastructure = Tables;
+            LoadDatabaseInfrastructure();
+            HashSet<Table> oldInfrastructure = Tables;
+
+            SaveTableChanges(newInfrastructure, oldInfrastructure);
+            //SaveColumnChanges(newInfrastructure, oldInfrastructure);
+        }
+
+        private void SaveTableChanges(HashSet<Table> newInfrastructure, HashSet<Table> oldInfrastructure)
+        {
+            string query = String.Empty;
+            IEnumerable<string> added = newInfrastructure.Select(table => table.Name).Except(oldInfrastructure.Select(table => table.Name));
+            foreach (string tableName in added)
+            {
+                newInfrastructure.Where(table => table.Name == tableName).First().Create();
+            }
+            IEnumerable<string> removed = oldInfrastructure.Select(table => table.Name).Except(newInfrastructure.Select(table => table.Name));
+            foreach (string tableName in removed)
+            {
+                oldInfrastructure.Where(table => table.Name == tableName).First().Drop();
+            }
+        }
     }
 }
