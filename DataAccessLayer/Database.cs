@@ -251,5 +251,21 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public void SaveDatabaseData()
+        {
+            foreach (Table table in Tables)
+            {
+                if (table.IsDataInserted())
+                {
+                    string query = table.GetInsertQuery();
+                    query = query.Substring(0, query.Length - 1);
+                    using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }

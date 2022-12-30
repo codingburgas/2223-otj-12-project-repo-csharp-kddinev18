@@ -16,6 +16,14 @@ namespace DataAccessLayer
             Name = name;
             Columns = new HashSet<Column>();
         }
+        public bool IsDataInserted()
+        {
+            return _isDataInserted;
+        }
+        public string GetInsertQuery()
+        {
+            return _insertQueryContainer;
+        }
         public void Create()
         {
             string columns = String.Empty;
