@@ -31,7 +31,8 @@
                         container += " UNIQUE ";
                         break;
                     case "PRIMARY KEY":
-                        container += " IDENTITY(1,1) PRIMARY KEY ";
+                        if(constraint.Item2 as string != "first" && constraint.Item2 as string != "second")
+                            container += " IDENTITY(1,1) PRIMARY KEY";
                         break;
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;

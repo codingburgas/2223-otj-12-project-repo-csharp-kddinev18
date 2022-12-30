@@ -19,6 +19,20 @@ namespace DataAccessLayer
                 _sqlConnection.Open();
             }
         }
+        public Database(string connectionString)
+        {
+            Tables = new HashSet<Table>();
+            _connectionString = connectionString;
+            if (_sqlConnection == null)
+            {
+                _sqlConnection = new SqlConnection(_connectionString);
+                _sqlConnection.Open();
+            }
+        }
+        public Database()
+        {
+            Tables = new HashSet<Table>();
+        }
         public static SqlConnection GetConnection()
         {
             return _sqlConnection;
@@ -174,30 +188,7 @@ namespace DataAccessLayer
                     {
                         Table foreignKeyTable = Tables.Where(table => table.Name == reader[0].ToString()).First();
                         Column foreignKeyColumn = foreignKeyTable.Columns.Where(column => column.Name == reader[1].ToString()).First();
-                        foreignKeyColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY", FindPrimaryKeys(table)));
-                    }
-                }
-            }
-        }
-
-        private Column FindPrimaryKeys(Table table)
-        {
-            string query = "SELECT COLUMN_NAME " +
-                           "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
-                           "WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + QUOTENAME(CONSTRAINT_NAME)), 'IsPrimaryKey') = 1 " +
-                           "AND TABLE_NAME = @TableName";
-            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
-            {
-                command.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = table.Name;
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return table.Columns.Where(column => column.Name == reader[0].ToString()).First();
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"The table {table.Name} does not have a primry key");
+                        foreignKeyColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY", table.FindPrimaryKeysThroughQuery().First()));
                     }
                 }
             }

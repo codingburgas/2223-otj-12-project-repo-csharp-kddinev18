@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 namespace DataAccessLayer
@@ -37,7 +38,7 @@ namespace DataAccessLayer
             {
                 columns += column.ToString();
             }
-            string query = $"CREATE TABLE [{Name}] \n(\n{columns});";
+            string query = $"CREATE TABLE [{Name}] \n(\n{columns}\n PRIMARY KEY ({String.Join(',', FindPrimaryKeys().Select(column => column.Name))})\n);";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 command.ExecuteNonQuery();
@@ -138,7 +139,52 @@ namespace DataAccessLayer
             _insertQueryContainer += $"({dataString}),";
             _isDataInserted = true;
         }
-
+        public List<Column> FindPrimaryKeysThroughQuery()
+        {
+            string query = "SELECT COLUMN_NAME " +
+                           "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                           "WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + QUOTENAME(CONSTRAINT_NAME)), 'IsPrimaryKey') = 1 " +
+                           "AND TABLE_NAME = @TableName";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                command.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = Name;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<Column> primaryKeys = new List<Column>();
+                    while (reader.Read())
+                    {
+                        primaryKeys.Add(Columns.Where(column => column.Name == reader[0].ToString()).First());
+                    }
+                    if (primaryKeys.Count == 0)
+                    {
+                        throw new ArgumentException($"The table {Name} does not have a primry key");
+                    }
+                    else
+                    {
+                        return primaryKeys;
+                    }
+                }
+            }
+        }
+        public List<Column> FindPrimaryKeys()
+        {
+            List<Column> primaryKeys = new List<Column>();
+            foreach (Column column in Columns)
+            {
+                if(column.Constraints.Select(constraint=>constraint.Item1).Contains("PRIMARY KEY"))
+                {
+                    primaryKeys.Add(column);
+                }
+            }
+            if (primaryKeys.Count == 0)
+            {
+                throw new ArgumentException($"The table {Name} does not have a primry key");
+            }
+            else
+            {
+                return primaryKeys;
+            }
+        }
         public static string ConvertDataTabletoString(DataTable table)
         {
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
