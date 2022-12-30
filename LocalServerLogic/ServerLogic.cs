@@ -47,6 +47,103 @@ namespace LocalServerLogic
             }
         }
 
+        public void ServerShutDown()
+        {
+            // Stops the server
+            _tcpListener.Stop();
+            _tcpListener = null;
+        }
+
+        public static void AcceptClients(IAsyncResult asyncResult)
+        {
+            // Newly connection client
+            TcpClient client = null;
+            try
+            {
+                // Connect the client
+                client = _tcpListener.EndAcceptTcpClient(asyncResult);
+                string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
+
+
+                string jsonString = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
+                List<JsonObject> jObject = JsonSerializer.Deserialize<List<JsonObject>>(jsonString);
+                if (jObject.Count == 0)
+                {
+                    Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
+                    _database.SaveDatabaseData();
+                    DisconnectClient(client);
+                    client = null;
+                    throw new Exception("Client not accepted");
+                }
+                else
+                {
+                    if (bool.Parse(jObject.First()["IsAprooved"].ToString()) == false)
+                    {
+                        DisconnectClient(client);
+                        client = null;
+                        throw new Exception("Client is banned");
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if(client is not null)
+            {
+                // Add the client newly connect client into the _clients list
+                _clients.Add(client);
+                // Begin recieving bytes from the client
+                client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+            }
+            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
+        }
+
+        public static void ReciveClientInput(IAsyncResult asyncResult)
+        {
+            TcpClient client = asyncResult.AsyncState as TcpClient;
+            int reciever;
+            try
+            {
+                // How many bytes has the user sent
+                reciever = client.Client.EndReceive(asyncResult);
+                // If the bytes are - disconnect the client
+                if (reciever == 0)
+                {
+                    DisconnectClient(client);
+                    return;
+                }
+                // Get the data
+                string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+            }
+            catch (Exception ex)
+            {
+                string response = $"{_error}|{ex.Message}";
+                // send data to the client
+                client.Client.Send(Encoding.ASCII.GetBytes(response));
+            }
+            finally
+            {
+                FlushBuffer();
+            }
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        // Clear the buffer
+        public static void FlushBuffer()
+        {
+            Array.Clear(_data, 0, _data.Length);
+        }
+
+        public static void DisconnectClient(TcpClient client)
+        {
+            client.Client.Shutdown(SocketShutdown.Both);
+            client.Client.Close();
+            _clients.Remove(client);
+        }
+
         private void CreateDefaultDatabaseStructure()
         {
             _database = new Database(_connectionString);
@@ -121,99 +218,6 @@ namespace LocalServerLogic
                 Database.Tables.Add(permissionTables);
             }
             _database.SaveDatabaseInfrastructure();
-        }
-
-        public void ServerShutDown()
-        {
-            // Stops the server
-            _tcpListener.Stop();
-            _tcpListener = null;
-        }
-
-        public static void AcceptClients(IAsyncResult asyncResult)
-        {
-            // Newly connection client
-            TcpClient client = null;
-            try
-            {
-                // Connect the client
-                client = _tcpListener.EndAcceptTcpClient(asyncResult);
-
-                string clientName = "TestName";
-                string clientIpAddress = "TestIPAddress";
-
-
-                string jsonString = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
-                List<JsonObject> jObject = JsonSerializer.Deserialize<List<JsonObject>>(jsonString);
-                if (jObject.Count == 0)
-                {
-                    Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientName, "false");
-                    _database.SaveDatabaseData();
-                }
-                else
-                {
-                    if (bool.Parse(jObject.First()["IsAprooved"].ToString()) == false)
-                    {
-                        DisconnectClient(client);
-                        throw new Exception("Client not accepted");
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
-
-            // Add the client newly connect client into the _clients list
-            _clients.Add(client);
-            // Begin recieving bytes from the client
-            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
-            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
-        }
-
-        public static void ReciveClientInput(IAsyncResult asyncResult)
-        {
-            TcpClient client = asyncResult.AsyncState as TcpClient;
-            int reciever;
-            try
-            {
-                // How many bytes has the user sent
-                reciever = client.Client.EndReceive(asyncResult);
-                // If the bytes are - disconnect the client
-                if (reciever == 0)
-                {
-                    DisconnectClient(client);
-                    return;
-                }
-                // Get the data
-                string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
-            }
-            catch (Exception ex)
-            {
-                string response = $"{_error}|{ex.Message}";
-                // send data to the client
-                client.Client.Send(Encoding.ASCII.GetBytes(response));
-            }
-            finally
-            {
-                FlushBuffer();
-            }
-            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
-        }
-
-        // Clear the buffer
-        public static void FlushBuffer()
-        {
-            Array.Clear(_data, 0, _data.Length);
-        }
-
-        public static void DisconnectClient(TcpClient client)
-        {
-            client.Client.Shutdown(SocketShutdown.Both);
-            client.Client.Close();
-            _clients.Remove(client);
         }
     }
 }
