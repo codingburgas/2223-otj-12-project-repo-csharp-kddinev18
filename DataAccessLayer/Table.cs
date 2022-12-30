@@ -53,33 +53,47 @@ namespace DataAccessLayer
             }
             Database.Tables.Remove(this);
         }
-        public string Select(string columnName, string expression, string value)
+        public DataTable Select(string columnName = "", string expression = "", string value = "")
         {
+            string query = String.Empty;
             string columns = String.Empty;
             foreach (Column column in Columns)
             {
                 columns += column.Name + ',';
             }
             columns = columns.Substring(0, columns.Length - 1);
+            if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
+            {
+                query = $"SELECT {columns} FROM {Name};";
+                using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        DataTable table = new DataTable();
+                        table.Load(reader);
+                        return table;
+                    }
+                }
+            }
             if (!Columns.Select(column => column.Name).Contains(columnName))
                 throw new Exception($"The column with name {columnName} does not exist in table {Name}");
             if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
                 throw new Exception($"The operation {expression} is not supported");
 
-            string query = $"SELECT {columns} FROM {Name} WHERE {columnName} {expression} @Value";
+            query = $"SELECT {columns} FROM {Name} WHERE {columnName} {expression} @Value;";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 int integerContainer = 0;
                 float floatContainer = 0;
-                if (int.TryParse(value, out integerContainer)) 
+                if (int.TryParse(value, out integerContainer))
                 {
                     command.Parameters.Add("@Value", SqlDbType.Int).Value = integerContainer;
                 }
-                if(float.TryParse(value, out floatContainer))
+                if (float.TryParse(value, out floatContainer))
                 {
                     command.Parameters.Add("@Value", SqlDbType.Decimal).Value = floatContainer;
                 }
-                if(value == "NULL")
+                if (value == "NULL")
                 {
                     command.Parameters.AddWithValue("@Value", null);
                 }
@@ -87,7 +101,7 @@ namespace DataAccessLayer
                 {
                     DataTable table = new DataTable();
                     table.Load(reader);
-                    return JsonSerializer.Serialize(table);
+                    return table;
                 }
             }
         }
@@ -123,6 +137,22 @@ namespace DataAccessLayer
             dataString = dataString.Substring(0, dataString.Length - 1);
             _insertQueryContainer += $"({dataString}),";
             _isDataInserted = true;
+        }
+
+        public static string ConvertDataTabletoString(DataTable table)
+        {
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+            foreach (DataRow dr in table.Rows)
+            {
+                row = new Dictionary<string, object>();
+                foreach (DataColumn col in table.Columns)
+                {
+                    row.Add(col.ColumnName, dr[col]);
+                }
+                rows.Add(row);
+            }
+            return JsonSerializer.Serialize(rows);
         }
     }
 }
