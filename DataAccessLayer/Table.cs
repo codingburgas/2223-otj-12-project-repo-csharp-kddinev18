@@ -24,6 +24,10 @@ namespace DataAccessLayer
         {
             return _insertQueryContainer;
         }
+        public void DiscardInsertQuery()
+        {
+            _insertQueryContainer = String.Empty;
+        }
         public void Create()
         {
             string columns = String.Empty;
@@ -53,7 +57,7 @@ namespace DataAccessLayer
         }
         public void Insert(params string[] data)
         {
-            if (_insertQueryContainer == string.Empty)
+            if (_insertQueryContainer == String.Empty)
             {
                 string columns = String.Empty;
                 foreach (Column column in Columns)
