@@ -110,6 +110,46 @@ namespace DataAccessLayer
                 }
             }
         }
+        public void Delete(string columnName = "", string expression = "", string value = "")
+        {
+            string query = String.Empty;
+            if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
+            {
+                query = $"DELETE FROM {Name};";
+                using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            if (!Columns.Select(column => column.Name).Contains(columnName))
+                throw new Exception($"The column with name {columnName} does not exist in table {Name}");
+            if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
+                throw new Exception($"The operation {expression} is not supported");
+
+            query = $"DELETE FROM {Name} WHERE {columnName} {expression} @Value;";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                int integerContainer = 0;
+                float floatContainer = 0;
+                if (int.TryParse(value, out integerContainer))
+                {
+                    command.Parameters.Add("@Value", SqlDbType.Int).Value = integerContainer;
+                }
+                else if (float.TryParse(value, out floatContainer))
+                {
+                    command.Parameters.Add("@Value", SqlDbType.Decimal).Value = floatContainer;
+                }
+                else if (value == "NULL")
+                {
+                    command.Parameters.AddWithValue("@Value", null);
+                }
+                else
+                {
+                    command.Parameters.Add("@Value", SqlDbType.NVarChar).Value = value;
+                }
+                command.ExecuteNonQuery();
+            }
+        }
         public void Insert(params string[] data)
         {
             if (_insertQueryContainer == String.Empty)

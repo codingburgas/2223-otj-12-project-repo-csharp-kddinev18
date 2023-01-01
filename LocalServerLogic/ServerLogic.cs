@@ -6,6 +6,8 @@ using System.Diagnostics;
 using DataAccessLayer;
 using System.Text.Json.Nodes;
 using System.Text.Json;
+using System.Collections.Generic;
+using System.Timers;
 
 namespace LocalServerLogic
 {
@@ -28,11 +30,20 @@ namespace LocalServerLogic
             _port = port;
         }
 
-        public void ServerSetUp()
+        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+
+        }
+
+        public void ServerSetUp(int deleteTimer)
         {
             try
             {
                 CreateDefaultDatabaseStructure();
+
+                System.Timers.Timer timer = new System.Timers.Timer() { Interval = deleteTimer };
+                timer.Elapsed += TimerOnElapsed;
+                timer.Start();
 
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
@@ -62,12 +73,12 @@ namespace LocalServerLogic
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
+                string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
 
 
-                string jsonString = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
-                List<JsonObject> jObject = JsonSerializer.Deserialize<List<JsonObject>>(jsonString);
-                if (jObject.Count == 0)
+                string devicesJson = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
+                List<JsonObject> devices = JsonSerializer.Deserialize<List<JsonObject>>(devicesJson);
+                if (devices.Count == 0)
                 {
                     Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
                     _database.SaveDatabaseData();
@@ -77,7 +88,7 @@ namespace LocalServerLogic
                 }
                 else
                 {
-                    if (bool.Parse(jObject.First()["IsAprooved"].ToString()) == false)
+                    if (bool.Parse(devices.First()["IsAprooved"].ToString()) == false)
                     {
                         DisconnectClient(client);
                         client = null;
@@ -91,7 +102,7 @@ namespace LocalServerLogic
                 Console.WriteLine(ex.Message);
             }
 
-            if(client is not null)
+            if (client is not null)
             {
                 // Add the client newly connect client into the _clients list
                 _clients.Add(client);
@@ -116,7 +127,7 @@ namespace LocalServerLogic
                     return;
                 }
                 // Get the data
-                string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+                HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty));
             }
             catch (Exception ex)
             {
@@ -129,6 +140,50 @@ namespace LocalServerLogic
                 FlushBuffer();
             }
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        private static void HandleClientInput(string data)
+        {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+            if (jObject["Type"].ToString() == "Authenticate")
+            {
+                if (!Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
+                {
+                    Table newTable = new Table(jObject["Name"].ToString());
+                    foreach (JsonObject column in JsonSerializer.Deserialize<List<JsonObject>>(jObject["Columns"].ToString()))
+                    {
+                        Column newColumn = new Column(column["Name"].ToString(), column["Type"].ToString(), newTable);
+                        foreach (JsonObject constraint in JsonSerializer.Deserialize<List<JsonObject>>(column["Constraints"].ToString()))
+                        {
+                            if (constraint["Constraint"].ToString() == "FOREIGN KEY")
+                            {
+                                string tableName = constraint["AdditionalInformation"].ToString().Split(", ")[0];
+                                string columnsName = constraint["AdditionalInformation"].ToString().Split(", ")[1];
+                                Column foreignKeyColumn = Database.Tables.Where(table => table.Name == tableName).First()
+                                    .Columns.Where(column => column.Name == columnsName).First();
+                                newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), foreignKeyColumn));
+                            }
+                            else
+                            {
+                                newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), constraint["AdditionalInformation"].ToString()));
+                            }
+                        }
+                        newTable.Columns.Add(newColumn);
+                    }
+                    Column systemColumn = new Column("When", "datetime2", newTable);
+                    newTable.Columns.Add(systemColumn);
+                    Database.Tables.Add(newTable);
+                    _database.SaveDatabaseInfrastructure();
+                }
+            }
+            else if (jObject["Type"].ToString() == "Insert")
+            {
+                Table table = Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
+                List<string> insertData = new List<string>();
+
+                table.Insert(JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString()).ToArray());
+                _database.SaveDatabaseData();
+            }
         }
 
         // Clear the buffer
