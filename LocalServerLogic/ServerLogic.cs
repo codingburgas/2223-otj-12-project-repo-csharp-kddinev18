@@ -8,6 +8,8 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Timers;
+using System;
+using System.Data.SqlClient;
 
 namespace LocalServerLogic
 {
@@ -22,6 +24,7 @@ namespace LocalServerLogic
         private static byte[] _data = new byte[16777216];
 
         private int _port;
+        private long _deleteTimer;
         private static int _success = 0;
         private static int _error = 1;
 
@@ -32,18 +35,25 @@ namespace LocalServerLogic
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            foreach (Table table in Database.Tables)
+            {
+                if (table.Name == "Users" || table.Name == "Devices" || table.Name == "Permissions")
+                    continue;
 
+                string query = $"DELETE FROM [{table.Name}] WHERE [Created] < DATEADD(mi,{(int)_deleteTimer/(1000 * 60)},GETDATE())";
+                using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
-        public void ServerSetUp(int deleteTimer)
+        public void ServerSetUp(long deleteTimer)
         {
             try
             {
-                CreateDefaultDatabaseStructure();
-
-                System.Timers.Timer timer = new System.Timers.Timer() { Interval = deleteTimer };
-                timer.Elapsed += TimerOnElapsed;
-                timer.Start();
+                _database = new Database(_connectionString);
+                BusinessLogic.CreateDefaultDatabaseStructure(_database);
 
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
@@ -170,8 +180,10 @@ namespace LocalServerLogic
                         }
                         newTable.Columns.Add(newColumn);
                     }
-                    Column systemColumn = new Column("When", "datetime2", newTable);
+                    Column systemColumn = new Column("Created", "datetime2(7)", newTable);
+                    systemColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
                     newTable.Columns.Add(systemColumn);
+
                     Database.Tables.Add(newTable);
                     _database.SaveDatabaseInfrastructure();
                 }
@@ -197,82 +209,6 @@ namespace LocalServerLogic
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
-        }
-
-        private void CreateDefaultDatabaseStructure()
-        {
-            _database = new Database(_connectionString);
-            _database.LoadDatabaseInfrastructure();
-            if (!Database.Tables.Select(table => table.Name).Contains("Devices"))
-            {
-                Table devicesTable = new Table("Devices");
-
-                Column deviceId = new Column("DeviceId", "int", devicesTable);
-                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
-                deviceId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                Column ipv4Address = new Column("IPv4Address", "nvarchar(64)", devicesTable);
-                ipv4Address.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-                ipv4Address.AddConstraint(new Tuple<string, object>("UNIQUE", null));
-
-                Column name = new Column("Name", "nvarchar(64)", devicesTable);
-                name.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-                name.AddConstraint(new Tuple<string, object>("UNIQUE", null));
-
-                Column aprooved = new Column("IsAprooved", "bit", devicesTable);
-                aprooved.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                devicesTable.Columns.Add(deviceId);
-                devicesTable.Columns.Add(ipv4Address);
-                devicesTable.Columns.Add(name);
-                devicesTable.Columns.Add(aprooved);
-                Database.Tables.Add(devicesTable);
-            }
-            if (!Database.Tables.Select(table => table.Name).Contains("Users"))
-            {
-                Table userTables = new Table("Users");
-
-                Column userId = new Column("UserId", "int", userTables);
-                userId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
-                userId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                Column userName = new Column("UserName", "nvarchar(64)", userTables);
-                userName.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                Column email = new Column("Email", "nvarchar(128)", userTables);
-                email.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                Column password = new Column("Password", "nvarchar(128)", userTables);
-                password.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                userTables.Columns.Add(userId);
-                userTables.Columns.Add(userName);
-                userTables.Columns.Add(email);
-                userTables.Columns.Add(password);
-                Database.Tables.Add(userTables);
-            }
-            if (!Database.Tables.Select(table => table.Name).Contains("Permissions"))
-            {
-                Table permissionTables = new Table("Permissions");
-
-                Column userId = new Column("UserId", "int", permissionTables);
-                userId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
-                    Database.Tables.Where(table => table.Name == "Users").First().Columns.Where(column => column.Name == "UserId").First()));
-
-                userId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "first"));
-                userId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                Column deviceId = new Column("DeviceId", "int", permissionTables);
-                deviceId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
-                    Database.Tables.Where(table => table.Name == "Devices").First().Columns.Where(column => column.Name == "DeviceId").First()));
-                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "second"));
-                deviceId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
-
-                permissionTables.Columns.Add(userId);
-                permissionTables.Columns.Add(deviceId);
-                Database.Tables.Add(permissionTables);
-            }
-            _database.SaveDatabaseInfrastructure();
         }
     }
 }

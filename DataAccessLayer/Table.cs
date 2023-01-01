@@ -157,7 +157,7 @@ namespace DataAccessLayer
                 string columns = String.Empty;
                 foreach (Column column in Columns)
                 {
-                    if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY"))
+                    if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT"))
                         continue;
 
                     columns += $"[{column.Name}],";

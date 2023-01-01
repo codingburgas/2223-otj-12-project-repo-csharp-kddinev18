@@ -12,7 +12,7 @@ namespace LocalServer
         static void Main(string[] args)
         {
             ServerLogic server = new ServerLogic(5400);
-            server.ServerSetUp();
+            server.ServerSetUp(20 * 60 * 1000);
             Console.ReadKey();
             server.ServerShutDown();
         }
