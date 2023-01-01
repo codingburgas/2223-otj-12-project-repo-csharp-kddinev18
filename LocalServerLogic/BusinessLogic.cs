@@ -180,5 +180,10 @@ namespace LocalServerLogic
 
             return client;
         }
+
+        public static void AprooveClient(string ipAddress)
+        {
+            Database.Tables.Where(table => table.Name == "Devices").First().Update("IsAprooved", "true", "IPv4Address", "=", ipAddress);
+        }
     }
 }

@@ -190,6 +190,58 @@ namespace DataAccessLayer
             _insertQueryContainer += $"({dataString}),";
             _isDataInserted = true;
         }
+        public void Update(string updateColumnName, string updateValue, string conditionColumnName, string expression, string coditionValue)
+        {
+            string query = String.Empty;
+            if (!Columns.Select(column => column.Name).Contains(updateColumnName))
+                throw new Exception($"The column with name {updateColumnName} does not exist in table {Name}");
+            if (!Columns.Select(column => column.Name).Contains(conditionColumnName))
+                throw new Exception($"The column with name {conditionColumnName} does not exist in table {Name}");
+            if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
+                throw new Exception($"The operation {expression} is not supported");
+
+            query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {conditionColumnName} {expression} @ConditionValue;";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                int integerContainer = 0;
+                float floatContainer = 0;
+                if (int.TryParse(updateValue, out integerContainer))
+                {
+                    command.Parameters.Add("@UpdateValue", SqlDbType.Int).Value = integerContainer;
+                }
+                else if (float.TryParse(updateValue, out floatContainer))
+                {
+                    command.Parameters.Add("@UpdateValue", SqlDbType.Decimal).Value = floatContainer;
+                }
+                else if (updateValue == "NULL")
+                {
+                    command.Parameters.AddWithValue("@UpdateValue", null);
+                }
+                else
+                {
+                    command.Parameters.Add("@ConditionValue", SqlDbType.NVarChar).Value = updateValue;
+                }
+
+                if (int.TryParse(updateValue, out integerContainer))
+                {
+                    command.Parameters.Add("@ConditionValue", SqlDbType.Int).Value = integerContainer;
+                }
+                else if (float.TryParse(updateValue, out floatContainer))
+                {
+                    command.Parameters.Add("@ConditionValue", SqlDbType.Decimal).Value = floatContainer;
+                }
+                else if (updateValue == "NULL")
+                {
+                    command.Parameters.AddWithValue("@ConditionValue", null);
+                }
+                else
+                {
+                    command.Parameters.Add("@ConditionValue", SqlDbType.NVarChar).Value = coditionValue;
+                }
+
+                command.ExecuteNonQuery();
+            }
+        }
         public List<Column> FindPrimaryKeysThroughQuery()
         {
             string query = "SELECT COLUMN_NAME " +

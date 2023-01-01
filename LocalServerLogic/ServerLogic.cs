@@ -129,5 +129,10 @@ namespace LocalServerLogic
             client.Client.Close();
             _clients.Remove(client);
         }
+
+        public void AprooveClient(string ipAddress)
+        {
+            BusinessLogic.AprooveClient(ipAddress);
+        }
     }
 }
