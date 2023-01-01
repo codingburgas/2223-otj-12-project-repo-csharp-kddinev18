@@ -105,7 +105,7 @@ namespace LocalServerLogic
                     return;
                 }
                 // Get the data
-                BusinessLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty));
+                BusinessLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), clients);
             }
             catch (Exception ex)
             {

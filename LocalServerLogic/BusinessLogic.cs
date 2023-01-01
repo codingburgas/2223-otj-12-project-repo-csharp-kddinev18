@@ -114,10 +114,10 @@ namespace LocalServerLogic
             _database.SaveDatabaseInfrastructure();
         }
 
-        public static void HandleClientInput(string data)
+        public static void HandleClientInput(string data, List<TcpClient> clients)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-            if (jObject["Type"].ToString() == "Authenticate")
+            if (jObject["Operation"].ToString() == "Authenticate")
             {
                 if (!Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
                 {
@@ -150,13 +150,29 @@ namespace LocalServerLogic
                     _database.SaveDatabaseInfrastructure();
                 }
             }
-            else if (jObject["Type"].ToString() == "Insert")
+            else if (jObject["Operation"].ToString() == "Insert")
             {
                 Table table = Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
                 List<string> insertData = new List<string>();
 
                 table.Insert(JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString()).ToArray());
                 _database.SaveDatabaseData();
+            }
+            else if (jObject["Operation"].ToString() == "Send")
+            {
+                string ipAddressDestination = jObject["Address"].ToString();
+                foreach (TcpClient client in clients)
+                {
+                    if(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() == ipAddressDestination)
+                    {
+                        NetworkStream stream = client.GetStream();
+                        string sendingData = jObject["Data"].ToString();
+                        byte[] msg = Encoding.ASCII.GetBytes(data);
+
+                        //Send to Client
+                        stream.Write(msg, 0, msg.Length);
+                    }
+                }
             }
         }
         public static bool AddClients(TcpClient client)
