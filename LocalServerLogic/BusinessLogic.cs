@@ -159,7 +159,7 @@ namespace LocalServerLogic
                 _database.SaveDatabaseData();
             }
         }
-        public static TcpClient AddClients(TcpClient client)
+        public static bool AddClients(TcpClient client)
         {
             string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
             string devicesJson = Table.ConvertDataTabletoString(Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
@@ -168,17 +168,17 @@ namespace LocalServerLogic
             {
                 Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
                 _database.SaveDatabaseData();
-                client = null;
+                return false;
             }
             else
             {
                 if (bool.Parse(devices.First()["IsAprooved"].ToString()) == false)
                 {
-                    client = null;
+                    return false;
                 }
             }
 
-            return client;
+            return true;
         }
 
         public static void AprooveClient(string ipAddress)

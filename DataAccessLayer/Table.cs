@@ -219,7 +219,7 @@ namespace DataAccessLayer
                 }
                 else
                 {
-                    command.Parameters.Add("@ConditionValue", SqlDbType.NVarChar).Value = updateValue;
+                    command.Parameters.Add("@UpdateValue", SqlDbType.NVarChar).Value = updateValue;
                 }
 
                 if (int.TryParse(updateValue, out integerContainer))

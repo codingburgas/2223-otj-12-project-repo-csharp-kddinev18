@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Timers;
 using System;
 using System.Data.SqlClient;
+using System.Net.Http;
 
 namespace LocalServerLogic
 {
@@ -17,7 +18,7 @@ namespace LocalServerLogic
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
-        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ORMTest;Integrated Security=True;MultipleActiveResultSets=true";
+        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurity;Integrated Security=True;MultipleActiveResultSets=true";
 
         // Buffer
         private static byte[] _data = new byte[16777216];
@@ -61,11 +62,13 @@ namespace LocalServerLogic
         {
             // Newly connection client
             TcpClient client = null;
+            bool accepted = false;
             try
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                client = BusinessLogic.AddClients(client);
+                Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
+                accepted = BusinessLogic.AddClients(client);
 
             }
             catch (Exception ex)
@@ -73,7 +76,7 @@ namespace LocalServerLogic
                 Console.WriteLine(ex.Message);
             }
 
-            if (client is not null)
+            if (accepted)
             {
                 // Add the client newly connect client into the _clients list
                 _clients.Add(client);
@@ -125,9 +128,11 @@ namespace LocalServerLogic
 
         public static void DisconnectClient(TcpClient client)
         {
+            Console.WriteLine("Client disconnected");
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
+            client = null;
         }
 
         public void AprooveClient(string ipAddress)
