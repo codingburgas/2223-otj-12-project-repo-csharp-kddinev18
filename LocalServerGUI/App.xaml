@@ -4,7 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:LocalServerGUI"
-             StartupUri="MainWindow.xaml">
+             StartupUri="View/XAML/UserAuthenticationWindow/UserAuthenticationWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <Style x:Key="textBoxIcon" TargetType="Icon:PackIconMaterial">

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LocalServerGUI
+namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +23,18 @@ namespace LocalServerGUI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Drag the window of the button is hold
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Shutdown the application
+            Application.Current.Shutdown();
         }
     }
 }
