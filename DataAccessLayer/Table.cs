@@ -8,16 +8,18 @@ namespace DataAccessLayer
 {
     public class Table
     {
+        public Database Database { get; set; }
         public string Name { get; set; }
         public HashSet<Column> Columns { get; set; }
 
         private string _insertQueryContainer = String.Empty;
         private bool _isDataInserted = false;
 
-        public Table(string name)
+        public Table(string name, Database database)
         {
             Name = name;
             Columns = new HashSet<Column>();
+            Database = database;
         }
         public bool IsDataInserted()
         {

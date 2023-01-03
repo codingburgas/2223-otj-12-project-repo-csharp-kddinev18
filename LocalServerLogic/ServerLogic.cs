@@ -11,6 +11,7 @@ using System.Timers;
 using System;
 using System.Data.SqlClient;
 using System.Net.Http;
+using LocalServerBusinessLogic;
 
 namespace LocalServerLogic
 {
@@ -18,26 +19,24 @@ namespace LocalServerLogic
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
-        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurity;Integrated Security=True;MultipleActiveResultSets=true";
 
-        // Buffer
         private static byte[] _data = new byte[16777216];
 
         private int _port;
         private static int _success = 0;
         private static int _error = 1;
 
-        public ServerLogic(int port)
+        private static ClientHandlingLogic _clientHandlingLogic;
+
+        public ServerLogic(int port, ClientHandlingLogic clientHandlingLogic)
         {
             _port = port;
+            _clientHandlingLogic = clientHandlingLogic;
         }
-
         public void ServerSetUp(long deleteTimer)
         {
             try
             {
-                BusinessLogic.InitialiseDatabase(_connectionString, deleteTimer);
-
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
                 _tcpListener.Start();
@@ -68,7 +67,7 @@ namespace LocalServerLogic
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
                 Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
-                accepted = BusinessLogic.AddClients(client);
+                accepted = _clientHandlingLogic.AddClients(client);
 
             }
             catch (Exception ex)
@@ -105,7 +104,7 @@ namespace LocalServerLogic
                     return;
                 }
                 // Get the data
-                BusinessLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), _clients);
+                _clientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), _clients);
             }
             catch (Exception ex)
             {
@@ -137,7 +136,7 @@ namespace LocalServerLogic
 
         public void AprooveClient(string ipAddress)
         {
-            BusinessLogic.AprooveClient(ipAddress);
+            _clientHandlingLogic.AprooveClient(ipAddress);
         }
     }
 }

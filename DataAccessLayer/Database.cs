@@ -5,7 +5,7 @@ namespace DataAccessLayer
 {
     public class Database
     {
-        public static HashSet<Table> Tables { get; set; }
+        public HashSet<Table> Tables { get; set; }
 
         private static SqlConnection _sqlConnection;
         private static string _connectionString;
@@ -54,7 +54,7 @@ namespace DataAccessLayer
                 {
                     while (reader.Read())
                     {
-                        Tables.Add(new Table(reader[0].ToString()));
+                        Tables.Add(new Table(reader[0].ToString(), this));
                     }
                 }
             }
