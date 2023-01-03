@@ -20,9 +20,22 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages
     /// </summary>
     public partial class RegistrationPage : Page
     {
-        public RegistrationPage()
+        private UsersAuthenticationWindow _userAuthentication;
+        public RegistrationPage(UsersAuthenticationWindow userAuthentication)
         {
+            _userAuthentication = userAuthentication;
             InitializeComponent();
+        }
+
+        private void OpenLogInFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Show LogInPage
+            _userAuthentication.ShowPage(_userAuthentication.LogInPage);
+        }
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Register and set the CurrentUserId
+            // UserAuthentocationLogic.Register(_userAuthentication, UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
         }
     }
 }
