@@ -64,5 +64,83 @@ namespace LocalServerLogic
             // Returns the string builder's string
             return salt.ToString();
         }
+
+        // Checks if the email is on corrent format
+        private static bool CheckEmail(string email)
+        {
+            // Check if the email does not constains '@'
+            if (email.Contains('@') == false)
+                // If the email does not constains '@' it trows axception
+                throw new ArgumentException("Email must contain \'@\'");
+
+            // Return true otherwise
+            return true;
+        }
+
+        // Checks if the password is on corrent format
+        private static bool CheckPassword(string pass)
+        {
+            // Checks if the password is between 10 and 32 characters long
+            if (pass.Length <= 10 || pass.Length > 32)
+                throw new ArgumentException("Password must be between 10 and 32 charcters");
+
+
+            // Checks if the password contains a space
+            if (pass.Contains(" "))
+                throw new ArgumentException("Password must not contain spaces");
+
+            // Checks if the password doesn't conatin upper characters
+            if (!pass.Any(char.IsUpper))
+                throw new ArgumentException("Password must contain at least 1 upper character");
+
+            // Checks if the password doesn't conatin lower characters
+            if (!pass.Any(char.IsLower))
+                throw new ArgumentException("Password must contain at least 1 lower character");
+
+            // Checks if the password conatins upper any special symbols
+            string specialCharacters = @"%!@#$%^&*()?/>.<,:;'\}]{[_~`+=-" + "\"";
+            char[] specialCharactersArray = specialCharacters.ToCharArray();
+            foreach (char c in specialCharactersArray)
+            {
+                if (pass.Contains(c))
+                    return true;
+            }
+            throw new ArgumentException("Password must contain at least 1 special character");
+        }
+
+        /*public int Register(string userName, string email, string password)
+        {
+            // Add master role
+            CheckMasterRole(dbContext);
+
+            // Checks if the email is on corrent format
+            CheckEmail(email);
+            // Checks if the password is on corrent format
+            CheckPassword(password);
+            // Gets the salt
+            string salt = GetSalt(userName);
+            // Hashes the password combinded with the salt
+            string hashPassword = Hash(password + salt);
+
+            // Add new instance of a User
+            User newUser = new User()
+            {
+                UserName = userName,
+                Password = hashPassword,
+                Email = email,
+                Salt = salt,
+            };
+            // Assign roleless role
+            newUser.Role = dbContext.Roles.Where(role => role.RoleIdentificator == "Master").FirstOrDefault();
+
+            // Add the newly added user into the current context
+            dbContext.Users.Add(newUser);
+
+            // Save all changes made in this context into the database
+            dbContext.SaveChanges();
+
+            // Returns the newly added user
+            return newUser.UserId;
+        }*/
     }
 }
