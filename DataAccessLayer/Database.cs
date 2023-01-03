@@ -145,13 +145,26 @@ namespace DataAccessLayer
                 command.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = table.Name;
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
+                    List<Tuple<string, object>> primaryKeys = new List<Tuple<string, object>>();
                     if (reader.Read())
                     {
-                        table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+                        primaryKeys.Add(new Tuple<string, object>("PRIMARY KEY", null));
+                    }
+                    if(primaryKeys.Count > 1)
+                    {
+                        foreach (Tuple<string, object> primaryKey in primaryKeys)
+                        {
+                            primaryKey.Item2 = "multiple";
+                            table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(primaryKey);
+                        }
+                    }
+                    else if (primaryKeys.Count == 1)
+                    {
+                        table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(primaryKeys.First());
                     }
                     else
                     {
-                        throw new ArgumentException($"The table {table.Name} does not have a primry key");
+                        throw new Exception("Cannot have a table wothout a primary key");
                     }
                 }
             }

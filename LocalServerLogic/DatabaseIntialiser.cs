@@ -124,12 +124,12 @@ namespace LocalServerBusinessLogic
                 Column roleId = new Column("RoleId", "int", permissionTable);
                 roleId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Roles").First().FindPrimaryKeys().First()));
-                roleId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "first"));
+                roleId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
 
                 Column deviceId = new Column("DeviceId", "int", permissionTable);
                 deviceId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
-                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "second"));
+                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
 
                 Column canCreate = new Column("CanCreate", "bit", permissionTable);
                 canCreate.AddConstraint(new Tuple<string, object>("NOT NULL", null));
