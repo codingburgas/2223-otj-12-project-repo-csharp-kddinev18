@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace LocalServerBusinessLogic
         public void CreateDefaultDatabaseStructure()
         {
             Database.LoadDatabaseInfrastructure();
+            bool changesMade = false;
             if (!Database.Tables.Select(table => table.Name).Contains("Roles"))
             {
                 Table rolesTable = new Table("Roles", Database);
@@ -52,7 +54,7 @@ namespace LocalServerBusinessLogic
                 rolesTable.Columns.Add(name);
 
                 Database.Tables.Add(rolesTable);
-                Database.SaveDatabaseInfrastructure();
+                changesMade = true;
             }
             if (!Database.Tables.Select(table => table.Name).Contains("Devices"))
             {
@@ -78,7 +80,7 @@ namespace LocalServerBusinessLogic
                 devicesTable.Columns.Add(name);
                 devicesTable.Columns.Add(aprooved);
                 Database.Tables.Add(devicesTable);
-                Database.SaveDatabaseInfrastructure();
+                changesMade = true;
             }
             if (!Database.Tables.Select(table => table.Name).Contains("Users"))
             {
@@ -98,10 +100,11 @@ namespace LocalServerBusinessLogic
                 Column password = new Column("Password", "nvarchar(128)", userTables);
                 password.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
-                Column salt = new Column("Salt", "char(15)", userTables);
-                password.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+                Column salt = new Column("Salt", "nvarchar(16)", userTables);
+                salt.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 Column roleId = new Column("RoleId", "int", userTables);
+                roleId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
                 roleId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Roles").First().FindPrimaryKeys().First()));
 
@@ -112,6 +115,7 @@ namespace LocalServerBusinessLogic
                 userTables.Columns.Add(salt);
                 userTables.Columns.Add(roleId);
                 Database.Tables.Add(userTables);
+                changesMade = true;
             }
             if (!Database.Tables.Select(table => table.Name).Contains("Permissions"))
             {
@@ -146,8 +150,10 @@ namespace LocalServerBusinessLogic
                 permissionTable.Columns.Add(canUpdate);
                 permissionTable.Columns.Add(canDelete);
                 Database.Tables.Add(permissionTable);
+                changesMade = true;
             }
-            Database.SaveDatabaseInfrastructure();
+            if(changesMade)
+                Database.SaveDatabaseInfrastructure();
         }
     }
 }

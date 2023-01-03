@@ -66,7 +66,7 @@ namespace LocalServerLogic
         }
 
         // Checks if the email is on corrent format
-        private static bool CheckEmail(string email)
+        private bool CheckEmail(string email)
         {
             // Check if the email does not constains '@'
             if (email.Contains('@') == false)
@@ -78,7 +78,7 @@ namespace LocalServerLogic
         }
 
         // Checks if the password is on corrent format
-        private static bool CheckPassword(string pass)
+        private bool CheckPassword(string pass)
         {
             // Checks if the password is between 10 and 32 characters long
             if (pass.Length <= 10 || pass.Length > 32)
@@ -107,6 +107,19 @@ namespace LocalServerLogic
             }
             throw new ArgumentException("Password must contain at least 1 special character");
         }
+        private bool CheckUsername(string userName)
+        {
+            // Checks if the userName is between 6 and 64 characters long
+            if (userName.Length <= 8 || userName.Length > 64)
+                throw new ArgumentException("Username must be between 8 and 64 charcters");
+
+
+            // Checks if the userName contains a space
+            if (userName.Contains(" "))
+                throw new ArgumentException("Username must not contain spaces");
+
+            return true;
+        }
         public void AddAdminRole()
         {
             DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
@@ -123,9 +136,11 @@ namespace LocalServerLogic
             // Add admin role
             AddAdminRole();
 
-            // Checks if the email is on corrent format
+            // Checks if the email is in corrent format
+            CheckUsername(userName);
+            // Checks if the email is in corrent format
             CheckEmail(email);
-            // Checks if the password is on corrent format
+            // Checks if the password is in corrent format
             CheckPassword(password);
             // Gets the salt
             string salt = GetSalt(userName);

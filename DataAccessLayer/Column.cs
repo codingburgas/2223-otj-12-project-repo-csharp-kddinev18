@@ -4,14 +4,14 @@
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        public Table Table { get; set; }
+        public Table ParentTable { get; set; }
         public HashSet<Tuple<string, object>> Constraints { get; set; }
         public Column(string name, string type, Table table)
         {
             Constraints = new HashSet<Tuple<string, object>>();
             Name = name;
             Type = type;
-            Table = table;
+            ParentTable = table;
         }
         public void AddConstraint(Tuple<string, object> constraint)
         {
@@ -36,7 +36,7 @@
                         break;
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;
-                        Table foreignKeyTable = Table.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
+                        Table foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
                         container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ";
                         break;
                     case "CHECK":
