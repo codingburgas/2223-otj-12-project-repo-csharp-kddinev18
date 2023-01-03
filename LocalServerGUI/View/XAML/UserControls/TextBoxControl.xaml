@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="LocalServerGUI.View.Code_Behind.UserControls.TextBoxControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             Name ="textBoxForm">
+    <StackPanel Orientation="Horizontal" Margin="10">
+        <Icon:PackIconMaterial Kind="{Binding ElementName=textBoxForm,Path=TextBoxIcon}" Style="{StaticResource textBoxIcon}"/>
+        <TextBox x:Name="TextBox" Margin="10 0" materialDesign:HintAssist.Hint="{Binding ElementName=textBoxForm,Path=TextBoxHintText}" Foreground="#2b2b2b" Width="250"/>
+    </StackPanel>
+</UserControl>
