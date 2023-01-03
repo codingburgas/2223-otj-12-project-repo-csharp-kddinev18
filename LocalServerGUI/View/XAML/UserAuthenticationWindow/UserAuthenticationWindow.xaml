@@ -1,4 +1,4 @@
-﻿<Window x:Class="LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.LocalServerGUI.MainWindow"
+﻿<Window x:Class="LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.UserAuthenticationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

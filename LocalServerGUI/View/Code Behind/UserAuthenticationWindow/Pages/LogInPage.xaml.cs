@@ -24,5 +24,14 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         {
             InitializeComponent();
         }
+        //Event handlers
+        private void OpenRegistrationFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Shows RegistrationPage
+        }
+        private void LogInButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Log in and sets CurrentUserId to the logged user id
+        }
     }
 }
