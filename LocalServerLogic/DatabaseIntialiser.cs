@@ -27,7 +27,7 @@ namespace LocalServerBusinessLogic
         {
             foreach (Table table in Database.Tables)
             {
-                if (table.Name == "Users" || table.Name == "Devices" || table.Name == "Permissions")
+                if (table.Name == "Users" || table.Name == "Devices" || table.Name == "Permissions" || table.Name == "Roles")
                     continue;
 
                 table.Delete("Created", "<", $"DATEADD(mi,{(int)_deleteTimer / (1000 * 60)},GETDATE())", true);

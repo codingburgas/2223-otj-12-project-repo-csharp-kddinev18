@@ -107,11 +107,21 @@ namespace LocalServerLogic
             }
             throw new ArgumentException("Password must contain at least 1 special character");
         }
-
-        /*public int Register(string userName, string email, string password)
+        public void AddAdminRole()
         {
-            // Add master role
-            CheckMasterRole(dbContext);
+            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Select("Name", "=", "Admin");
+            if(dataTable.Rows.Count == 0)
+            {
+                _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
+                _databaseInitialiser.Database.SaveDatabaseData();
+            }
+        }
+
+        public int Register(string userName, string email, string password)
+        {
+            // Add admin role
+            AddAdminRole();
 
             // Checks if the email is on corrent format
             CheckEmail(email);
@@ -122,25 +132,14 @@ namespace LocalServerLogic
             // Hashes the password combinded with the salt
             string hashPassword = Hash(password + salt);
 
-            // Add new instance of a User
-            User newUser = new User()
-            {
-                UserName = userName,
-                Password = hashPassword,
-                Email = email,
-                Salt = salt,
-            };
-            // Assign roleless role
-            newUser.Role = dbContext.Roles.Where(role => role.RoleIdentificator == "Master").FirstOrDefault();
+            _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Insert(userName, email, hashPassword, salt, "1");
+            _databaseInitialiser.Database.SaveDatabaseData();
 
-            // Add the newly added user into the current context
-            dbContext.Users.Add(newUser);
+            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Select("UserName", "=", userName);
 
-            // Save all changes made in this context into the database
-            dbContext.SaveChanges();
-
-            // Returns the newly added user
-            return newUser.UserId;
-        }*/
+            return int.Parse(dataTable.Rows[0]["UserId"].ToString());
+        }
     }
 }
