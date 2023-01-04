@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Reflection.PortableExecutable;
 using System.Text.Json;
+using System.Xml.Serialization;
 
 namespace DataAccessLayer
 {
@@ -102,6 +103,20 @@ namespace DataAccessLayer
                     DataTable table = new DataTable();
                     table.Load(reader);
                     return table;
+                }
+            }
+        }
+        public int GetRowsCount()
+        {
+            string query = $"SELECT COUNT({String.Join(',', FindPrimaryKeys())}) FROM [{Name}]";
+            using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return int.Parse(reader[0].ToString());
+                    else
+                        return 0;
                 }
             }
         }

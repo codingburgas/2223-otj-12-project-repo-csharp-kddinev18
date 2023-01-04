@@ -194,5 +194,17 @@ namespace LocalServerLogic
             return int.Parse(_databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName).Rows[0]["UserId"].ToString());
         }
+
+        public string GetUsers(int pagingSize, int amount)
+        {
+            return Table.ConvertDataTabletoString(_databaseInitialiser.Database.Tables
+                .Where(table => table.Name == "Users").First().Select("", "", "", pagingSize, amount));
+        }
+
+        public int GetUsersCount()
+        {
+            return _databaseInitialiser.Database.Tables
+                .Where(table => table.Name == "Users").First().GetRowsCount();
+        }
     }
 }
