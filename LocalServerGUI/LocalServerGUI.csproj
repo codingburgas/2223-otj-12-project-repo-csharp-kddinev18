@@ -20,4 +20,13 @@
     <Resource Include="Assets\Images\example-8.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="View\Code Behind\MainWindow\" />
+    <Folder Include="View\XAML\MainWindow\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LocalServerLogic\LocalServerBusinessLogic.csproj" />
+  </ItemGroup>
+
 </Project>

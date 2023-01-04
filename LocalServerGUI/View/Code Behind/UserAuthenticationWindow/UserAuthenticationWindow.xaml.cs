@@ -1,5 +1,7 @@
-﻿using LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages;
+﻿using LocalServerBusinessLogic;
+using LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages;
+using LocalServerLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,25 +26,28 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
     {
         public LogInPage LogInPage { get; set; }
         public RegistrationPage RegistrationPage { get; set; }
+
+        public DatabaseIntialiser DatabaseIntialiser { get; set; }
+        public ServerLogic Server { get; set; }
+        public UserAuthenticationLogic UserAuthentication { get; set; }
         public UsersAuthenticationWindow()
         {
             try
             {
-                // Instatiates the login page
+                DatabaseIntialiser = new DatabaseIntialiser(200 * 60 * 1000);
+                Server = new ServerLogic(5400, new ClientHandlingLogic(DatabaseIntialiser));
+                Server.ServerSetUp(200 * 60 * 1000);
+                UserAuthentication = new UserAuthenticationLogic(DatabaseIntialiser);
+
                 LogInPage = new LogInPage(this);
-                // Instatiates the register page
                 RegistrationPage = new RegistrationPage(this);
 
                 InitializeComponent();
-                // Show the login form
                 ShowPage(LogInPage);
             }
-            // If there are any exception don't just close the window, show a message box first
-            catch (Exception)
+            catch (Exception ex) 
             {
-                // Shows a message box
-                MessageBox.Show("The server is currently down. Please excuse us.", "Connection error");
-                // Closes the application
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 Application.Current.Shutdown();
             }
         }

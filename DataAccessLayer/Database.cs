@@ -154,8 +154,7 @@ namespace DataAccessLayer
                     {
                         foreach (Tuple<string, object> primaryKey in primaryKeys)
                         {
-                            primaryKey.Item2 = "multiple";
-                            table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(primaryKey);
+                            table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
                         }
                     }
                     else if (primaryKeys.Count == 1)

@@ -1,4 +1,6 @@
-﻿using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
+﻿using LocalServerGUI.Models;
+using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
+using LocalServerLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,18 +23,10 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
     /// </summary>
     public partial class LogInPage : Page
     {
-        private UsersAuthenticationWindow _userAuthentication;
-        public LogInPage(UsersAuthenticationWindow userAuthentication)
+        private UsersAuthenticationWindow _userAuthenticationWindow;
+        public LogInPage(UsersAuthenticationWindow userAuthenticationWindow)
         {
-            _userAuthentication = userAuthentication;
-            // Logs with user credentials txt file
-            // UserAuthentocationLogic.LogInWithCookies();
-            // If CurrentUserId is nut null open MainWindow
-            /*if (CurrentUserInformation.CurrentUserId is not null)
-            {
-                // Open main window
-                _userAuthentication.ShowMainWindow();
-            }*/
+            _userAuthenticationWindow = userAuthenticationWindow;
             InitializeComponent();
         }
 
@@ -40,12 +34,12 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         private void OpenRegistrationFormButton_Click(object sender, RoutedEventArgs e)
         {
             // Shows RegistrationPage
-            _userAuthentication.ShowPage(_userAuthentication.RegistrationPage);
+            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.RegistrationPage);
         }
         private void LogInButton_Click(object sender, RoutedEventArgs e)
         {
             // Log in and sets CurrentUserId to the logged user id
-            // UserAuthentocationLogic.LogIn(_userAuthentication, UserName.TextBox.Text, PasswordTextBox.Password, RememberMeCheckBox.IsChecked == true ? true : false);
+            CurrentUserInformation.UserId = _userAuthenticationWindow.UserAuthentication.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
         }
     }
 }

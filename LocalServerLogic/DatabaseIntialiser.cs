@@ -97,10 +97,10 @@ namespace LocalServerBusinessLogic
                 Column email = new Column("Email", "nvarchar(128)", userTables);
                 email.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
-                Column password = new Column("Password", "nvarchar(128)", userTables);
+                Column password = new Column("Password", "nvarchar(256)", userTables);
                 password.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
-                Column salt = new Column("Salt", "nvarchar(16)", userTables);
+                Column salt = new Column("Salt", "nvarchar(32)", userTables);
                 salt.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 Column roleId = new Column("RoleId", "int", userTables);

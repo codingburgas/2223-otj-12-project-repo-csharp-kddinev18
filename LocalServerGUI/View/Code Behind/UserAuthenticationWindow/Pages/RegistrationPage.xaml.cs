@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocalServerGUI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,22 +21,22 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages
     /// </summary>
     public partial class RegistrationPage : Page
     {
-        private UsersAuthenticationWindow _userAuthentication;
-        public RegistrationPage(UsersAuthenticationWindow userAuthentication)
+        private UsersAuthenticationWindow _userAuthenticationWindow;
+        public RegistrationPage(UsersAuthenticationWindow userAuthenticationWindow)
         {
-            _userAuthentication = userAuthentication;
+            _userAuthenticationWindow = userAuthenticationWindow;
             InitializeComponent();
         }
 
         private void OpenLogInFormButton_Click(object sender, RoutedEventArgs e)
         {
             // Show LogInPage
-            _userAuthentication.ShowPage(_userAuthentication.LogInPage);
+            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.LogInPage);
         }
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             // Register and set the CurrentUserId
-            // UserAuthentocationLogic.Register(_userAuthentication, UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
+            CurrentUserInformation.UserId = _userAuthenticationWindow.UserAuthentication.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
         }
     }
 }
