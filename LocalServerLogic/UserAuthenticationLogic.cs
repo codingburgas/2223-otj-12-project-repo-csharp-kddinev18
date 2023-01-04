@@ -156,5 +156,25 @@ namespace LocalServerLogic
 
             return int.Parse(dataTable.Rows[0]["UserId"].ToString());
         }
+
+        public void RegisterMember(string userName, string email, string password, string roleName)
+        {
+            string roleId = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Select("Name", "=", roleName).Rows[0]["UserId"].ToString();
+            // Checks if the email is in corrent format
+            CheckUsername(userName);
+            // Checks if the email is in corrent format
+            CheckEmail(email);
+            // Checks if the password is in corrent format
+            CheckPassword(password);
+            // Gets the salt
+            string salt = GetSalt(userName);
+            // Hashes the password combinded with the salt
+            string hashPassword = Hash(password + salt);
+
+            _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Insert(userName, email, hashPassword, salt, roleId);
+            _databaseInitialiser.Database.SaveDatabaseData();
+        }
     }
 }
