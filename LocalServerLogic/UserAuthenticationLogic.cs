@@ -176,5 +176,23 @@ namespace LocalServerLogic
                 .First().Insert(userName, email, hashPassword, salt, roleId);
             _databaseInitialiser.Database.SaveDatabaseData();
         }
+
+        public int LogIn(string userName, string password)
+        {
+            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Select("Username", "=", userName);
+            if (dataTable.Rows.Count == 0)
+            {
+                throw new Exception("Wrong credentials");
+            }
+            string hashPassword = Hash(password + dataTable.Rows[0]["UserId"]);
+            if(hashPassword == dataTable.Rows[0]["Password"])
+            {
+                throw new Exception("Wrong credentials");
+            }
+
+            return int.Parse(_databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Select("UserName", "=", userName).Rows[0]["UserId"].ToString());
+        }
     }
 }
