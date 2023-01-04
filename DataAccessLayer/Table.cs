@@ -35,11 +35,7 @@ namespace DataAccessLayer
         }
         public void Create()
         {
-            string columns = String.Empty;
-            foreach (Column column in Columns)
-            {
-                columns += column.ToString();
-            }
+            string columns = String.Join(' ', Columns.Select(column => column.ToString()));
             string query = $"CREATE TABLE [{Name}] \n(\n{columns}\n PRIMARY KEY ({String.Join(',', FindPrimaryKeys().Select(column => column.Name))})\n);";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
@@ -56,18 +52,15 @@ namespace DataAccessLayer
             }
             Database.Tables.Remove(this);
         }
-        public DataTable Select(string columnName = "", string expression = "", string value = "")
+        public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int amount = 0)
         {
             string query = String.Empty;
-            string columns = String.Empty;
-            foreach (Column column in Columns)
-            {
-                columns += column.Name + ',';
-            }
-            columns = columns.Substring(0, columns.Length - 1);
+            string paging = pagingSize != 0 && amount != 0 ? $"ORDER BY [{String.Join(", ", FindPrimaryKeys())}] OFFSET ({pagingSize}) ROWS FETCH NEXT ({amount}) ROWS ONLY" : "";
+            string columns = String.Join(", ", Columns.Select(column => $"[{column.Name}]"));
+
             if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
             {
-                query = $"SELECT {columns} FROM {Name};";
+                query = $"SELECT {columns} FROM [{Name}] {paging};";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -83,7 +76,7 @@ namespace DataAccessLayer
             if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
                 throw new Exception($"The operation {expression} is not supported");
 
-            query = $"SELECT {columns} FROM {Name} WHERE {columnName} {expression} @Value;";
+            query = $"SELECT {columns} FROM [{Name}] WHERE [{columnName}] {expression} @Value {paging}";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 int integerContainer = 0;
@@ -117,7 +110,7 @@ namespace DataAccessLayer
             string query = String.Empty;
             if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
             {
-                query = $"DELETE FROM {Name};";
+                query = $"DELETE FROM [{Name}];";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
                 {
                     command.ExecuteNonQuery();
@@ -128,14 +121,14 @@ namespace DataAccessLayer
             if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
                 throw new Exception($"The operation {expression} is not supported");
 
-            query = $"DELETE FROM {Name} WHERE {columnName} {expression} @Value;";
+            query = $"DELETE FROM [{Name}] WHERE [{columnName}] {expression} @Value;";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 int integerContainer = 0;
                 float floatContainer = 0;
                 if (isTrusted)
                 {
-                    query = $"DELETE FROM {Name} WHERE {columnName} {expression} {value};";
+                    query = $"DELETE FROM [{Name}] WHERE [{columnName}] {expression} {value};";
                 }
                 else
                 {
@@ -276,7 +269,7 @@ namespace DataAccessLayer
             List<Column> primaryKeys = new List<Column>();
             foreach (Column column in Columns)
             {
-                if(column.Constraints.Select(constraint=>constraint.Item1).Contains("PRIMARY KEY"))
+                if (column.Constraints.Select(constraint => constraint.Item1).Contains("PRIMARY KEY"))
                 {
                     primaryKeys.Add(column);
                 }
