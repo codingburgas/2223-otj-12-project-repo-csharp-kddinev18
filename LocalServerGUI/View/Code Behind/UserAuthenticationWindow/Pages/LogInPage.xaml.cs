@@ -39,7 +39,7 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         private void LogInButton_Click(object sender, RoutedEventArgs e)
         {
             // Log in and sets CurrentUserId to the logged user id
-            CurrentUserInformation.UserId = _userAuthenticationWindow.UserAuthentication.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
+            CurrentUserInformation.UserId = UserAuthenticationLogic.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
         }
     }
 }

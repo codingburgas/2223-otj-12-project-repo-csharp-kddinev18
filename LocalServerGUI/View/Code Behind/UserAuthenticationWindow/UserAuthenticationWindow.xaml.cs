@@ -1,5 +1,6 @@
 ﻿using LocalServerBusinessLogic;
 using LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages;
+using LocalServerGUI.View.Code_Behind.MainWindow;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages;
 using LocalServerLogic;
 using System;
@@ -27,22 +28,18 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
         public LogInPage LogInPage { get; set; }
         public RegistrationPage RegistrationPage { get; set; }
 
-        public DatabaseIntialiser DatabaseIntialiser { get; set; }
         public ServerLogic Server { get; set; }
-        public UserAuthenticationLogic UserAuthentication { get; set; }
         public UsersAuthenticationWindow()
         {
             try
             {
-                DatabaseIntialiser = new DatabaseIntialiser(200 * 60 * 1000);
-                Server = new ServerLogic(5400, new ClientHandlingLogic(DatabaseIntialiser));
+                InitializeComponent();
+                Server = new ServerLogic(5400);
                 Server.ServerSetUp(200 * 60 * 1000);
-                UserAuthentication = new UserAuthenticationLogic(DatabaseIntialiser);
 
                 LogInPage = new LogInPage(this);
                 RegistrationPage = new RegistrationPage(this);
 
-                InitializeComponent();
                 ShowPage(LogInPage);
             }
             catch (Exception ex) 
@@ -51,6 +48,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
                 Application.Current.Shutdown();
             }
         }
+
         public void ShowPage(Page page)
         {
             // Change the content of the form with the specific page
@@ -59,9 +57,9 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
         public void ShowMainWindow()
         {
             // Instantiates a new window
-            
+            LocalServerMainWindow main = new LocalServerMainWindow(Server);
             // Show the new window
-
+            main.Show();
             // Close this window
             this.Close();
         }
@@ -75,6 +73,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             // Shutdown the application
+            Server.ServerShutDown();
             Application.Current.Shutdown();
         }
     }

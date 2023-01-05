@@ -9,44 +9,48 @@ using System.Threading.Tasks;
 
 namespace LocalServerBusinessLogic
 {
-    public class UserModifierLogic
+    public static class UserModifierLogic
     {
-        private DatabaseInitialiser _databaseIntialiser;
-        public UserModifierLogic(DatabaseInitialiser databaseIntialiser)
-        {
-            _databaseIntialiser = databaseIntialiser;
-        }
+        public static DatabaseInitialiser DatabaseInitialiser { get; set; }
 
-        public UserInformation GetCurrentUserInformation(int userId)
+        public static UserInformation GetCurrentUserInformation(int userId)
         {
-            DataRow dataRow = _databaseIntialiser.Database.Tables.Where(table => table.Name == "Users")
+            DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserId", "=", userId.ToString()).Rows[0];
             return new UserInformation()
             {
+                UserId = userId,
                 UserName = dataRow["UserName"].ToString(),
-                Email = dataRow["Email"].ToString()
+                Email = dataRow["Email"].ToString(),
+                Role = DatabaseInitialiser.Database.Tables
+                .Where(table => table.Name == "Roles").First()
+                .Select("RoleId", "=", dataRow["RoleId"].ToString()).Rows[0]["Name"].ToString()
             };
         }
 
-        public List<UserInformation> GetUsers(int pagingSize, int amount)
+        public static List<UserInformation> GetUsersInformation(int pagingSize, int amount)
         {
-            DataTable dataTable = _databaseIntialiser.Database.Tables
+            DataTable dataTable = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Users").First().Select("", "", "", pagingSize, amount);
             List<UserInformation> users = new List<UserInformation>();
             foreach (DataRow data in dataTable.Rows)
             {
                 users.Add(new UserInformation()
                 {
+                    UserId = int.Parse(data["UserId"].ToString()),
                     Email = data["Email"].ToString(),
-                    UserName = data["UserName"].ToString()
+                    UserName = data["UserName"].ToString(),
+                    Role = DatabaseInitialiser.Database.Tables
+                    .Where(table => table.Name == "Roles").First()
+                    .Select("RoleId", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
                 });
             }
             return users;
         }
 
-        public int GetUsersCount()
+        public static int GetUsersCount()
         {
-            return _databaseIntialiser.Database.Tables
+            return DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Users").First().GetRowsCount();
         }
     }

@@ -17,15 +17,11 @@ using LocalServerModels;
 
 namespace LocalServerLogic
 {
-    public class UserAuthenticationLogic
+    public static class UserAuthenticationLogic
     {
-        private DatabaseInitialiser _databaseInitialiser;
-        public UserAuthenticationLogic(DatabaseInitialiser databaseIntialiser)
-        {
-            _databaseInitialiser = databaseIntialiser;
-        }
+        public static DatabaseInitialiser DatabaseInitialiser { get; set; }
         // Retuns the hashed data using the SHA256 algorithm
-        private string Hash(string data)
+        private static string Hash(string data)
         {
             // Conver the output to a string and return it
             return BitConverter.ToString
@@ -43,7 +39,7 @@ namespace LocalServerLogic
                 .Replace("-", "");
         }
         // Generates a random sequence of characters and numbers
-        private string GetSalt(string userName)
+        private static string GetSalt(string userName)
         {
             StringBuilder salt = new StringBuilder();
             Random random = new Random();
@@ -67,7 +63,7 @@ namespace LocalServerLogic
         }
 
         // Checks if the email is on corrent format
-        private bool CheckEmail(string email)
+        private static bool CheckEmail(string email)
         {
             // Check if the email does not constains '@'
             if (email.Contains('@') == false)
@@ -79,7 +75,7 @@ namespace LocalServerLogic
         }
 
         // Checks if the password is on corrent format
-        private bool CheckPassword(string pass)
+        private static bool CheckPassword(string pass)
         {
             // Checks if the password is between 10 and 32 characters long
             if (pass.Length <= 10 || pass.Length > 32)
@@ -108,7 +104,7 @@ namespace LocalServerLogic
             }
             throw new ArgumentException("Password must contain at least 1 special character");
         }
-        private bool CheckUsername(string userName)
+        private static bool CheckUsername(string userName)
         {
             // Checks if the userName is between 6 and 64 characters long
             if (userName.Length <= 8 || userName.Length > 64)
@@ -121,18 +117,18 @@ namespace LocalServerLogic
 
             return true;
         }
-        public void AddAdminRole()
+        public static void AddAdminRole()
         {
-            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+            DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
                 .First().Select("Name", "=", "Admin");
             if(dataTable.Rows.Count == 0)
             {
-                _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
-                _databaseInitialiser.Database.SaveDatabaseData();
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
+                DatabaseInitialiser.Database.SaveDatabaseData();
             }
         }
 
-        public int Register(string userName, string email, string password)
+        public static int Register(string userName, string email, string password)
         {
             // Add admin role
             AddAdminRole();
@@ -148,19 +144,19 @@ namespace LocalServerLogic
             // Hashes the password combinded with the salt
             string hashPassword = Hash(password + salt);
 
-            _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Insert(userName, email, hashPassword, salt, "1");
-            _databaseInitialiser.Database.SaveDatabaseData();
+            DatabaseInitialiser.Database.SaveDatabaseData();
 
-            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+            DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName);
 
             return int.Parse(dataTable.Rows[0]["UserId"].ToString());
         }
 
-        public void RegisterMember(string userName, string email, string password, string roleName)
+        public static void RegisterMember(string userName, string email, string password, string roleName)
         {
-            string roleId = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+            string roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
                 .First().Select("Name", "=", roleName).Rows[0]["UserId"].ToString();
             // Checks if the email is in corrent format
             CheckUsername(userName);
@@ -173,14 +169,14 @@ namespace LocalServerLogic
             // Hashes the password combinded with the salt
             string hashPassword = Hash(password + salt);
 
-            _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Insert(userName, email, hashPassword, salt, roleId);
-            _databaseInitialiser.Database.SaveDatabaseData();
+            DatabaseInitialiser.Database.SaveDatabaseData();
         }
 
-        public int LogIn(string userName, string password)
+        public static int LogIn(string userName, string password)
         {
-            DataTable dataTable = _databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+            DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("Username", "=", userName);
             if (dataTable.Rows.Count == 0)
             {
@@ -192,7 +188,7 @@ namespace LocalServerLogic
                 throw new Exception("Wrong credentials");
             }
 
-            return int.Parse(_databaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+            return int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName).Rows[0]["UserId"].ToString());
         }
     }

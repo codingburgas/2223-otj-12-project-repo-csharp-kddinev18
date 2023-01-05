@@ -1,4 +1,5 @@
 ﻿using LocalServerGUI.Models;
+using LocalServerLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             // Register and set the CurrentUserId
-            CurrentUserInformation.UserId = _userAuthenticationWindow.UserAuthentication.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
+            CurrentUserInformation.UserId = UserAuthenticationLogic.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
         }
     }
 }

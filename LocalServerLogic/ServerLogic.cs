@@ -26,17 +26,19 @@ namespace LocalServerLogic
         private static int _success = 0;
         private static int _error = 1;
 
-        private static ClientHandlingLogic _clientHandlingLogic;
-
-        public ServerLogic(int port, ClientHandlingLogic clientHandlingLogic)
+        public ServerLogic(int port)
         {
             _port = port;
-            _clientHandlingLogic = clientHandlingLogic;
         }
         public void ServerSetUp(long deleteTimer)
         {
             try
             {
+                DatabaseInitialiser databaseInitialiser = new DatabaseInitialiser(deleteTimer);
+                ClientHandlingLogic.DatabaseInitialiser = databaseInitialiser;
+                UserAuthenticationLogic.DatabaseInitialiser = databaseInitialiser;
+                UserModifierLogic.DatabaseInitialiser = databaseInitialiser;
+
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
                 _tcpListener.Start();
@@ -54,6 +56,10 @@ namespace LocalServerLogic
         {
             // Stops the server
             _tcpListener.Stop();
+            foreach (TcpClient client in _clients)
+            {
+                DisconnectClient(client);
+            }
             _tcpListener = null;
         }
 
@@ -65,9 +71,12 @@ namespace LocalServerLogic
             try
             {
                 // Connect the client
-                client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
-                accepted = _clientHandlingLogic.AddClients(client);
+                if (_tcpListener is not null)
+                {
+                    client = _tcpListener.EndAcceptTcpClient(asyncResult);
+                    Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
+                    accepted = ClientHandlingLogic.AddClients(client);
+                }
 
             }
             catch (Exception ex)
@@ -81,12 +90,13 @@ namespace LocalServerLogic
                 _clients.Add(client);
                 // Begin recieving bytes from the client
                 client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
             }
-            else
+            else if (_tcpListener is not null)
             {
                 DisconnectClient(client);
+                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
             }
-            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
         }
 
         public static void ReciveClientInput(IAsyncResult asyncResult)
@@ -104,7 +114,7 @@ namespace LocalServerLogic
                     return;
                 }
                 // Get the data
-                _clientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), _clients);
+                ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), _clients);
             }
             catch (Exception ex)
             {
@@ -136,7 +146,7 @@ namespace LocalServerLogic
 
         public void AprooveClient(string ipAddress)
         {
-            _clientHandlingLogic.AprooveClient(ipAddress);
+            ClientHandlingLogic.AprooveClient(ipAddress);
         }
     }
 }
