@@ -1,0 +1,94 @@
+﻿<Window x:Class="LocalServerGUI.View.Code_Behind.MainWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Height="720" Width="1080" WindowStartupLocation="CenterOwner" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+
+    <Border Background="#eff2f7" CornerRadius="30" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Left Menu-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Menu Icon-->
+                <Button Margin="15" HorizontalAlignment="Left" VerticalAlignment ="Top" Style="{StaticResource MaterialDesignFloatingActionButton}" Width="30" Height="30" Background="{x:Null}" BorderBrush="#4E6BBF" ToolTip="Close" x:Name="ExitButton" Click="ExitButton_Click">
+                    <materialDesign:PackIcon Kind="Close" Foreground="#4D49BF" Width="20" Height="20" />
+                </Button>
+
+                <Border Grid.Row="1" Background="#623ed0" CornerRadius="0 50 0 30">
+                    <DockPanel>
+                        <!--Menu Logo-->
+
+                        <Border x:Name="IconColor" Width="80" Height="80" Padding="3" Background="Black" CornerRadius="100" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="50 -30 0 0">
+                            <TextBlock x:Name="IconText" Text="M" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="30"/>
+                        </Border>
+                        <!--Menu Titles-->
+                        <TextBlock x:Name="Username" Text = "username" Foreground="White" FontSize="32" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center" Margin="5 25 0 10"/>
+                        <TextBlock x:Name="Role" Text = "role" Foreground="White" FontSize="14" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center"/>
+                        <!--Menu Separator-->
+                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#7e5fdc"/>
+                        <!--Menu Buttons-->
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="MembersButton" Style="{StaticResource menuButton}" Click="MembersButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Members"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="ProjectsButton" Style="{StaticResource menuButton}" Click="ProjectsButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Memory" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Projects"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="TeamsButton" Style="{StaticResource menuButton}" Click="TeamsButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Ballot" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Teams"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="VacationsButton" Style="{StaticResource menuButton}" Click="VacationsButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="UmbrellaBeach" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Vacations"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="15 0 0 20">
+                            <Button x:Name="LogOutButton" Style="{StaticResource menuButton}" Click="LogOutButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Log Out"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </Grid>
+
+            <!--Main Section-->
+            <Frame x:Name="MainWindowFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Margin="30 20 20 20"/>
+
+
+        </Grid>
+    </Border>
+</Window>
