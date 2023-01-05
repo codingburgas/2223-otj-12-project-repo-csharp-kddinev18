@@ -55,7 +55,8 @@ namespace LocalServerLogic
         public void ServerShutDown()
         {
             // Stops the server
-            _tcpListener.Stop();
+            if(_tcpListener != null)
+                _tcpListener.Stop();
             foreach (TcpClient client in _clients)
             {
                 DisconnectClient(client);

@@ -177,7 +177,7 @@ namespace LocalServerLogic
         public static int LogIn(string userName, string password)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Select("Username", "=", userName);
+                .First().Select("UserName", "=", userName);
             if (dataTable.Rows.Count == 0)
             {
                 throw new Exception("Wrong credentials");
@@ -190,6 +190,15 @@ namespace LocalServerLogic
 
             return int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName).Rows[0]["UserId"].ToString());
+        }
+
+        public static bool IsAdmin(int userId)
+        {
+            DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Select("UserId", "=", userId.ToString());
+
+            return DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Select("RoleId", "=", dataTable.Rows[0]["RoleId"].ToString()).Rows[0]["Name"].ToString() == "Admin";
         }
     }
 }

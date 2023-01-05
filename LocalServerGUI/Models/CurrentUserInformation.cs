@@ -9,5 +9,6 @@ namespace LocalServerGUI.Models
     public static class CurrentUserInformation
     {
         public static int UserId { get; set; }
+        public static bool IsAdmin { get; set; }
     }
 }

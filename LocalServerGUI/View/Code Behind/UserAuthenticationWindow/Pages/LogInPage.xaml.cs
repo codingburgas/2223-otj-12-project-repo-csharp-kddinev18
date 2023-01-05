@@ -40,6 +40,8 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         {
             // Log in and sets CurrentUserId to the logged user id
             CurrentUserInformation.UserId = UserAuthenticationLogic.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
+            CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
+            _userAuthenticationWindow.ShowMainWindow();
         }
     }
 }

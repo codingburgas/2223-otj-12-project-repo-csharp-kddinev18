@@ -27,7 +27,7 @@
                             <TextBlock x:Name="IconText" Text="M" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="30"/>
                         </Border>
                         <!--Menu Titles-->
-                        <TextBlock x:Name="Username" Text = "username" Foreground="White" FontSize="32" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center" Margin="5 25 0 10"/>
+                        <TextBlock x:Name="Username" Text = "username" Foreground="White" FontSize="25" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center" Margin="5 25 0 10"/>
                         <TextBlock x:Name="Role" Text = "role" Foreground="White" FontSize="14" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center"/>
                         <!--Menu Separator-->
                         <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#7e5fdc"/>
