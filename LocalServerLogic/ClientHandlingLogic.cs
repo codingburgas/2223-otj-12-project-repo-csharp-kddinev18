@@ -15,8 +15,8 @@ namespace LocalServerBusinessLogic
 {
     public class ClientHandlingLogic
     {
-        private DatabaseIntialiser _databaseIntialiser;
-        public ClientHandlingLogic(DatabaseIntialiser databaseIntialiser)
+        private DatabaseInitialiser _databaseIntialiser;
+        public ClientHandlingLogic(DatabaseInitialiser databaseIntialiser)
         {
             databaseIntialiser = _databaseIntialiser;
         }

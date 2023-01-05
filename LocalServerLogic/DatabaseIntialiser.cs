@@ -9,12 +9,12 @@ using System.Timers;
 
 namespace LocalServerBusinessLogic
 {
-    public class DatabaseIntialiser
+    public class DatabaseInitialiser
     {
         public Database Database { get; set; }
         private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurity;Integrated Security=True;MultipleActiveResultSets=true";
         private long _deleteTimer;
-        public DatabaseIntialiser(long deleteTimer)
+        public DatabaseInitialiser(long deleteTimer)
         {
             _deleteTimer = deleteTimer;
             Database = new Database(_connectionString);
