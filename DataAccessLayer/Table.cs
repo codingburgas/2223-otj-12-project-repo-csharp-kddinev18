@@ -53,10 +53,10 @@ namespace DataAccessLayer
             }
             Database.Tables.Remove(this);
         }
-        public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int amount = 0)
+        public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int skipAmount = 0)
         {
             string query = String.Empty;
-            string paging = pagingSize != 0 && amount != 0 ? $"ORDER BY [{String.Join(", ", FindPrimaryKeys())}] OFFSET ({pagingSize}) ROWS FETCH NEXT ({amount}) ROWS ONLY" : "";
+            string paging = pagingSize != 0 && skipAmount != 0 ? $"ORDER BY [{String.Join(", ", FindPrimaryKeys())}] OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
             string columns = String.Join(", ", Columns.Select(column => $"[{column.Name}]"));
 
             if (columnName == String.Empty && expression == String.Empty && value == String.Empty)

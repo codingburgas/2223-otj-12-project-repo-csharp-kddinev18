@@ -70,48 +70,53 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
 
             // Get the users from the database
-            UserInformation userInformation = UserModifierLogic.GetUsersInformation(_pagingSize, _sikpAmount);
+            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(_pagingSize, _sikpAmount);
             _usersInformation = new ObservableCollection<UserBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in _usersInformation)
+            foreach (UserInformation userInformation in usersInformation)
             {
-                // Assign the bachground color for the icon
-                userInformation.BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255)));
-                // Assign the inital of the icon
-                userInformation.Initials = userInformation.UserName.Substring(0, 1);
-                // If the user is admin enable the edit button, otherwise disable it
-                userInformation.EditButton = CurrentUserInformation.IsAdmin;
-                // If the user is admin enable the remove button, otherwise disable it
-                userInformation.RemoveButton = CurrentUserInformation.IsAdmin;
+                _usersInformation.Add(new UserBindingInformation(userInformation)
+                {
+                    // Assign the bachground color for the icon
+                    BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
+                    // Assign the inital of the icon
+                    Initials = userInformation.UserName.Substring(0, 1),
+                    // If the user is admin enable the edit button, otherwise disable it
+                    EditButton = CurrentUserInformation.IsAdmin,
+                    // If the user is admin enable the remove button, otherwise disable it
+                    RemoveButton = CurrentUserInformation.IsAdmin
+                });
             }
             // Assign the datagrid the collection
-            MemberDataGrid.ItemsSource = _usersInformation;
+            UsersDataGrid.ItemsSource = _usersInformation;
         }
         public void UpdateDataGrid(string filter)
         {
-            // Set the count to 1
-            _userCount = 1;
+            // Canges the count of the teams based on the argument i {-1;0;1}
+            _userCount += 1;
             // Devide the vacations count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
 
             // Get the users from the database
-            UserInformation user = UserLogic.GetUserByName(filter);
-            _usersInformation = new ObservableCollection<UserInformation>();
-            _usersInformation.Add(user);
+            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(filter, _pagingSize, _sikpAmount);
+            _usersInformation = new ObservableCollection<UserBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in _usersInformation)
+            foreach (UserInformation userInformation in usersInformation)
             {
-                // Assign the bachground color for the icon
-                userInformation.BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255)));
-                // Assign the inital of the icon
-                userInformation.Initials = userInformation.UserName.Substring(0, 1);
-                // If the user is admin enable the edit button, otherwise disable it
-                userInformation.EditButton = CurrentUserInformation.IsAdmin;
-                // If the user is admin enable the remove button, otherwise disable it
-                userInformation.RemoveButton = CurrentUserInformation.IsAdmin;
+                _usersInformation.Add(new UserBindingInformation(userInformation)
+                {
+                    // Assign the bachground color for the icon
+                    BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
+                    // Assign the inital of the icon
+                    Initials = userInformation.UserName.Substring(0, 1),
+                    // If the user is admin enable the edit button, otherwise disable it
+                    EditButton = CurrentUserInformation.IsAdmin,
+                    // If the user is admin enable the remove button, otherwise disable it
+                    RemoveButton = CurrentUserInformation.IsAdmin
+                });
             }
             // Assign the datagrid the collection
-            MemberDataGrid.ItemsSource = _usersInformation;
+            UsersDataGrid.ItemsSource = _usersInformation;
         }
         // Event handlers
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -165,21 +170,21 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the AddMembersButton is clicked
         private void AddMembersButton_Click(object sender, RoutedEventArgs e)
         {
-            // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
+            /*// If the AddMemberWindow isn't opened, oped it, otherwise do nothing
             if (AddMemberWindow.isOpened == false)
             {
                 AddMemberWindow addMemberWindow = new AddMemberWindow(this);
                 addMemberWindow.Show();
-            }
+            }*/
         }
 
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserInformation dataRow = (UserInformation)MemberDataGrid.SelectedItem;
+            UserInformation dataRow = (UserInformation)UsersDataGrid.SelectedItem;
             // Edit a uesr
-            UserLogic.EditUser(dataRow.UserId, dataRow.Email, dataRow.RoleIdentificator);
+            UserModifierLogic.EditUser(dataRow.UserId, dataRow.UserName, dataRow.Email, dataRow.Role);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -189,13 +194,13 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the RemoveButton is clicked
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Get the row the user clickd on
+            /*// Get the row the user clickd on
             UserInformation dataRow = (UserInformation)MemberDataGrid.SelectedItem;
             // Remove the user
             UserLogic.RemoveUser(dataRow.UserId);
 
             // Update the grid
-            UpdateDataGrid(-1);
+            UpdateDataGrid(-1);*/
         }
     }
 }

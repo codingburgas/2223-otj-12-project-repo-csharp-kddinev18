@@ -28,10 +28,30 @@ namespace LocalServerBusinessLogic
             };
         }
 
-        public static List<UserInformation> GetUsersInformation(int pagingSize, int amount)
+        public static List<UserInformation> GetUsersInformation(int pagingSize, int skipAmount)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables
-                .Where(table => table.Name == "Users").First().Select("", "", "", pagingSize, amount);
+                .Where(table => table.Name == "Users").First().Select("", "", "", pagingSize, skipAmount);
+            List<UserInformation> users = new List<UserInformation>();
+            foreach (DataRow data in dataTable.Rows)
+            {
+                users.Add(new UserInformation()
+                {
+                    UserId = int.Parse(data["UserId"].ToString()),
+                    Email = data["Email"].ToString(),
+                    UserName = data["UserName"].ToString(),
+                    Role = DatabaseInitialiser.Database.Tables
+                    .Where(table => table.Name == "Roles").First()
+                    .Select("RoleId", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
+                });
+            }
+            return users;
+        }
+
+        public static List<UserInformation> GetUsersInformation(string userName,int pagingSize, int skipAmount)
+        {
+            DataTable dataTable = DatabaseInitialiser.Database.Tables
+                .Where(table => table.Name == "Users").First().Select("UserName", "=", userName, pagingSize, skipAmount);
             List<UserInformation> users = new List<UserInformation>();
             foreach (DataRow data in dataTable.Rows)
             {
@@ -52,6 +72,18 @@ namespace LocalServerBusinessLogic
         {
             return DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Users").First().GetRowsCount();
+        }
+
+        public static void EditUser(int userId,string userName, string email, string role)
+        {
+            Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First();
+            table.Update("UserName", userName, "UserId", "=", userId.ToString());
+            table.Update("Email", email, "UserId", "=", userId.ToString());
+
+            int rolrId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+                .Select("Name", "=", role).Rows[0]["Name"].ToString());
+
+            table.Update("RoleId", rolrId.ToString(), "UserId", "=", userId.ToString());
         }
     }
 }
