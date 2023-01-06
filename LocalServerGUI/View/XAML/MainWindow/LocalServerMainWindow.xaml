@@ -34,10 +34,10 @@
                         <!--Menu Buttons-->
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button x:Name="MembersButton" Style="{StaticResource menuButton}" Click="MembersButton_Click">
+                            <Button x:Name="UsersButton" Style="{StaticResource menuButton}" Click="UsersButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Members"/>
+                                    <TextBlock Text="Users"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -88,8 +88,6 @@
                 </Button>
                 <Frame x:Name="MainWindowFrame" NavigationUIVisibility="Hidden" Margin="30 20 20 20"/>
             </StackPanel>
-
-
         </Grid>
     </Border>
 </Window>

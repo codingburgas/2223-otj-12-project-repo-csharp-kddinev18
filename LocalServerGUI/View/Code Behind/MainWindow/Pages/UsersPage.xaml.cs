@@ -1,5 +1,6 @@
 ﻿using LocalServerBusinessLogic;
 using LocalServerGUI.Models;
+using LocalServerGUI.View.Code_Behind.AddUser;
 using LocalServerModels;
 using System;
 using System.Collections.Generic;
@@ -84,7 +85,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // If the user is admin enable the edit button, otherwise disable it
                     EditButton = CurrentUserInformation.IsAdmin,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin
+                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
                 });
             }
             // Assign the datagrid the collection
@@ -112,7 +113,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // If the user is admin enable the edit button, otherwise disable it
                     EditButton = CurrentUserInformation.IsAdmin,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin
+                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
                 });
             }
             // Assign the datagrid the collection
@@ -170,19 +171,19 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the AddMembersButton is clicked
         private void AddMembersButton_Click(object sender, RoutedEventArgs e)
         {
-            /*// If the AddMemberWindow isn't opened, oped it, otherwise do nothing
-            if (AddMemberWindow.isOpened == false)
+            // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
+            if (AddUserWindow.isOpened == false)
             {
-                AddMemberWindow addMemberWindow = new AddMemberWindow(this);
+                AddUserWindow addMemberWindow = new AddUserWindow(this);
                 addMemberWindow.Show();
-            }*/
+            }
         }
 
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserInformation dataRow = (UserInformation)UsersDataGrid.SelectedItem;
+            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Edit a uesr
             UserModifierLogic.EditUser(dataRow.UserId, dataRow.UserName, dataRow.Email, dataRow.Role);
 
@@ -194,13 +195,12 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the RemoveButton is clicked
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            /*// Get the row the user clickd on
-            UserInformation dataRow = (UserInformation)MemberDataGrid.SelectedItem;
+            // Get the row the user clickd on
+            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Remove the user
-            UserLogic.RemoveUser(dataRow.UserId);
-
+            UserModifierLogic.RemoveUser(dataRow.UserId);
             // Update the grid
-            UpdateDataGrid(-1);*/
+            UpdateDataGrid(-1);
         }
     }
 }

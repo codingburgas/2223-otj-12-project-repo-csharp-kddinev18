@@ -11,13 +11,10 @@ namespace LocalServer
     {
         static void Main(string[] args)
         {
-            DatabaseIntialiser databaseIntialiser = new DatabaseIntialiser(200 * 60 * 1000);
+            DatabaseInitialiser databaseIntialiser = new DatabaseInitialiser(200 * 60 * 1000);
 
-            ClientHandlingLogic clientHandlingLogic = new ClientHandlingLogic(databaseIntialiser);
-            ServerLogic server = new ServerLogic(5400, clientHandlingLogic);
+            ServerLogic server = new ServerLogic(5400);
             server.ServerSetUp(200 * 60 * 1000);
-            UserAuthenticationLogic userAuthenticationLogic = new UserAuthenticationLogic(databaseIntialiser);
-            //int id = userAuthenticationLogic.Register("Milko12345", "Milko@abv.bg", "Password1!1!");
 
             while (Console.ReadLine() != "q")
             {

@@ -126,6 +126,10 @@ namespace LocalServerLogic
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
+            else
+            {
+                throw new Exception("If want to register yourself into the platform contact your administrator.");
+            }
         }
 
         public static int Register(string userName, string email, string password)

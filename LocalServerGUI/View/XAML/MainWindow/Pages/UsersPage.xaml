@@ -24,24 +24,21 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <!--Menu Icon-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
-            <Button Style="{StaticResource topButton}" Margin="30 10 20 35" Background="#dcdcdc" HorizontalAlignment="Right" Click="RefreshButton_Click">
-                <Icon:PackIconMaterial Kind="Refresh"/>
-            </Button>
-        </StackPanel>
-
         <!--Page Title-->
         <TextBlock Text="Members" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
         <!--Add Button-->
-        <Button Style="{StaticResource addButton}" x:Name="AddMembersButton" Click="AddMembersButton_Click" Margin="0 0 0 0" >
-            <StackPanel Orientation="Horizontal">
-                <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
-                <TextBlock Text="Add new Member"/>
-            </StackPanel>
-        </Button>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 10">
+            <Button Style="{StaticResource addButton}"  x:Name="AddMembersButton" Click="AddMembersButton_Click" Margin="0 0 0 0" >
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                    <TextBlock Text="Add new Member"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource topButton}" Margin="30 0 0 0" Background="#dcdcdc" HorizontalAlignment="Right" Click="RefreshButton_Click">
+                <Icon:PackIconMaterial Kind="Refresh"/>
+            </Button>
+        </StackPanel>
 
         <!--Separator-->
         <Separator Height="1" Grid.Row="3" Background="#dae2ea" Margin="0 -1 0 10"/>

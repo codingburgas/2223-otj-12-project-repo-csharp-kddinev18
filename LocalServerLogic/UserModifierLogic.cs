@@ -85,5 +85,11 @@ namespace LocalServerBusinessLogic
 
             table.Update("RoleId", rolrId.ToString(), "UserId", "=", userId.ToString());
         }
+
+        public static void RemoveUser(int userId)
+        {
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
+                .Delete("UserId", "=", userId.ToString()); 
+        }
     }
 }

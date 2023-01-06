@@ -33,6 +33,7 @@ namespace DataAccessLayer
         public void DiscardInsertQuery()
         {
             _insertQueryContainer = String.Empty;
+            _isDataInserted = false;
         }
         public void Create()
         {
@@ -108,7 +109,7 @@ namespace DataAccessLayer
         }
         public int GetRowsCount()
         {
-            string query = $"SELECT COUNT({String.Join(',', FindPrimaryKeys())}) FROM [{Name}]";
+            string query = $"SELECT COUNT({String.Join(',', FindPrimaryKeys().Select(column => column.Name))}) FROM [{Name}]";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 using (SqlDataReader reader = command.ExecuteReader())

@@ -1,5 +1,6 @@
 ﻿using LocalServerBusinessLogic;
 using LocalServerGUI.Models;
+using LocalServerGUI.View.Code_Behind.MainWindow.Pages;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
 using LocalServerLogic;
 using LocalServerModels;
@@ -26,6 +27,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
     {
         private bool _isMaximized = false;
         public ServerLogic Server { get; set; }
+
+        public Lazy<UsersPage> UsersPage { get; set; }
         public LocalServerMainWindow(ServerLogic server)
         {
             Server = server;
@@ -38,7 +41,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             Username.Text = userBindingInformation.UserName;
             Role.Text = userBindingInformation.Role;
             // Loading the members page intpo the memory and showing it
-            //ShowPage(MembersPage.Value);
+            UsersPage = new Lazy<UsersPage>();
+            ShowPage(UsersPage.Value);
         }
         // Shows a page
         public void ShowPage(Page page)
@@ -90,9 +94,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             }
         }
         // Invoked every time MembersButton is clicked
-        private void MembersButton_Click(object sender, RoutedEventArgs e)
+        private void UsersButton_Click(object sender, RoutedEventArgs e)
         {
-            //ShowPage(MembersPage.Value);
+            ShowPage(UsersPage.Value);
         }
 
         // Invoked every time ProjectsButton is clicked
