@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer;
+using LocalServerLogic;
 using LocalServerModels;
 using System;
 using System.Collections.Generic;
@@ -79,11 +80,18 @@ namespace LocalServerBusinessLogic
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First();
             table.Update("UserName", userName, "UserId", "=", userId.ToString());
             table.Update("Email", email, "UserId", "=", userId.ToString());
+            string roleId = String.Empty;
+            try
+            {
+                roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+                    .Select("Name", "=", role).Rows[0]["RoleId"].ToString();
+            }
+            catch (Exception)
+            {
+                roleId = UserAuthenticationLogic.AddRole(role);
+            }
 
-            int rolrId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
-                .Select("Name", "=", role).Rows[0]["Name"].ToString());
-
-            table.Update("RoleId", rolrId.ToString(), "UserId", "=", userId.ToString());
+            table.Update("RoleId", roleId.ToString(), "UserId", "=", userId.ToString());
         }
 
         public static void RemoveUser(int userId)

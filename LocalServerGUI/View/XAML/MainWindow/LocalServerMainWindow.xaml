@@ -43,10 +43,10 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button x:Name="ProjectsButton" Style="{StaticResource menuButton}" Click="ProjectsButton_Click">
+                            <Button x:Name="DevicesButton" Style="{StaticResource menuButton}" Click="DevicesButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Memory" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Projects"/>
+                                    <TextBlock Text="Devices"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>

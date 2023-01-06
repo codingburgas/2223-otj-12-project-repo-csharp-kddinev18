@@ -100,7 +100,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         }
 
         // Invoked every time ProjectsButton is clicked
-        private void ProjectsButton_Click(object sender, RoutedEventArgs e)
+        private void DevicesButton_Click(object sender, RoutedEventArgs e)
         {
             //ShowPage(ProjectsPage.Value);
         }

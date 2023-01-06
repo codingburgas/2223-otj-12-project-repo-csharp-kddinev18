@@ -131,6 +131,16 @@ namespace LocalServerLogic
                 throw new Exception("If want to register yourself into the platform contact your administrator.");
             }
         }
+        public static string AddRole(string roleName)
+        {
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Insert(roleName);
+
+            DatabaseInitialiser.Database.SaveDatabaseData();
+
+            return DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
+        }
 
         public static int Register(string userName, string email, string password)
         {
@@ -160,8 +170,16 @@ namespace LocalServerLogic
 
         public static void RegisterMember(string userName, string email, string password, string roleName)
         {
-            string roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
-                .First().Select("Name", "=", roleName).Rows[0]["UserId"].ToString();
+            string roleId = String.Empty;
+            try
+            {
+                roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                    .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
+            }
+            catch(Exception)
+            {
+                roleId = AddRole(roleName);
+            }
             // Checks if the email is in corrent format
             CheckUsername(userName);
             // Checks if the email is in corrent format
