@@ -1,4 +1,5 @@
-﻿using LocalServerModels;
+﻿using DataAccessLayer;
+using LocalServerModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace LocalServerBusinessLogic
 {
-    public static class DevicesModificationLogic
+    public static class DeviceModificationLogic
     {
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
 
-        public static List<DevicesInformation> GetDevices(int pagingSize, int skipAmount)
+        public static List<DeviceInformation> GetDevicesInformation(int pagingSize, int skipAmount)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Devices").First().Select("", "", "", pagingSize, skipAmount);
-            List<DevicesInformation> devices = new List<DevicesInformation>();
+            List<DeviceInformation> devices = new List<DeviceInformation>();
             foreach (DataRow data in dataTable.Rows)
             {
-                devices.Add(new DevicesInformation { 
+                devices.Add(new DeviceInformation { 
                     DeviceId = int.Parse(data["DeviceId"].ToString()),
                     IPv4Address = data["IPv4Address"].ToString(),
                     Name = data["Name"].ToString(),
@@ -31,14 +32,14 @@ namespace LocalServerBusinessLogic
             return devices;
         }
 
-        public static List<DevicesInformation> GetDevices(string name ,int pagingSize, int skipAmount)
+        public static List<DeviceInformation> GetDevicesInformation(string name ,int pagingSize, int skipAmount)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Devices").First().Select("Name", "=", name, pagingSize, skipAmount);
-            List<DevicesInformation> devices = new List<DevicesInformation>();
+            List<DeviceInformation> devices = new List<DeviceInformation>();
             foreach (DataRow data in dataTable.Rows)
             {
-                devices.Add(new DevicesInformation
+                devices.Add(new DeviceInformation
                 {
                     DeviceId = int.Parse(data["DeviceId"].ToString()),
                     IPv4Address = data["IPv4Address"].ToString(),
@@ -53,6 +54,20 @@ namespace LocalServerBusinessLogic
         {
             return DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Devices").First().GetRowsCount();
+        }
+
+        public static void EditDevice(int deviceId, string name, bool isAprooved)
+        {
+            Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First();
+
+            table.Update("Name", name, "DeviceId", "=", deviceId.ToString());
+            table.Update("IsAprooved", isAprooved.ToString(), "DeviceId", "=", deviceId.ToString());
+        }
+
+        public static void RemoveDevice(int deviceId)
+        {
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Delete("DeviceId", "=", deviceId.ToString());
         }
     }
 }

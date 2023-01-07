@@ -26,7 +26,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
     public partial class DevicesPage : Page
     {
         // A collection that updates both ways (form the view and code behind)
-        private ObservableCollection<UserBindingInformation> _usersInformation;
+        private ObservableCollection<DeviceBindingInformation> _deviceInformation;
         // The count of the vacations in the database
         private int _devicesCount;
         // The paging size
@@ -42,9 +42,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             InitializeComponent();
 
             // Get the count of the users without the current user
-            _devicesCount = UserModifierLogic.GetUsersCount() - 1;
+            _devicesCount = DeviceModificationLogic.GetDevicesCount();
             // Devide the teams count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
 
             // Updates the grid
             UpdateDataGrid(0);
@@ -60,58 +60,58 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid(int i)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _userCount += i;
+            _devicesCount += i;
             // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
 
             // Get the users from the database
-            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(_pagingSize, _sikpAmount);
-            _usersInformation = new ObservableCollection<UserBindingInformation>();
+            List<DeviceInformation> devicesInformation = DeviceModificationLogic.GetDevicesInformation(_pagingSize, _sikpAmount);
+            _deviceInformation = new ObservableCollection<DeviceBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in usersInformation)
+            foreach (DeviceInformation deviceInformation in devicesInformation)
             {
-                _usersInformation.Add(new UserBindingInformation(userInformation)
+                _deviceInformation.Add(new DeviceBindingInformation(deviceInformation)
                 {
                     // Assign the bachground color for the icon
                     BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
                     // Assign the inital of the icon
-                    Initials = userInformation.UserName.Substring(0, 1),
+                    Initials = deviceInformation.Name.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
                     EditButton = CurrentUserInformation.IsAdmin,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin
                 });
             }
             // Assign the datagrid the collection
-            UsersDataGrid.ItemsSource = _usersInformation;
+            DevicesDataGrid.ItemsSource = _deviceInformation;
         }
         public void UpdateDataGrid(string filter)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _userCount += 1;
+            _devicesCount += 1;
             // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
 
             // Get the users from the database
-            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(filter, _pagingSize, _sikpAmount);
-            _usersInformation = new ObservableCollection<UserBindingInformation>();
+            List<DeviceInformation> devicesInformation = DeviceModificationLogic.GetDevicesInformation(filter ,_pagingSize, _sikpAmount);
+            _deviceInformation = new ObservableCollection<DeviceBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in usersInformation)
+            foreach (DeviceInformation deviceInformation in devicesInformation)
             {
-                _usersInformation.Add(new UserBindingInformation(userInformation)
+                _deviceInformation.Add(new DeviceBindingInformation(deviceInformation)
                 {
                     // Assign the bachground color for the icon
                     BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
                     // Assign the inital of the icon
-                    Initials = userInformation.UserName.Substring(0, 1),
+                    Initials = deviceInformation.Name.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
                     EditButton = CurrentUserInformation.IsAdmin,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin
                 });
             }
             // Assign the datagrid the collection
-            UsersDataGrid.ItemsSource = _usersInformation;
+            DevicesDataGrid.ItemsSource = _deviceInformation;
         }
         // Event handlers
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -162,24 +162,14 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Update the datagrid
             UpdateDataGrid(0);
         }
-        // Invoked every time the AddMembersButton is clicked
-        private void AddMembersButton_Click(object sender, RoutedEventArgs e)
-        {
-            // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
-            if (AddUserWindow.isOpened == false)
-            {
-                AddUserWindow addMemberWindow = new AddUserWindow(this);
-                addMemberWindow.Show();
-            }
-        }
 
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
+            DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Edit a uesr
-            UserModifierLogic.EditUser(dataRow.UserId, dataRow.UserName, dataRow.Email, dataRow.Role);
+            DeviceModificationLogic.EditDevice(dataRow.DeviceId, dataRow.Name, dataRow.IsAprooved);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -190,9 +180,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
+            DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Remove the user
-            UserModifierLogic.RemoveUser(dataRow.UserId);
+            DeviceModificationLogic.RemoveDevice(dataRow.DeviceId);
             // Update the grid
             UpdateDataGrid(-1);
         }

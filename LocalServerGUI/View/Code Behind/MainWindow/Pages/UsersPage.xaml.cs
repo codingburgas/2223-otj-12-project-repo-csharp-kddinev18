@@ -47,8 +47,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                 AddMembersButton.IsEnabled = false;
             }
 
-            // Get the count of the users without the current user
-            _userCount = UserModifierLogic.GetUsersCount() - 1;
+            // Get the count of the users
+            _userCount = UserModifierLogic.GetUsersCount();
             // Devide the teams count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
 

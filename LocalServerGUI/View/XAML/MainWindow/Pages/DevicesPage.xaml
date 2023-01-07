@@ -44,7 +44,7 @@
         </Grid>
 
         <!--Members Datagrid-->
-        <DataGrid Grid.Row="5" x:Name="UsersDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="5" x:Name="DevicesDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding UserId}"/>
 

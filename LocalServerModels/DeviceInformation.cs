@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LocalServerModels
 {
-    public class DevicesInformation
+    public class DeviceInformation
     {
         public int DeviceId { get; set; }
         public string IPv4Address { get; set; }

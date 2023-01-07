@@ -38,7 +38,7 @@ namespace LocalServerLogic
                 ClientHandlingLogic.DatabaseInitialiser = databaseInitialiser;
                 UserAuthenticationLogic.DatabaseInitialiser = databaseInitialiser;
                 UserModifierLogic.DatabaseInitialiser = databaseInitialiser;
-                DevicesModificationLogic.DatabaseInitialiser = databaseInitialiser;
+                DeviceModificationLogic.DatabaseInitialiser = databaseInitialiser;
 
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server

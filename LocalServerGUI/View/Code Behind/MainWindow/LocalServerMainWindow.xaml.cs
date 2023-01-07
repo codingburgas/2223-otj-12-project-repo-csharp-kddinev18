@@ -29,6 +29,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         public ServerLogic Server { get; set; }
 
         public Lazy<UsersPage> UsersPage { get; set; }
+        public Lazy<DevicesPage> DevicesPage { get; set; }
         public LocalServerMainWindow(ServerLogic server)
         {
             Server = server;
@@ -42,6 +43,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             Role.Text = userBindingInformation.Role;
             // Loading the members page intpo the memory and showing it
             UsersPage = new Lazy<UsersPage>();
+            DevicesPage = new Lazy<DevicesPage>();
             ShowPage(UsersPage.Value);
         }
         // Shows a page
@@ -102,7 +104,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         // Invoked every time ProjectsButton is clicked
         private void DevicesButton_Click(object sender, RoutedEventArgs e)
         {
-            //ShowPage(ProjectsPage.Value);
+            ShowPage(DevicesPage.Value);
         }
 
         // Invoked every time TeamsButton is clicked
