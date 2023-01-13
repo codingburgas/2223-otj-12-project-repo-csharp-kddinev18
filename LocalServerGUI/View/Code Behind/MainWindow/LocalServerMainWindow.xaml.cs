@@ -30,6 +30,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
 
         public Lazy<UsersPage> UsersPage { get; set; }
         public Lazy<DevicesPage> DevicesPage { get; set; }
+        public Lazy<RolesPage> RolesPage { get; set; }
         public LocalServerMainWindow(ServerLogic server)
         {
             Server = server;
@@ -44,6 +45,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             // Loading the members page intpo the memory and showing it
             UsersPage = new Lazy<UsersPage>();
             DevicesPage = new Lazy<DevicesPage>();
+            RolesPage = new Lazy<RolesPage>();
             ShowPage(UsersPage.Value);
         }
         // Shows a page
@@ -110,7 +112,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         // Invoked every time TeamsButton is clicked
         private void RolesButton_Click(object sender, RoutedEventArgs e)
         {
-            //ShowPage(TeamsPage.Value);
+            ShowPage(RolesPage.Value);
         }
 
         // Invoked every time LogOutButton is clicked

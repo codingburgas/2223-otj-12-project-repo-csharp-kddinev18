@@ -26,9 +26,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
     public partial class RolesPage : Page
     {
         // A collection that updates both ways (form the view and code behind)
-        private ObservableCollection<UserBindingInformation> _usersInformation;
+        private ObservableCollection<RoleBindingInformation> _rolesInformation;
         // The count of the vacations in the database
-        private int _userCount;
+        private int _rolesCount;
         // The paging size
         private int _pagingSize = 10;
         // The number of pages
@@ -44,13 +44,13 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             if (!CurrentUserInformation.IsAdmin)
             {
                 // Disable the AddMembersButton
-                AddMembersButton.IsEnabled = false;
+                AddRolesButton.IsEnabled = false;
             }
 
             // Get the count of the users
-            _userCount = UserModifierLogic.GetUsersCount();
+            _rolesCount = RolesModificationLogic.GetRolesCount();
             // Devide the teams count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
             // Updates the grid
             UpdateDataGrid(0);
@@ -66,58 +66,58 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid(int i)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _userCount += i;
+            _rolesCount += i;
             // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
             // Get the users from the database
-            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(_pagingSize, _sikpAmount);
-            _usersInformation = new ObservableCollection<UserBindingInformation>();
+            List<RoleInformation> rolesInformation = RolesModificationLogic.GetRolesInformation(_pagingSize, _sikpAmount);
+            _rolesInformation = new ObservableCollection<RoleBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in usersInformation)
+            foreach (RoleInformation roleInformation in rolesInformation)
             {
-                _usersInformation.Add(new UserBindingInformation(userInformation)
+                _rolesInformation.Add(new RoleBindingInformation(roleInformation)
                 {
                     // Assign the bachground color for the icon
                     BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
                     // Assign the inital of the icon
-                    Initials = userInformation.UserName.Substring(0, 1),
+                    Initials = roleInformation.Name.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin,
+                    EditButton = CurrentUserInformation.IsAdmin && roleInformation.Name != "Admin",
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin && roleInformation.Name != "Admin"
                 });
             }
             // Assign the datagrid the collection
-            UsersDataGrid.ItemsSource = _usersInformation;
+            RolesDataGrid.ItemsSource = _rolesInformation;
         }
         public void UpdateDataGrid(string filter)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _userCount += 1;
+            _rolesCount += 1;
             // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
             // Get the users from the database
-            List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(filter, _pagingSize, _sikpAmount);
-            _usersInformation = new ObservableCollection<UserBindingInformation>();
+            List<RoleInformation> rolesInformation = RolesModificationLogic.GetRolesInformation(filter ,_pagingSize, _sikpAmount);
+            _rolesInformation = new ObservableCollection<RoleBindingInformation>();
             Random r = new Random();
-            foreach (UserInformation userInformation in usersInformation)
+            foreach (RoleInformation roleInformation in rolesInformation)
             {
-                _usersInformation.Add(new UserBindingInformation(userInformation)
+                _rolesInformation.Add(new RoleBindingInformation(roleInformation)
                 {
                     // Assign the bachground color for the icon
                     BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
                     // Assign the inital of the icon
-                    Initials = userInformation.UserName.Substring(0, 1),
+                    Initials = roleInformation.Name.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin,
+                    EditButton = CurrentUserInformation.IsAdmin && roleInformation.Name != "Admin",
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin && roleInformation.Name != "Admin"
                 });
             }
             // Assign the datagrid the collection
-            UsersDataGrid.ItemsSource = _usersInformation;
+            RolesDataGrid.ItemsSource = _rolesInformation;
         }
         // Event handlers
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -169,23 +169,18 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             UpdateDataGrid(0);
         }
         // Invoked every time the AddMembersButton is clicked
-        private void AddMembersButton_Click(object sender, RoutedEventArgs e)
+        private void AddRolesButton_Click(object sender, RoutedEventArgs e)
         {
-            // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
-            if (AddUserWindow.isOpened == false)
-            {
-                AddUserWindow addMemberWindow = new AddUserWindow(this);
-                addMemberWindow.Show();
-            }
+            
         }
 
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
+            RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Edit a uesr
-            UserModifierLogic.EditUser(dataRow.UserId, dataRow.UserName, dataRow.Email, dataRow.Role);
+            RolesModificationLogic.EditRole(dataRow.RoleId, dataRow.Name);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -196,9 +191,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
+            RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Remove the user
-            UserModifierLogic.RemoveUser(dataRow.UserId);
+            RolesModificationLogic.RemoveRole(dataRow.RoleId);
             // Update the grid
             UpdateDataGrid(-1);
         }

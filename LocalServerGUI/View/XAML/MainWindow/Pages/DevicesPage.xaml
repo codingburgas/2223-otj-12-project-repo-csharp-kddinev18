@@ -46,7 +46,7 @@
         <!--Members Datagrid-->
         <DataGrid Grid.Row="5" x:Name="DevicesDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding UserId}"/>
+                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding DeviceId}"/>
 
                 <DataGridTemplateColumn Header="Icon" IsReadOnly="True" Width="0.35*">
                     <DataGridTemplateColumn.CellTemplate>

@@ -53,11 +53,11 @@
         </Grid>
 
         <!--Members Datagrid-->
-        <DataGrid Grid.Row="5" x:Name="UsersDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="5" x:Name="RolesDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding UserId}"/>
+                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding RoleId}"/>
 
-                <DataGridTemplateColumn Header="Icon" IsReadOnly="True" Width="0.35*">
+                <DataGridTemplateColumn Header="Icon" IsReadOnly="True" Width="0.1*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -69,7 +69,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Role Name" IsReadOnly="False" Width="*" Binding="{Binding UserName}"/>
+                <DataGridTextColumn Header="Role Name" IsReadOnly="False" Width="*" Binding="{Binding Name}"/>
 
                 <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
