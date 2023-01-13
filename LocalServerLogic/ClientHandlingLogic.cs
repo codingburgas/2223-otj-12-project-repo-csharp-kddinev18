@@ -88,16 +88,6 @@ namespace LocalServerBusinessLogic
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
                 DatabaseInitialiser.Database.SaveDatabaseData();
 
-                string deviceId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                    .Select("IPv4Address", "=", clientIpAddress).Rows[0]["DeviceId"].ToString();
-
-                foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
-                {
-                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
-                        .Insert(item["RoleId"].ToString(), deviceId, "false", "false", "false", "false");
-                }
-                DatabaseInitialiser.Database.SaveDatabaseData();
-
                 return false;
             }
             else
@@ -114,6 +104,16 @@ namespace LocalServerBusinessLogic
         public static void AprooveClient(string ipAddress)
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("IsAprooved", "true", "IPv4Address", "=", ipAddress);
+
+            string deviceId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString();
+
+            foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
+            {
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
+                    .Insert(item["RoleId"].ToString(), deviceId, "false", "false", "false", "false");
+            }
+            DatabaseInitialiser.Database.SaveDatabaseData();
         }
     }
 }

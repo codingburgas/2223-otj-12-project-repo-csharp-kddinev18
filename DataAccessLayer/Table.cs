@@ -109,7 +109,7 @@ namespace DataAccessLayer
         }
         public int GetRowsCount()
         {
-            string query = $"SELECT COUNT({String.Join(',', FindPrimaryKeys().Select(column => column.Name))}) FROM [{Name}]";
+            string query = $"SELECT COUNT({FindPrimaryKeys().Select(column => column.Name).First()}) FROM [{Name}]";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -185,7 +185,8 @@ namespace DataAccessLayer
                 string columns = String.Empty;
                 foreach (Column column in Columns)
                 {
-                    if (column.Constraints.Any(constraint => (constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT") && constraint.Item1 != "FOREIGN KEY"))
+                    if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT") &&
+                        !column.Constraints.Any(constraint => constraint.Item1 == "FOREIGN KEY"))
                         continue;
 
                     columns += $"[{column.Name}],";
@@ -226,11 +227,11 @@ namespace DataAccessLayer
 
             if(isTrusted)
             {
-                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {conditionColumnName} {expression} @ConditionValue;";
+                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {whereClause};";
             }
             else
             {
-                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {whereClause};";
+                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {conditionColumnName} {expression} @ConditionValue;";
             }
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
@@ -252,7 +253,7 @@ namespace DataAccessLayer
                 {
                     command.Parameters.Add("@UpdateValue", SqlDbType.NVarChar).Value = updateValue;
                 }
-                if (isTrusted)
+                if (!isTrusted)
                 {
 
                     if (int.TryParse(updateValue, out integerContainer))

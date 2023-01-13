@@ -37,7 +37,7 @@
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;
                         Table foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
-                        container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ";
+                        container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ON DELETE CASCADE";
                         break;
                     case "CHECK":
                         container += $" CHECK {constraint.Item2 as string} ";

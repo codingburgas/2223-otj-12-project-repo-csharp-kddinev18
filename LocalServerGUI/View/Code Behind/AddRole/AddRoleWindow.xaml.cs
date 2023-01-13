@@ -23,12 +23,12 @@ namespace LocalServerGUI.View.Code_Behind.AddRole
     public partial class AddRoleWindow : Window
     {
         private bool _isMaximized = false;
-        private RolesPage rolesPage;
+        private RolesPage _rolesPage;
 
         public static bool isOpened = false;
         public AddRoleWindow(RolesPage rolesPage)
         {
-            rolesPage = rolesPage;
+            _rolesPage = rolesPage;
             InitializeComponent();
             isOpened = true;
         }
@@ -36,7 +36,7 @@ namespace LocalServerGUI.View.Code_Behind.AddRole
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             RoleModificationLogic.AddRole(Role.TextBox.Text);
-            rolesPage.UpdateDataGrid(1);
+            _rolesPage.UpdateDataGrid(1);
         }
         // Invoke every time the CancelButton is clicked
         private void CancelButton_Click(object sender, RoutedEventArgs e)

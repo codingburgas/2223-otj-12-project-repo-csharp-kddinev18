@@ -59,9 +59,17 @@ namespace LocalServerBusinessLogic
         public static void EditDevice(int deviceId, string name, bool isAprooved)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First();
-
-            table.Update("Name", name, "DeviceId", "=", deviceId.ToString());
+            if(bool.Parse(table.Select("DeviceId", "=", deviceId.ToString()).Rows[0]["IsAprooved"].ToString()) != isAprooved)
+            {
+                foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
+                {
+                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
+                        .Insert(item["RoleId"].ToString(), deviceId.ToString(), "false", "false", "false", "false");
+                }
+                DatabaseInitialiser.Database.SaveDatabaseData();
+            }
             table.Update("IsAprooved", isAprooved.ToString(), "DeviceId", "=", deviceId.ToString());
+            table.Update("Name", name, "DeviceId", "=", deviceId.ToString());
         }
 
         public static void RemoveDevice(int deviceId)

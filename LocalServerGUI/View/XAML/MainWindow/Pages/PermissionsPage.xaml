@@ -44,7 +44,6 @@
         <!--Members Datagrid-->
         <DataGrid Grid.Row="5" x:Name="PermissionsDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding UserId}"/>
 
                 <DataGridTextColumn Header="Role" IsReadOnly="True" Width="*" Binding="{Binding RoleName}"/>
                 <DataGridTextColumn Header="Device" IsReadOnly="True" Width="*" Binding="{Binding DeviceName}"/>
