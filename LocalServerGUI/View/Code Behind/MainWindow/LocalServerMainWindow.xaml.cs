@@ -31,6 +31,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         public Lazy<UsersPage> UsersPage { get; set; }
         public Lazy<DevicesPage> DevicesPage { get; set; }
         public Lazy<RolesPage> RolesPage { get; set; }
+        public Lazy<PermissionsPage> PermissionsPage { get; set; }
         public LocalServerMainWindow(ServerLogic server)
         {
             Server = server;
@@ -46,6 +47,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             UsersPage = new Lazy<UsersPage>();
             DevicesPage = new Lazy<DevicesPage>();
             RolesPage = new Lazy<RolesPage>();
+            PermissionsPage = new Lazy<PermissionsPage>();
             ShowPage(UsersPage.Value);
         }
         // Shows a page
@@ -113,6 +115,11 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         private void RolesButton_Click(object sender, RoutedEventArgs e)
         {
             ShowPage(RolesPage.Value);
+        }
+
+        private void PermissionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPage(PermissionsPage.Value);
         }
 
         // Invoked every time LogOutButton is clicked

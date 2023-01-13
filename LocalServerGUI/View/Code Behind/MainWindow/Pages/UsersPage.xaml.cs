@@ -65,11 +65,15 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         }
         public void UpdateDataGrid(int i)
         {
+            _userCount = UserModifierLogic.GetUsersCount();
             // Canges the count of the teams based on the argument i {-1;0;1}
             _userCount += i;
             // Devide the vacations count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
-
+            if (_numberOfPages <= 1)
+            {
+                NextButton.IsEnabled = false;
+            }
             // Get the users from the database
             List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(_pagingSize, _sikpAmount);
             _usersInformation = new ObservableCollection<UserBindingInformation>();
@@ -94,10 +98,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid(string filter)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _userCount += 1;
+            _userCount = 1;
             // Devide the vacations count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_userCount / _pagingSize);
-
             // Get the users from the database
             List<UserInformation> usersInformation = UserModifierLogic.GetUsersInformation(filter, _pagingSize, _sikpAmount);
             _usersInformation = new ObservableCollection<UserBindingInformation>();
@@ -130,7 +133,14 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         {
             if (e.Key == Key.Return)
             {
-                UpdateDataGrid(Filter.TextBox.Text);
+                if(Filter.TextBox.Text == "")
+                {
+                    UpdateDataGrid(0);
+                }
+                else
+                {
+                    UpdateDataGrid(Filter.TextBox.Text);
+                }
             }
         }
 

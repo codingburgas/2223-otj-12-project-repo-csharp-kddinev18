@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Serialization;
+using System.Data;
 
 namespace LocalServerBusinessLogic
 {
@@ -86,6 +87,17 @@ namespace LocalServerBusinessLogic
             {
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
                 DatabaseInitialiser.Database.SaveDatabaseData();
+
+                string deviceId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                    .Select("IPv4Address", "=", clientIpAddress).Rows[0]["DeviceId"].ToString();
+
+                foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
+                {
+                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
+                        .Insert(item["RoleId"].ToString(), deviceId, "false", "false", "false", "false");
+                }
+                DatabaseInitialiser.Database.SaveDatabaseData();
+
                 return false;
             }
             else

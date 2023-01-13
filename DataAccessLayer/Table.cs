@@ -121,9 +121,18 @@ namespace DataAccessLayer
                 }
             }
         }
-        public void Delete(string columnName = "", string expression = "", string value = "", bool isTrusted = false)
+        public void Delete(string columnName = "", string expression = "", string value = "", bool isTrusted = false, string whereCaluse = "")
         {
             string query = String.Empty;
+            if(whereCaluse != String.Empty && isTrusted)
+            {
+                query = $"DELETE FROM [{Name}] WHERE {whereCaluse};";
+                using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                {
+                    command.ExecuteNonQuery();
+                }
+                return;
+            }
             if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
             {
                 query = $"DELETE FROM [{Name}];";
@@ -131,6 +140,7 @@ namespace DataAccessLayer
                 {
                     command.ExecuteNonQuery();
                 }
+                return;
             }
             if (!Columns.Select(column => column.Name).Contains(columnName))
                 throw new Exception($"The column with name {columnName} does not exist in table {Name}");
@@ -175,7 +185,7 @@ namespace DataAccessLayer
                 string columns = String.Empty;
                 foreach (Column column in Columns)
                 {
-                    if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT"))
+                    if (column.Constraints.Any(constraint => (constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT") && constraint.Item1 != "FOREIGN KEY"))
                         continue;
 
                     columns += $"[{column.Name}],";
@@ -201,17 +211,27 @@ namespace DataAccessLayer
             _insertQueryContainer += $"({dataString}),";
             _isDataInserted = true;
         }
-        public void Update(string updateColumnName, string updateValue, string conditionColumnName, string expression, string coditionValue)
+        public void Update(string updateColumnName, string updateValue, string conditionColumnName, string expression, string coditionValue, bool isTrusted = false, string whereClause = "")
         {
             string query = String.Empty;
-            if (!Columns.Select(column => column.Name).Contains(updateColumnName))
-                throw new Exception($"The column with name {updateColumnName} does not exist in table {Name}");
-            if (!Columns.Select(column => column.Name).Contains(conditionColumnName))
-                throw new Exception($"The column with name {conditionColumnName} does not exist in table {Name}");
-            if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
-                throw new Exception($"The operation {expression} is not supported");
+            if (!isTrusted)
+            {
+                if (!Columns.Select(column => column.Name).Contains(updateColumnName))
+                    throw new Exception($"The column with name {updateColumnName} does not exist in table {Name}");
+                if (!Columns.Select(column => column.Name).Contains(conditionColumnName))
+                    throw new Exception($"The column with name {conditionColumnName} does not exist in table {Name}");
+                if (expression != "=" && expression != "!=" && expression != "<" && expression != ">" && expression != ">=" && expression != "<=")
+                    throw new Exception($"The operation {expression} is not supported");
+            }
 
-            query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {conditionColumnName} {expression} @ConditionValue;";
+            if(isTrusted)
+            {
+                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {conditionColumnName} {expression} @ConditionValue;";
+            }
+            else
+            {
+                query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {whereClause};";
+            }
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 int integerContainer = 0;
@@ -232,22 +252,25 @@ namespace DataAccessLayer
                 {
                     command.Parameters.Add("@UpdateValue", SqlDbType.NVarChar).Value = updateValue;
                 }
+                if (isTrusted)
+                {
 
-                if (int.TryParse(updateValue, out integerContainer))
-                {
-                    command.Parameters.Add("@ConditionValue", SqlDbType.Int).Value = integerContainer;
-                }
-                else if (float.TryParse(updateValue, out floatContainer))
-                {
-                    command.Parameters.Add("@ConditionValue", SqlDbType.Decimal).Value = floatContainer;
-                }
-                else if (updateValue == "NULL")
-                {
-                    command.Parameters.AddWithValue("@ConditionValue", null);
-                }
-                else
-                {
-                    command.Parameters.Add("@ConditionValue", SqlDbType.NVarChar).Value = coditionValue;
+                    if (int.TryParse(updateValue, out integerContainer))
+                    {
+                        command.Parameters.Add("@ConditionValue", SqlDbType.Int).Value = integerContainer;
+                    }
+                    else if (float.TryParse(updateValue, out floatContainer))
+                    {
+                        command.Parameters.Add("@ConditionValue", SqlDbType.Decimal).Value = floatContainer;
+                    }
+                    else if (updateValue == "NULL")
+                    {
+                        command.Parameters.AddWithValue("@ConditionValue", null);
+                    }
+                    else
+                    {
+                        command.Parameters.Add("@ConditionValue", SqlDbType.NVarChar).Value = coditionValue;
+                    }
                 }
 
                 command.ExecuteNonQuery();

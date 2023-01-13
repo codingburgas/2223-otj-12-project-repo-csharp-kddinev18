@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LocalServerBusinessLogic
 {
-    public static class RolesModificationLogic
+    public static class RoleModificationLogic
     {
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
         public static List<RoleInformation> GetRolesInformation(int pagingSize, int skipAmount)
@@ -61,6 +61,20 @@ namespace LocalServerBusinessLogic
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
                 .Delete("RoleId", "=", roleId.ToString());
+        }
+
+        public static void AddRole(string name)
+        {
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert(name);
+            DatabaseInitialiser.Database.SaveDatabaseData();
+            int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+                .Select("Name", "=", name).Rows[0]["RoleId"].ToString());
+
+            foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)
+            {
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First().Insert(roleId.ToString(), item["DeviceId"].ToString(), "false", "false", "false", "false");
+            }
+            DatabaseInitialiser.Database.SaveDatabaseData();
         }
     }
 }

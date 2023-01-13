@@ -1,6 +1,5 @@
 ﻿using LocalServerBusinessLogic;
 using LocalServerGUI.Models;
-using LocalServerGUI.View.Code_Behind.AddUser;
 using LocalServerModels;
 using System;
 using System.Collections.Generic;
@@ -21,14 +20,14 @@ using System.Windows.Shapes;
 namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
 {
     /// <summary>
-    /// Interaction logic for DevicesPage.xaml
+    /// Interaction logic for PermissionsPage.xaml
     /// </summary>
-    public partial class DevicesPage : Page
+    public partial class PermissionsPage : Page
     {
         // A collection that updates both ways (form the view and code behind)
-        private ObservableCollection<DeviceBindingInformation> _deviceInformation;
+        private ObservableCollection<PermissionBindingInformation> _permissionsInformation;
         // The count of the vacations in the database
-        private int _devicesCount;
+        private int _permissionsCount;
         // The paging size
         private int _pagingSize = 10;
         // The number of pages
@@ -37,14 +36,14 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         private int _pageIndex = 0;
         // The amount of viewed vacations
         private int _sikpAmount = 0;
-        public DevicesPage()
+        public PermissionsPage()
         {
             InitializeComponent();
 
-            // Get the count of the users without the current user
-            _devicesCount = DeviceModificationLogic.GetDevicesCount();
+            // Get the count of the users
+            _permissionsCount = PermissionModifierLogic.GetPermissionsCount();
             // Devide the teams count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_permissionsCount / _pagingSize);
 
             // Updates the grid
             UpdateDataGrid(0);
@@ -60,72 +59,30 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid(int i)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _devicesCount += i;
+            _permissionsCount += i;
             // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
+            _numberOfPages = (int)Math.Ceiling((double)_permissionsCount / _pagingSize);
 
             // Get the users from the database
-            List<DeviceInformation> devicesInformation = DeviceModificationLogic.GetDevicesInformation(_pagingSize, _sikpAmount);
-            _deviceInformation = new ObservableCollection<DeviceBindingInformation>();
+            List<PermissionInformation> permissionsInformation = PermissionModifierLogic.GetPermissionInformation(_pagingSize, _sikpAmount);
+            _permissionsInformation = new ObservableCollection<PermissionBindingInformation>();
             Random r = new Random();
-            foreach (DeviceInformation deviceInformation in devicesInformation)
+            foreach (PermissionInformation permissionInformation in permissionsInformation)
             {
-                _deviceInformation.Add(new DeviceBindingInformation(deviceInformation)
+                _permissionsInformation.Add(new PermissionBindingInformation(permissionInformation)
                 {
-                    // Assign the bachground color for the icon
-                    BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
-                    // Assign the inital of the icon
-                    Initials = deviceInformation.Name.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
                     EditButton = CurrentUserInformation.IsAdmin,
-                    // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin
                 });
             }
             // Assign the datagrid the collection
-            DevicesDataGrid.ItemsSource = _deviceInformation;
-        }
-        public void UpdateDataGrid(string filter)
-        {
-            // Canges the count of the teams based on the argument i {-1;0;1}
-            _devicesCount = 1;
-            // Devide the vacations count to the paging size to see how many pages are there
-            _numberOfPages = (int)Math.Ceiling((double)_devicesCount / _pagingSize);
-
-            // Get the users from the database
-            List<DeviceInformation> devicesInformation = DeviceModificationLogic.GetDevicesInformation(filter ,_pagingSize, _sikpAmount);
-            _deviceInformation = new ObservableCollection<DeviceBindingInformation>();
-            Random r = new Random();
-            foreach (DeviceInformation deviceInformation in devicesInformation)
-            {
-                _deviceInformation.Add(new DeviceBindingInformation(deviceInformation)
-                {
-                    // Assign the bachground color for the icon
-                    BgColor = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255))),
-                    // Assign the inital of the icon
-                    Initials = deviceInformation.Name.Substring(0, 1),
-                    // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin,
-                    // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin
-                });
-            }
-            // Assign the datagrid the collection
-            DevicesDataGrid.ItemsSource = _deviceInformation;
+            PermissionsDataGrid.ItemsSource = _permissionsInformation;
         }
         // Event handlers
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             // Update the datagrid
             UpdateDataGrid(0);
-        }
-
-        private void KeyDown_Filter(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                UpdateDataGrid(Filter.TextBox.Text);
-            }
         }
 
         // Invoked every time the PrevButton is clicked
@@ -167,9 +124,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
+            PermissionBindingInformation dataRow = (PermissionBindingInformation)PermissionsDataGrid.SelectedItem;
             // Edit a uesr
-            DeviceModificationLogic.EditDevice(dataRow.DeviceId, dataRow.Name, dataRow.IsAprooved);
+            PermissionModifierLogic.EditPermission(dataRow.RoleName, dataRow.DeviceName, dataRow.CanCreate, dataRow.CanRead, dataRow.CanUpdate, dataRow.CanDelete);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -180,9 +137,11 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
             // Get the row the user clickd on
-            DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
+            PermissionBindingInformation dataRow = (PermissionBindingInformation)PermissionsDataGrid.SelectedItem;
+
             // Remove the user
-            DeviceModificationLogic.RemoveDevice(dataRow.DeviceId);
+            PermissionModifierLogic.RemovePermission(dataRow.RoleName, dataRow.DeviceName);
+
             // Update the grid
             UpdateDataGrid(-1);
         }

@@ -1,5 +1,6 @@
 ﻿using LocalServerBusinessLogic;
 using LocalServerGUI.Models;
+using LocalServerGUI.View.Code_Behind.AddRole;
 using LocalServerGUI.View.Code_Behind.AddUser;
 using LocalServerModels;
 using System;
@@ -48,7 +49,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             }
 
             // Get the count of the users
-            _rolesCount = RolesModificationLogic.GetRolesCount();
+            _rolesCount = RoleModificationLogic.GetRolesCount();
             // Devide the teams count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
@@ -71,7 +72,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
             // Get the users from the database
-            List<RoleInformation> rolesInformation = RolesModificationLogic.GetRolesInformation(_pagingSize, _sikpAmount);
+            List<RoleInformation> rolesInformation = RoleModificationLogic.GetRolesInformation(_pagingSize, _sikpAmount);
             _rolesInformation = new ObservableCollection<RoleBindingInformation>();
             Random r = new Random();
             foreach (RoleInformation roleInformation in rolesInformation)
@@ -94,12 +95,12 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid(string filter)
         {
             // Canges the count of the teams based on the argument i {-1;0;1}
-            _rolesCount += 1;
+            _rolesCount = 1;
             // Devide the vacations count to the paging size to see how many pages are there
             _numberOfPages = (int)Math.Ceiling((double)_rolesCount / _pagingSize);
 
             // Get the users from the database
-            List<RoleInformation> rolesInformation = RolesModificationLogic.GetRolesInformation(filter ,_pagingSize, _sikpAmount);
+            List<RoleInformation> rolesInformation = RoleModificationLogic.GetRolesInformation(filter ,_pagingSize, _sikpAmount);
             _rolesInformation = new ObservableCollection<RoleBindingInformation>();
             Random r = new Random();
             foreach (RoleInformation roleInformation in rolesInformation)
@@ -171,7 +172,12 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the AddMembersButton is clicked
         private void AddRolesButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
+            if (AddRoleWindow.isOpened == false)
+            {
+                AddRoleWindow addRoleWindow = new AddRoleWindow(this);
+                addRoleWindow.Show();
+            }
         }
 
         // Invoked every time the EditButton is clicked
@@ -180,7 +186,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Edit a uesr
-            RolesModificationLogic.EditRole(dataRow.RoleId, dataRow.Name);
+            RoleModificationLogic.EditRole(dataRow.RoleId, dataRow.Name);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -193,7 +199,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Remove the user
-            RolesModificationLogic.RemoveRole(dataRow.RoleId);
+            RoleModificationLogic.RemoveRole(dataRow.RoleId);
             // Update the grid
             UpdateDataGrid(-1);
         }

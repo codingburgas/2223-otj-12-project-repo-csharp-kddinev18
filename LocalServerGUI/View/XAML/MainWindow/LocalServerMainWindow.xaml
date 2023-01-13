@@ -60,6 +60,15 @@
                             </Button>
                         </StackPanel>
 
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="PermissionsButton" Style="{StaticResource menuButton}" Click="PermissionsButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="AccountEdit" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Permissions"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
                         <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="15 0 0 20">
                             <Button x:Name="LogOutButton" Style="{StaticResource menuButton}" Click="LogOutButton_Click">
                                 <StackPanel Orientation="Horizontal">

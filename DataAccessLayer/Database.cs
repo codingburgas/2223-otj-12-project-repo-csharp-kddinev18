@@ -136,38 +136,19 @@ namespace DataAccessLayer
 
         private void LoadKeys(Table table)
         {
-            string query = "SELECT COLUMN_NAME " +
-                           "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
-                           "WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + QUOTENAME(CONSTRAINT_NAME)), 'IsPrimaryKey') = 1 " +
-                           "AND TABLE_NAME = @TableName";
-            using (SqlCommand command = new SqlCommand(query, _sqlConnection))
+            List<Column> primaryKerys = table.FindPrimaryKeysThroughQuery();
+            foreach (Column col in primaryKerys)
             {
-                command.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = table.Name;
-                using (SqlDataReader reader = command.ExecuteReader())
+                if(primaryKerys.Count > 1)
                 {
-                    List<Tuple<string, object>> primaryKeys = new List<Tuple<string, object>>();
-                    if (reader.Read())
-                    {
-                        primaryKeys.Add(new Tuple<string, object>("PRIMARY KEY", null));
-                    }
-                    if(primaryKeys.Count > 1)
-                    {
-                        foreach (Tuple<string, object> primaryKey in primaryKeys)
-                        {
-                            table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
-                        }
-                    }
-                    else if (primaryKeys.Count == 1)
-                    {
-                        table.Columns.Where(column => column.Name == reader[0].ToString()).First().AddConstraint(primaryKeys.First());
-                    }
-                    else
-                    {
-                        throw new Exception("Cannot have a table wothout a primary key");
-                    }
+                    table.Columns.Where(column => column.Name == col.Name).First().Constraints.Add(new Tuple<string, object>("PRIMARY KEY", "multiple"));
+                }
+                else
+                {
+                    table.Columns.Where(column => column.Name == col.Name).First().Constraints.Add(new Tuple<string, object>("PRIMARY KEY", null));
                 }
             }
-            query = "SELECT COL.NAME FROM " +
+            string query = "SELECT COL.NAME FROM " +
                     "SYS.OBJECTS OBJ " +
                     "JOIN SYS.COLUMNS COL ON COL.[OBJECT_ID] = OBJ.[OBJECT_ID] " +
                     "JOIN SYS.INDEX_COLUMNS IDX_COLS ON IDX_COLS.[COLUMN_ID] = COL.[COLUMN_ID] AND IDX_COLS.[OBJECT_ID] = COL.[OBJECT_ID] " +
