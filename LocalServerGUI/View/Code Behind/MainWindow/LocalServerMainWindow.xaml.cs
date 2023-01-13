@@ -108,15 +108,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         }
 
         // Invoked every time TeamsButton is clicked
-        private void TeamsButton_Click(object sender, RoutedEventArgs e)
+        private void RolesButton_Click(object sender, RoutedEventArgs e)
         {
             //ShowPage(TeamsPage.Value);
-        }
-
-        // Invoked every time VacationsButton is clicked
-        private void VacationsButton_Click(object sender, RoutedEventArgs e)
-        {
-            //ShowPage(VacationsPage.Value);
         }
 
         // Invoked every time LogOutButton is clicked

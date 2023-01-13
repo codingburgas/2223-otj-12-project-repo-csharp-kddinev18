@@ -52,19 +52,10 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button x:Name="TeamsButton" Style="{StaticResource menuButton}" Click="TeamsButton_Click">
+                            <Button x:Name="RolesButton" Style="{StaticResource menuButton}" Click="RolesButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Ballot" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Teams"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button x:Name="VacationsButton" Style="{StaticResource menuButton}" Click="VacationsButton_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <Icon:PackIconMaterial Kind="UmbrellaBeach" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Vacations"/>
+                                    <TextBlock Text="Roles"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
