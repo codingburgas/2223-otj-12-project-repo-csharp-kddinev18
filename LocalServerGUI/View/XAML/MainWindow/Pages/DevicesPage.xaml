@@ -61,8 +61,8 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Header="IPv4Address" IsReadOnly="True" Width="*" Binding="{Binding IPv4Address}"/>
-                <DataGridTextColumn Header="Name" IsReadOnly="False" Width="*" Binding="{Binding Name}"/>
-                <DataGridCheckBoxColumn Header="Aproove" IsReadOnly="False" Width="*" Binding="{Binding IsAprooved}"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="False" Width="*" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Aproove" IsReadOnly="False" Width="*" Binding="{Binding IsAprooved, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>

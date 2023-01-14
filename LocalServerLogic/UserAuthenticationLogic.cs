@@ -138,8 +138,18 @@ namespace LocalServerLogic
 
             DatabaseInitialiser.Database.SaveDatabaseData();
 
-            return DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+            string roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
                 .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
+
+            foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)
+            {
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions")
+                    .First().Insert(roleId, item["DeviceId"].ToString(), "false", "false", "false", "false");
+            }
+
+            DatabaseInitialiser.Database.SaveDatabaseData();
+
+            return roleId;
         }
 
         public static int Register(string userName, string email, string password)

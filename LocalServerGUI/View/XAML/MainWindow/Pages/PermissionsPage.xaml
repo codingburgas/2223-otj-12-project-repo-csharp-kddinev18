@@ -47,10 +47,10 @@
 
                 <DataGridTextColumn Header="Role" IsReadOnly="True" Width="*" Binding="{Binding RoleName}"/>
                 <DataGridTextColumn Header="Device" IsReadOnly="True" Width="*" Binding="{Binding DeviceName}"/>
-                <DataGridCheckBoxColumn Header="Create" IsReadOnly="False" Width="*" Binding="{Binding CanCreate}"/>
-                <DataGridCheckBoxColumn Header="Read" IsReadOnly="False" Width="*" Binding="{Binding CanRead}"/>
-                <DataGridCheckBoxColumn Header="Update" IsReadOnly="False" Width="*" Binding="{Binding CanUpdate}"/>
-                <DataGridCheckBoxColumn Header="Delete" IsReadOnly="False" Width="*" Binding="{Binding CanDelete}"/>
+                <DataGridCheckBoxColumn Header="Create" IsReadOnly="False" Width="*" Binding="{Binding CanCreate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Read" IsReadOnly="False" Width="*" Binding="{Binding CanRead, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Update" IsReadOnly="False" Width="*" Binding="{Binding CanUpdate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Delete" IsReadOnly="False" Width="*" Binding="{Binding CanDelete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>

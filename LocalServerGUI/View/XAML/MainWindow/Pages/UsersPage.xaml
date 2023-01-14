@@ -69,9 +69,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="UserName" IsReadOnly="False" Width="*" Binding="{Binding UserName}"/>
-                <DataGridTextColumn Header="Email" IsReadOnly="False" Width="*" Binding="{Binding Email}"/>
-                <DataGridTextColumn Header="Role" IsReadOnly="False" Width="*" Binding="{Binding Role}"/>
+                <DataGridTextColumn Header="UserName" IsReadOnly="False" Width="*" Binding="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Email" IsReadOnly="False" Width="*" Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Role" IsReadOnly="False" Width="*" Binding="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>

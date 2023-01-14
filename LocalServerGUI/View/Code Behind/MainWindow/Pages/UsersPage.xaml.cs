@@ -87,7 +87,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // Assign the inital of the icon
                     Initials = userInformation.UserName.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin,
+                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId,
                     // If the user is admin enable the remove button, otherwise disable it
                     RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
                 });
@@ -114,7 +114,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // Assign the inital of the icon
                     Initials = userInformation.UserName.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin,
+                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId,
                     // If the user is admin enable the remove button, otherwise disable it
                     RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
                 });

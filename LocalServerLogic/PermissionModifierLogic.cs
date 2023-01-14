@@ -49,7 +49,7 @@ namespace LocalServerBusinessLogic
             int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(Table => Table.Name == "Roles").First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString());
             int deviceId = int.Parse(DatabaseInitialiser.Database.Tables.Where(Table => Table.Name == "Devices").First().Select("Name", "=", deviceName).Rows[0]["DeviceId"].ToString());
 
-            Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First();
+            Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First();
             table.Update("CanCreate", create.ToString(), "", "", "", true, $"RoleId = {roleId} AND DeviceId = {deviceId}");
             table.Update("CanRead", read.ToString(), "", "", "", true, $"RoleId = {roleId} AND DeviceId = {deviceId}");
             table.Update("CanUpdate", update.ToString(), "", "", "", true, $"RoleId = {roleId} AND DeviceId = {deviceId}");
@@ -61,7 +61,7 @@ namespace LocalServerBusinessLogic
             int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(Table => Table.Name == "Roles").First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString());
             int deviceId = int.Parse(DatabaseInitialiser.Database.Tables.Where(Table => Table.Name == "Devices").First().Select("Name", "=", deviceName).Rows[0]["DeviceId"].ToString());
 
-            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
                 .Delete("", "", "", true, $"RoleId = {roleId} AND DeviceId = {deviceId}");
         }
     }

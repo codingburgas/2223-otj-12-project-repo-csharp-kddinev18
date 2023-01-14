@@ -256,15 +256,15 @@ namespace DataAccessLayer
                 if (!isTrusted)
                 {
 
-                    if (int.TryParse(updateValue, out integerContainer))
+                    if (int.TryParse(coditionValue, out integerContainer))
                     {
                         command.Parameters.Add("@ConditionValue", SqlDbType.Int).Value = integerContainer;
                     }
-                    else if (float.TryParse(updateValue, out floatContainer))
+                    else if (float.TryParse(coditionValue, out floatContainer))
                     {
                         command.Parameters.Add("@ConditionValue", SqlDbType.Decimal).Value = floatContainer;
                     }
-                    else if (updateValue == "NULL")
+                    else if (coditionValue == "NULL")
                     {
                         command.Parameters.AddWithValue("@ConditionValue", null);
                     }
