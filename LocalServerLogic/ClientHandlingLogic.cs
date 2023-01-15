@@ -17,13 +17,15 @@ namespace LocalServerBusinessLogic
     public static class ClientHandlingLogic
     {
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
-        public static void HandleClientInput(string data, List<TcpClient> clients)
+        public static void HandleClientInput(string data, string ipAddress, List<TcpClient> clients)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
             if (jObject["Operation"].ToString() == "Authenticate")
             {
                 if (!DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
                 {
+                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("Name", jObject["Name"].ToString(), "IPv4Address", "=", ipAddress);
+
                     Table newTable = new Table(jObject["Name"].ToString(), DatabaseInitialiser.Database);
                     foreach (JsonObject column in JsonSerializer.Deserialize<List<JsonObject>>(jObject["Columns"].ToString()))
                     {
@@ -45,8 +47,14 @@ namespace LocalServerBusinessLogic
                         }
                         newTable.Columns.Add(newColumn);
                     }
-                    Column systemColumn = new Column("Created", "datetime2(7)", newTable);
-                    systemColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
+                    Column systemTimeColumn = new Column("Created", "datetime2(7)", newTable);
+                    systemTimeColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
+
+                    Column systemColumn = new Column("DeviceId", "int", newTable);
+                    systemColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
+                        DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
+
+                    newTable.Columns.Add(systemTimeColumn);
                     newTable.Columns.Add(systemColumn);
 
                     DatabaseInitialiser.Database.Tables.Add(newTable);
@@ -58,7 +66,9 @@ namespace LocalServerBusinessLogic
                 Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
                 List<string> insertData = new List<string>();
 
-                table.Insert(JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString()).ToArray());
+                table.Insert(JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString()).ToArray(), 
+                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                    .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString());
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
             else if (jObject["Operation"].ToString() == "Send")

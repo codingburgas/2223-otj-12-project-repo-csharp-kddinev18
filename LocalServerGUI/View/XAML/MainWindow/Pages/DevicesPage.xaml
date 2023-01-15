@@ -27,9 +27,15 @@
         <!--Page Title-->
         <TextBlock Text="Devices" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
-        <Button Style="{StaticResource topButton}" Grid.Row="1" Margin="30 0 0 0" Background="#dcdcdc" HorizontalAlignment="Right" Click="RefreshButton_Click">
-            <Icon:PackIconMaterial Kind="Refresh"/>
-        </Button>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Grid Width="250" HorizontalAlignment="Right">
+                <userControls:TextBoxControl x:Name="DeleteTimer" TextBoxHintText="Filter" KeyDown="KeyDown_Filter"/>
+            </Grid>
+            <Button Style="{StaticResource topButton}"  Margin="30 0 0 0" Background="#dcdcdc" HorizontalAlignment="Right" Click="RefreshButton_Click">
+
+                <Icon:PackIconMaterial Kind="Refresh"/>
+            </Button>
+        </StackPanel>
 
         <!--Separator-->
         <Separator Height="1" Grid.Row="3" Background="#dae2ea" Margin="0 -1 0 10"/>
@@ -61,7 +67,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Header="IPv4Address" IsReadOnly="True" Width="*" Binding="{Binding IPv4Address}"/>
-                <DataGridTextColumn Header="Name" IsReadOnly="False" Width="*" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Width="*" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridCheckBoxColumn Header="Aproove" IsReadOnly="False" Width="*" Binding="{Binding IsAprooved, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">

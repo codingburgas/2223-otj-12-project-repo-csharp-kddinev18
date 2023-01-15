@@ -118,7 +118,7 @@ namespace LocalServerLogic
                     return;
                 }
                 // Get the data
-                ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), _clients);
+                ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), _clients);
             }
             catch (Exception ex)
             {

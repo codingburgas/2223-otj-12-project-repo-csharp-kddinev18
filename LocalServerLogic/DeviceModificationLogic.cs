@@ -74,6 +74,16 @@ namespace LocalServerBusinessLogic
 
         public static void RemoveDevice(int deviceId)
         {
+            DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Select("DeviceId", "=", deviceId.ToString()).Rows[0];
+
+            if(bool.Parse(dataRow["isAprooved"].ToString()))
+            {
+                DatabaseInitialiser.Database.Tables.Remove(
+                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == dataRow["Name"].ToString()).First());
+
+                DatabaseInitialiser.Database.SaveDatabaseInfrastructure();
+            }
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Delete("DeviceId", "=", deviceId.ToString());
         }
