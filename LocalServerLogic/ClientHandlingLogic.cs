@@ -66,12 +66,14 @@ namespace LocalServerBusinessLogic
                 Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
                 List<string> insertData = new List<string>();
 
-                table.Insert(JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString()).ToArray(), 
-                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                List<string> args = JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString());
+                args.Add(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                     .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString());
+
+                table.Insert(args.ToArray());
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
-            else if (jObject["Operation"].ToString() == "Send")
+            /*else if (jObject["Operation"].ToString() == "Send")
             {
                 string ipAddressDestination = jObject["Address"].ToString();
                 foreach (TcpClient client in clients)
@@ -86,6 +88,10 @@ namespace LocalServerBusinessLogic
                         stream.Write(msg, 0, msg.Length);
                     }
                 }
+            }*/
+            else
+            {
+                throw new Exception("Wrong operation type");
             }
         }
         public static bool AddClients(TcpClient client)

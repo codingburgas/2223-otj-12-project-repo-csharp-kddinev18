@@ -147,10 +147,5 @@ namespace LocalServerLogic
             _clients.Remove(client);
             client = null;
         }
-
-        public void AprooveClient(string ipAddress)
-        {
-            ClientHandlingLogic.AprooveClient(ipAddress);
-        }
     }
 }

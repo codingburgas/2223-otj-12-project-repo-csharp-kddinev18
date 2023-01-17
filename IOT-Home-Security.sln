@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAcce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalServerGUI", "LocalServerGUI\LocalServerGUI.csproj", "{D230DA78-1FC8-49B0-855A-AAC558CEC496}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalServerModels", "LocalServerModels\LocalServerModels.csproj", "{D4628603-9005-4FD4-9FFD-F49782490A69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalServerModels", "LocalServerModels\LocalServerModels.csproj", "{D4628603-9005-4FD4-9FFD-F49782490A69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalServer", "GlobalServer\GlobalServer.csproj", "{4AD23BAE-7AD0-4224-A487-1CDE7031BA89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{D4628603-9005-4FD4-9FFD-F49782490A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4628603-9005-4FD4-9FFD-F49782490A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4628603-9005-4FD4-9FFD-F49782490A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AD23BAE-7AD0-4224-A487-1CDE7031BA89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AD23BAE-7AD0-4224-A487-1CDE7031BA89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AD23BAE-7AD0-4224-A487-1CDE7031BA89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AD23BAE-7AD0-4224-A487-1CDE7031BA89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

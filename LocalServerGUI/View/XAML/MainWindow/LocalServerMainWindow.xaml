@@ -34,6 +34,15 @@
                         <!--Menu Buttons-->
 
                         <StackPanel DockPanel.Dock="Top">
+                            <Button x:Name="HomeButton" Style="{StaticResource menuButton}" Click="HomeButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Home"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        
+                        <StackPanel DockPanel.Dock="Top">
                             <Button x:Name="UsersButton" Style="{StaticResource menuButton}" Click="UsersButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
