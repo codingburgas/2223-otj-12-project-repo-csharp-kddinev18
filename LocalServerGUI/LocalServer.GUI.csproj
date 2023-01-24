@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LocalServerLogic\LocalServerBusinessLogic.csproj" />
+    <ProjectReference Include="..\LocalServerLogic\LocalServer.BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
