@@ -40,8 +40,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         public void UpdateDataGrid()
         {
             // Get the users from the database
-            _usersInformation = new ObservableCollection<UserInformation>(UserModifierLogic.GetUsersInformation(10, 0));
-            _deviceInformation = new ObservableCollection<DeviceInformation>(DeviceModificationLogic.GetDevicesInformation(10, 0));
+            _usersInformation = new ObservableCollection<UserInformation>(UserModifierLogic.GetUsersInformation(5, 0));
+            _deviceInformation = new ObservableCollection<DeviceInformation>(DeviceModificationLogic.GetDevicesInformation(5, 0));
             UsersDataGrid.ItemsSource = _usersInformation;
             DevicesDataGrid.ItemsSource = _deviceInformation;
         }

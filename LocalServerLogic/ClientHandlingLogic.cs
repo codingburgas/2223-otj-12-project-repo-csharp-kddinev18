@@ -131,5 +131,10 @@ namespace LocalServerBusinessLogic
             }
             DatabaseInitialiser.Database.SaveDatabaseData();
         }
+
+        public static void ConnectGlobalServer(string userName, string password)
+        {
+            TcpClient tcpClient 
+        }
     }
 }
