@@ -8,6 +8,7 @@ namespace GlobalServer
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
+        private static Dictionary<string, bool> _aproovedClients = new Dictionary<string, bool>();
 
         private static byte[] _data = new byte[16777216];
 
@@ -58,6 +59,7 @@ namespace GlobalServer
                 if (_tcpListener is not null)
                 {
                     client = _tcpListener.EndAcceptTcpClient(asyncResult);
+                    _aproovedClients.Add(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), false);
                     Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
                 }
 
@@ -95,6 +97,15 @@ namespace GlobalServer
                 }
                 // Get the data
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+
+                if (_aproovedClients[((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString()] == false)
+                {
+
+                }
+                else
+                {
+
+                }
             }
             catch (Exception ex)
             {
@@ -121,6 +132,7 @@ namespace GlobalServer
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
+            _aproovedClients.Remove(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
             client = null;
         }
     }
