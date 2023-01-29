@@ -1,7 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using DataAccessLayer;
 
 namespace GlobalServer
 {
@@ -10,19 +9,17 @@ namespace GlobalServer
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
         private static Dictionary<string, bool> _aproovedClients = new Dictionary<string, bool>();
-        private static Database _database;
 
         private static byte[] _data = new byte[16777216];
 
         private int _port;
         private static int _success = 0;
         private static int _error = 1;
-        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurity;Integrated Security=True;MultipleActiveResultSets=true";
+        private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurityGlobal;Integrated Security=True;MultipleActiveResultSets=true";
 
         public ServerLogic(int port)
         {
             _port = port;
-            _database = new Database(_connectionString);
         }
         public void ServerSetUp()
         {

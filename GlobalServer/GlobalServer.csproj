@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GlobalServer.DAL\GlobalServer.DAL.csproj" />
-  </ItemGroup>
-
 </Project>
