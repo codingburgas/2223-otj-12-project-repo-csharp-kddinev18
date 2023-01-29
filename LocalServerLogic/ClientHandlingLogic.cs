@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Serialization;
 using System.Data;
+using System.Net.Http;
+using System.Xml.Linq;
 
 namespace LocalServerBusinessLogic
 {
@@ -130,11 +132,6 @@ namespace LocalServerBusinessLogic
                     .Insert(item["RoleId"].ToString(), deviceId, "false", "false", "false", "false");
             }
             DatabaseInitialiser.Database.SaveDatabaseData();
-        }
-
-        public static void ConnectGlobalServer(string userName, string password)
-        {
-            TcpClient tcpClient 
         }
     }
 }
