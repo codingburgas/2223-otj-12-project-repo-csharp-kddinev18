@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using GlobalServer.DAL;
 
 namespace GlobalServer
 {
@@ -9,6 +10,7 @@ namespace GlobalServer
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
         private static Dictionary<string, bool> _aproovedClients = new Dictionary<string, bool>();
+        private static GlobalServerDbContext _dbContext;
 
         private static byte[] _data = new byte[16777216];
 
@@ -20,6 +22,7 @@ namespace GlobalServer
         public ServerLogic(int port)
         {
             _port = port;
+            _dbContext = new GlobalServerDbContext("Server=(localdb)\\MSSQLLocalDB;Database=IOTHomeSecurityGlobal;Integrated Security=True;");
         }
         public void ServerSetUp()
         {
