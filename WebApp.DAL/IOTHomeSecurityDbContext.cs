@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Reflection.Metadata;
 
-namespace WebApp.Models
+namespace WebApp.DAL
 {
     public partial class IOTHomeSecurityDbContext : DbContext
     {

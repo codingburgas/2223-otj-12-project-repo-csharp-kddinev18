@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalServer.GUI", "LocalSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{951A5DE9-B3C2-43CE-82BD-04E831CD4EF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.BLL", "WebApp.BLL\WebApp.BLL.csproj", "{7C926AD1-98A0-407E-894A-B7AAE57812C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.DAL", "WebApp.DAL\WebApp.DAL.csproj", "{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{951A5DE9-B3C2-43CE-82BD-04E831CD4EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{951A5DE9-B3C2-43CE-82BD-04E831CD4EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{951A5DE9-B3C2-43CE-82BD-04E831CD4EF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C926AD1-98A0-407E-894A-B7AAE57812C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C926AD1-98A0-407E-894A-B7AAE57812C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C926AD1-98A0-407E-894A-B7AAE57812C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C926AD1-98A0-407E-894A-B7AAE57812C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
