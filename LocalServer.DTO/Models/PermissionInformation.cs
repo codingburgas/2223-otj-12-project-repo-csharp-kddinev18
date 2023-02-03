@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServer.DTO
+namespace LocalServer.DTO.Models
 {
     public class PermissionInformation
     {

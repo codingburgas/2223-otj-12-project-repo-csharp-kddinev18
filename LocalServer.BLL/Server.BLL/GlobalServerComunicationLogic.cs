@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.Server.BLL
 {
     public static class GlobalServerComunicationLogic
     {
@@ -35,7 +35,7 @@ namespace LocalServer.BLL
         // Convert the bytes into a string
         public static string FormatData()
         {
-            return Encoding.ASCII.GetString(_data).Replace("\0", String.Empty);
+            return Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
         }
 
         // Clear the data buffer

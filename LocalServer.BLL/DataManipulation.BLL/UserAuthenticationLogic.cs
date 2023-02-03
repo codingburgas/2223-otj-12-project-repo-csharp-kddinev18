@@ -12,7 +12,7 @@ using System.Net;
 using System.Data;
 using System.Security.Cryptography;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.DataManipulation.BLL
 {
     public static class UserAuthenticationLogic
     {
@@ -118,7 +118,7 @@ namespace LocalServer.BLL
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
                 .First().Select("Name", "=", "Admin");
-            if(dataTable.Rows.Count == 0)
+            if (dataTable.Rows.Count == 0)
             {
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
                 DatabaseInitialiser.Database.SaveDatabaseData();
@@ -177,13 +177,13 @@ namespace LocalServer.BLL
 
         public static void RegisterMember(string userName, string email, string password, string roleName)
         {
-            string roleId = String.Empty;
+            string roleId = string.Empty;
             try
             {
                 roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
                     .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 roleId = AddRole(roleName);
             }
@@ -212,7 +212,7 @@ namespace LocalServer.BLL
                 throw new Exception("Wrong credentials");
             }
             string hashPassword = Hash(password + dataTable.Rows[0]["UserId"]);
-            if(hashPassword == dataTable.Rows[0]["Password"])
+            if (hashPassword == dataTable.Rows[0]["Password"])
             {
                 throw new Exception("Wrong credentials");
             }

@@ -1,4 +1,4 @@
-﻿using LocalServer.BLL;
+﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServerGUI.View.Code_Behind.MainWindow.Pages;
 using System;
 using System.Collections.Generic;

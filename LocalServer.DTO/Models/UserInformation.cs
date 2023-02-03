@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
-namespace LocalServer.DTO
+
+namespace LocalServer.DTO.Models
 {
     public class UserInformation
     {

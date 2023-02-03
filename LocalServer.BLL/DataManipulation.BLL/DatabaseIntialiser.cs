@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.DataManipulation.BLL
 {
     public class DatabaseInitialiser
     {
@@ -152,7 +152,7 @@ namespace LocalServer.BLL
                 Database.Tables.Add(permissionTable);
                 changesMade = true;
             }
-            if(changesMade)
+            if (changesMade)
                 Database.SaveDatabaseInfrastructure();
         }
     }

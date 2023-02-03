@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Diagnostics;
 using System.Net;
-using LocalServer.BLL;
+using LocalServer.BLL.Server.BLL;
 
 namespace LocalServer.CLI
 {

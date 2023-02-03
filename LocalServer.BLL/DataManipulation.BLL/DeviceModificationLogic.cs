@@ -1,5 +1,5 @@
 ﻿using LocalSerevr.DAL;
-using LocalServer.DTO;
+using LocalServer.DTO.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.DataManipulation.BLL
 {
     public static class DeviceModificationLogic
     {
@@ -22,7 +22,8 @@ namespace LocalServer.BLL
             List<DeviceInformation> devices = new List<DeviceInformation>();
             foreach (DataRow data in dataTable.Rows)
             {
-                devices.Add(new DeviceInformation { 
+                devices.Add(new DeviceInformation
+                {
                     DeviceId = int.Parse(data["DeviceId"].ToString()),
                     IPv4Address = data["IPv4Address"].ToString(),
                     Name = data["Name"].ToString(),
@@ -32,7 +33,7 @@ namespace LocalServer.BLL
             return devices;
         }
 
-        public static List<DeviceInformation> GetDevicesInformation(string name ,int pagingSize, int skipAmount)
+        public static List<DeviceInformation> GetDevicesInformation(string name, int pagingSize, int skipAmount)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Devices").First().Select("Name", "=", name, pagingSize, skipAmount);
@@ -59,7 +60,7 @@ namespace LocalServer.BLL
         public static void EditDevice(int deviceId, string name, bool isAprooved)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First();
-            if(bool.Parse(table.Select("DeviceId", "=", deviceId.ToString()).Rows[0]["IsAprooved"].ToString()) != isAprooved)
+            if (bool.Parse(table.Select("DeviceId", "=", deviceId.ToString()).Rows[0]["IsAprooved"].ToString()) != isAprooved)
             {
                 foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
                 {
@@ -77,7 +78,7 @@ namespace LocalServer.BLL
             DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("DeviceId", "=", deviceId.ToString()).Rows[0];
 
-            if(bool.Parse(dataRow["isAprooved"].ToString()))
+            if (bool.Parse(dataRow["isAprooved"].ToString()))
             {
                 DatabaseInitialiser.Database.Tables.Remove(
                     DatabaseInitialiser.Database.Tables.Where(table => table.Name == dataRow["Name"].ToString()).First());

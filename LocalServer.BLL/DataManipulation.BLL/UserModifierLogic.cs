@@ -1,5 +1,5 @@
 ﻿using LocalSerevr.DAL;
-using LocalServer.DTO;
+using LocalServer.DTO.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.DataManipulation.BLL
 {
     public static class UserModifierLogic
     {
@@ -48,7 +48,7 @@ namespace LocalServer.BLL
             return users;
         }
 
-        public static List<UserInformation> GetUsersInformation(string userName,int pagingSize, int skipAmount)
+        public static List<UserInformation> GetUsersInformation(string userName, int pagingSize, int skipAmount)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Users").First().Select("UserName", "=", userName, pagingSize, skipAmount);
@@ -74,12 +74,12 @@ namespace LocalServer.BLL
                 .Where(table => table.Name == "Users").First().GetRowsCount();
         }
 
-        public static void EditUser(int userId,string userName, string email, string role)
+        public static void EditUser(int userId, string userName, string email, string role)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First();
             table.Update("UserName", userName, "UserId", "=", userId.ToString());
             table.Update("Email", email, "UserId", "=", userId.ToString());
-            string roleId = String.Empty;
+            string roleId = string.Empty;
             try
             {
                 roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
@@ -96,7 +96,7 @@ namespace LocalServer.BLL
         public static void RemoveUser(int userId)
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
-                .Delete("UserId", "=", userId.ToString()); 
+                .Delete("UserId", "=", userId.ToString());
         }
     }
 }

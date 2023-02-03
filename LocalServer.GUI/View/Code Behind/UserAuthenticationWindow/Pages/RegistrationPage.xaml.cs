@@ -1,4 +1,4 @@
-﻿using LocalServer.BLL;
+﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServerGUI.Models;
 using System;
 using System.Collections.Generic;

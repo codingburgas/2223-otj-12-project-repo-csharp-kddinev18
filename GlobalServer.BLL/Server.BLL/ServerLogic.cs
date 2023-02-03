@@ -10,13 +10,18 @@ using System.Timers;
 using System;
 using System.Data.SqlClient;
 using System.Net.Http;
+using GlobalServer.DAL;
+using GlobalServer.DAL.Data.Models;
+using System.Security.Cryptography;
 
-namespace LocalServer.BLL
+namespace GlobalServer.BLL.Server.BLL
 {
     public class ServerLogic
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
+        private static Dictionary<string, bool> _aproovedClients = new Dictionary<string, bool>();
+        private static IOTHomeSecurityDbContext _dbContext = new IOTHomeSecurityDbContext();
 
         private static byte[] _data = new byte[16777216];
 
@@ -32,14 +37,6 @@ namespace LocalServer.BLL
         {
             try
             {
-                DatabaseInitialiser databaseInitialiser = new DatabaseInitialiser(deleteTimer);
-                ClientHandlingLogic.DatabaseInitialiser = databaseInitialiser;
-                UserAuthenticationLogic.DatabaseInitialiser = databaseInitialiser;
-                UserModifierLogic.DatabaseInitialiser = databaseInitialiser;
-                DeviceModificationLogic.DatabaseInitialiser = databaseInitialiser;
-                RoleModificationLogic.DatabaseInitialiser = databaseInitialiser;
-                PermissionModifierLogic.DatabaseInitialiser = databaseInitialiser;
-
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
                 _tcpListener.Start();
@@ -56,7 +53,7 @@ namespace LocalServer.BLL
         public void ServerShutDown()
         {
             // Stops the server
-            if(_tcpListener != null)
+            if (_tcpListener != null)
                 _tcpListener.Stop();
             foreach (TcpClient client in _clients)
             {
@@ -69,32 +66,23 @@ namespace LocalServer.BLL
         {
             // Newly connection client
             TcpClient client = null;
-            bool accepted = false;
             try
             {
                 // Connect the client
-                if (_tcpListener is not null)
-                {
-                    client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                    Console.WriteLine("Client connected with IP {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
-                    accepted = ClientHandlingLogic.AddClients(client);
-                }
-
+                client = _tcpListener.EndAcceptTcpClient(asyncResult);
+                _aproovedClients.Add(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), false);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            if (accepted)
-            {
-                // Add the client newly connect client into the _clients list
-                _clients.Add(client);
-                // Begin recieving bytes from the client
-                client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
-                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
-            }
-            else if (_tcpListener is not null)
+            // Add the client newly connect client into the _clients list
+            _clients.Add(client);
+            // Begin recieving bytes from the client
+            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
+            if (_tcpListener is not null)
             {
                 DisconnectClient(client);
                 _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
@@ -116,7 +104,31 @@ namespace LocalServer.BLL
                     return;
                 }
                 // Get the data
-                ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", String.Empty), ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), _clients);
+                string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
+
+
+
+                string ipAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+                if (_aproovedClients[ipAddress] == false)
+                {
+                    JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+                    User user = _dbContext.Users.Where(user => user.UserName == jObject["UserName"].ToString()).First();
+                    string hashedPassword = Hash(String.Concat(jObject["Password"].ToString(), user.Salt));
+                    if(hashedPassword == user.Password)
+                    {
+                        _aproovedClients[ipAddress] = true;
+                    }
+                    else
+                    {
+                        DisconnectClient(client);
+                        _aproovedClients.Remove(ipAddress);
+                    }
+                }
+                else
+                {
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -144,6 +156,31 @@ namespace LocalServer.BLL
             client.Client.Close();
             _clients.Remove(client);
             client = null;
+        }
+
+
+
+
+
+
+
+
+        private static string Hash(string data)
+        {
+            // Conver the output to a string and return it
+            return BitConverter.ToString
+                (
+                    // Hashing
+                    SHA256.Create().ComputeHash
+                    (
+                        // convert the string into bytes using UTF8 encoding
+                        Encoding.UTF8.GetBytes(data)
+                    )
+                )
+                // Convert all the characters in the string to a uppercase characters
+                .ToUpper()
+                // Remove the '-' from the hashed data
+                .Replace("-", "");
         }
     }
 }

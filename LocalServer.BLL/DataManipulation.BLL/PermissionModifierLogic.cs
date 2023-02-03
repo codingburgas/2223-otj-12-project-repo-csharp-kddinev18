@@ -1,5 +1,5 @@
 ﻿using LocalSerevr.DAL;
-using LocalServer.DTO;
+using LocalServer.DTO.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServer.BLL
+namespace LocalServer.BLL.DataManipulation.BLL
 {
     public static class PermissionModifierLogic
     {

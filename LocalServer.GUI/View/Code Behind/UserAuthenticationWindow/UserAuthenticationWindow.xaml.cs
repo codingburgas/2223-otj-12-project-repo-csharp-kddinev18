@@ -1,4 +1,4 @@
-﻿using LocalServer.BLL;
+﻿using LocalServer.BLL.Server.BLL;
 using LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages;
 using LocalServerGUI.View.Code_Behind.MainWindow;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages;
