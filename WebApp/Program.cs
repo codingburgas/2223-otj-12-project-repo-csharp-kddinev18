@@ -1,3 +1,6 @@
+using WebApp.BLL.Services;
+using WebApp.DAL;
+
 namespace WebApp
 {
     public class Program
@@ -8,6 +11,7 @@ namespace WebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 
             var app = builder.Build();
 

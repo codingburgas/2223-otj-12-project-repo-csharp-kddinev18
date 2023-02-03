@@ -1,4 +1,4 @@
-namespace WebApp.Models
+namespace WebApp.DAL.Data.Models
 {
     public class ErrorViewModel
     {

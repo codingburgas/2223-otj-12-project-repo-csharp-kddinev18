@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApp.DAL\WebApp.DAL.csproj" />
-    <ProjectReference Include="..\WebApp\WebApp.csproj" />
   </ItemGroup>
 
 </Project>

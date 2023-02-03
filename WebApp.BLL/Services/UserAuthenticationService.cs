@@ -1,13 +1,23 @@
-﻿using System.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 using WebApp.DAL;
+using WebApp.DAL.Data.Models;
 
-namespace WebApp.BLL
+namespace WebApp.BLL.Services
 {
-    public static class UserAuthentication
+    public interface IUserAuthenticationService
     {
-        private static string Hash(string data)
+        public void Register(User user, IOTHomeSecurityDbContext dbContext);
+        public int LogIn(User user, IOTHomeSecurityDbContext dbContext);
+
+    }
+
+    public class UserAuthenticationService : IUserAuthenticationService
+    {
+        private string Hash(string data)
         {
             // Conver the output to a string and return it
             return BitConverter.ToString
@@ -25,7 +35,7 @@ namespace WebApp.BLL
                 .Replace("-", "");
         }
         // Generates a random sequence of characters and numbers
-        private static string GetSalt(string userName)
+        private string GetSalt(string userName)
         {
             StringBuilder salt = new StringBuilder();
             Random random = new Random();
@@ -49,7 +59,7 @@ namespace WebApp.BLL
         }
 
         // Checks if the email is on corrent format
-        private static bool CheckEmail(string email)
+        private bool CheckEmail(string email)
         {
             // Check if the email does not constains '@'
             if (email.Contains('@') == false)
@@ -61,7 +71,7 @@ namespace WebApp.BLL
         }
 
         // Checks if the password is on corrent format
-        private static bool CheckPassword(string pass)
+        private bool CheckPassword(string pass)
         {
             // Checks if the password is between 10 and 32 characters long
             if (pass.Length <= 10 || pass.Length > 32)
@@ -90,7 +100,7 @@ namespace WebApp.BLL
             }
             throw new ArgumentException("Password must contain at least 1 special character");
         }
-        private static bool CheckUsername(string userName)
+        private bool CheckUsername(string userName)
         {
             // Checks if the userName is between 6 and 64 characters long
             if (userName.Length <= 8 || userName.Length > 64)
@@ -104,7 +114,7 @@ namespace WebApp.BLL
             return true;
         }
 
-        public static void Register(User user, IOTHomeSecurityDbContext dbContext)
+        public void Register(User user, IOTHomeSecurityDbContext dbContext)
         {
             // Checks if the email is in corrent format
             CheckUsername(user.UserName);
@@ -123,6 +133,31 @@ namespace WebApp.BLL
 
             dbContext.Users.Add(user);
             dbContext.SaveChanges();
+        }
+
+        public int LogIn(User userInformation, IOTHomeSecurityDbContext dbContext)
+        {
+            List<User> users = dbContext.Users
+                // Where the user's username matches the given useraname
+                .Where(u => u.UserName == userInformation.UserName)
+                // Convert the result set to a list
+                .ToList();
+
+            // If there are no users with the given user name trow an exception
+            if (users.Count == 0)
+                return -1;
+
+            // For every user check is the password matches
+            foreach (User user in users)
+            {
+                // Cheks if the hashed password is equal to the user password
+                if (Hash(userInformation.Password + user.Salt.ToString()) == user.Password)
+                {
+                    return user.Id;
+                }
+            }
+            // Throws exception if the user couldn't log in
+            return -1;
         }
     }
 }

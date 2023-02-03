@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System.Reflection.Metadata;
+using WebApp.DAL.Data.Models;
 
 namespace WebApp.DAL
 {

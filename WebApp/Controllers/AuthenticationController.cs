@@ -1,14 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.BLL;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
+using WebApp.BLL.Services;
 using WebApp.DAL;
 using WebApp.DAL.Data.Models;
-using WebApp.Models;
 
 namespace WebApp.Controllers
 {
     public class AuthenticationController : Controller
     {
+        private readonly IUserAuthenticationService _userAuthenticationService;
         private IOTHomeSecurityDbContext _dbContext;
+        public AuthenticationController(IUserAuthenticationService userAuthenticationService)
+        {
+            _dbContext = new IOTHomeSecurityDbContext();
+            _userAuthenticationService = userAuthenticationService;
+        }
         [HttpGet]
         public IActionResult Register()
         {
@@ -18,8 +25,8 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult Register(User newUser)
         {
-            UserAuthentication.Register(newUser, _dbContext);
-            return LogIn();
+            _userAuthenticationService.Register(newUser, _dbContext);
+            return RedirectToAction("LogIn");
         }
 
         [HttpGet]
@@ -29,9 +36,13 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn(User newUser)
+        public string LogIn(User user)
         {
-            return View();
+            int test = _userAuthenticationService.LogIn(user, _dbContext);
+            if (test == -1)
+                return "YOU FAILED";
+            else
+                return "You have logged in!!!!!";
         }
     }
 }
