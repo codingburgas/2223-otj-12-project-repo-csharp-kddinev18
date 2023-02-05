@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace LocalServer.BLL.Server.BLL
 {
@@ -18,10 +22,10 @@ namespace LocalServer.BLL.Server.BLL
             if (_tcpClient == null)
                 _tcpClient = new TcpClient("127.0.0.1", 5400);
 
-            ClientToServerComunication($"{userName}|{password}");
+            ClientToServerComunication("{ "+$"UserName: \"{userName}\", Password: \"{password}\" "+" }");
         }
 
-        // Diconenct from the servet
+        // Disconenct from the servet
         public static void RemoveConnection()
         {
             if (_tcpClient != null)
@@ -45,7 +49,7 @@ namespace LocalServer.BLL.Server.BLL
         }
 
         // Communication with the server
-        private static string ClientToServerComunication(string message)
+        private static JsonObject ClientToServerComunication(string message)
         {
             // Clear the data buffer
             FlushBuffer();
@@ -55,14 +59,41 @@ namespace LocalServer.BLL.Server.BLL
             // Wait until a response is recieved
             _tcpClient.Client.Receive(_data);
 
+            string data = FormatData();
             // Format tha data
-            string serialisedData = FormatData();
-            // If the first argument is '0' throw exception
-            if (serialisedData.Split('|')[0] == "1")
-                throw new Exception(serialisedData.Split('|')[1]);
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+            if (jObject.ContainsKey("Error"))
+                throw new Exception(jObject["Error"].ToString());
 
-            // Else return the data
-            return serialisedData;
+            return jObject;
+        }
+
+        public static async Task AwaitServerCall()
+        {
+            try
+            {
+                //if (_tcpClient.Connected)
+                //{
+                    //NetworkStream stream = _tcpClient.GetStream();
+
+                    while (true)//_tcpClient.Connected)
+                    {
+                        //byte[] buffer = new byte[_tcpClient.ReceiveBufferSize];
+                        //int read = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        //if (read > 0)
+                        //{
+                            // you have received a message, do something with it
+                        //}
+                    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                // display the error message or whatever
+                _tcpClient.Client.Shutdown(SocketShutdown.Both);
+                _tcpClient.Close();
+                _tcpClient = null;
+            }
         }
     }
 }

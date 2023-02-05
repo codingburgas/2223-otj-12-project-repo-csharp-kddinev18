@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
 using WebApp.BLL.Services;
 using WebApp.DAL;
@@ -36,13 +37,10 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public string LogIn(User user)
+        public void LogIn(User user)
         {
-            int test = _userAuthenticationService.LogIn(user, _dbContext);
-            if (test == -1)
-                return "YOU FAILED";
-            else
-                return "You have logged in!!!!!";
+            TempData["CurrentUserInformation"] = JsonConvert.SerializeObject(new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext) });
+            RedirectToAction("Index", "Home");
         }
     }
 }

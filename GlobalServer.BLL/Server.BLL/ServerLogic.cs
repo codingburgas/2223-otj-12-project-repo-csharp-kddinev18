@@ -20,7 +20,7 @@ namespace GlobalServer.BLL.Server.BLL
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
-        private static Dictionary<string, bool> _aproovedClients = new Dictionary<string, bool>();
+        private static Dictionary<string, Tuple<int,bool>> _aproovedClients = new Dictionary<string, Tuple<int, bool>>();
         private static IOTHomeSecurityDbContext _dbContext = new IOTHomeSecurityDbContext();
 
         private static byte[] _data = new byte[16777216];
@@ -70,7 +70,7 @@ namespace GlobalServer.BLL.Server.BLL
             {
                 // Connect the client
                 client = _tcpListener.EndAcceptTcpClient(asyncResult);
-                _aproovedClients.Add(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), false);
+                _aproovedClients.Add(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), new Tuple<int, bool>(-1, false));
             }
             catch (Exception ex)
             {
@@ -105,28 +105,14 @@ namespace GlobalServer.BLL.Server.BLL
                 }
                 // Get the data
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
-
-
-
-                string ipAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
-                if (_aproovedClients[ipAddress] == false)
+                if(AuthenticateClient(client, data))
                 {
-                    JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-                    User user = _dbContext.Users.Where(user => user.UserName == jObject["UserName"].ToString()).First();
-                    string hashedPassword = Hash(String.Concat(jObject["Password"].ToString(), user.Salt));
-                    if(hashedPassword == user.Password)
-                    {
-                        _aproovedClients[ipAddress] = true;
-                    }
-                    else
-                    {
-                        DisconnectClient(client);
-                        _aproovedClients.Remove(ipAddress);
-                    }
+
                 }
                 else
                 {
-
+                    DisconnectClient(client);
+                    _aproovedClients.Remove(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
                 }
 
             }
@@ -141,6 +127,30 @@ namespace GlobalServer.BLL.Server.BLL
                 FlushBuffer();
             }
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        private static bool AuthenticateClient(TcpClient client, string data)
+        {
+            string ipAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+            if (_aproovedClients[ipAddress].Item2 == false)
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+                User user = _dbContext.Users.Where(user => user.UserName == jObject["UserName"].ToString()).First();
+                string hashedPassword = Hash(String.Concat(jObject["Password"].ToString(), user.Salt));
+                if (hashedPassword == user.Password)
+                {
+                    _aproovedClients[ipAddress] = new Tuple<int, bool>(user.Id, true);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
 
         // Clear the buffer
@@ -158,12 +168,10 @@ namespace GlobalServer.BLL.Server.BLL
             client = null;
         }
 
-
-
-
-
-
-
+        public static void LocalServerCommunication(int userId, string localServerIp, string message)
+        {
+            
+        }
 
         private static string Hash(string data)
         {

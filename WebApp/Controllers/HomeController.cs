@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using WebApp.DAL.Data.Models;
 
@@ -15,7 +16,15 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (TempData["CurrentUserInformation"] is null)
+            {
+                return View(new CurrentUserModel() { Id = 0 });
+            }
+            else
+            {
+                CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
+                return View(currentUser);
+            }
         }
 
         public IActionResult Privacy()

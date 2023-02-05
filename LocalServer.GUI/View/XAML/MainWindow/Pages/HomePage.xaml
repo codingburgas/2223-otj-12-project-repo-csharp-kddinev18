@@ -39,7 +39,7 @@
                     <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="UserName"/>
                     <StackPanel Orientation="Horizontal" Margin="10">
                         <Icon:PackIconMaterial Kind="FormTextboxPassword" Style="{StaticResource textBoxIcon}"/>
-                        <PasswordBox x:Name="PasswordTextBox" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
+                        <PasswordBox x:Name="Password" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
                     </StackPanel>
                     <Button Margin="20" Grid.Column="1" Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Connect to server" x:Name="ConnectButton" Click="ConnectButton_Click" Content="Connect"/>
                 </StackPanel>

@@ -10,11 +10,7 @@ namespace LocalServer.CLI
     {
         static void Main(string[] args)
         {
-            ServerLogic server = new ServerLogic(5400);
-            server.ServerSetUp(200 * 60 * 1000);
-
-            Console.ReadKey();
-            server.ServerShutDown();
+            Console.WriteLine("Hi");
         }
     }
 }
