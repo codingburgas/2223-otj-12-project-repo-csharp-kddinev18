@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -20,9 +21,9 @@ namespace LocalServer.BLL.Server.BLL
         public static void SetUpConnection(string userName, string password)
         {
             if (_tcpClient == null)
-                _tcpClient = new TcpClient("127.0.0.1", 5400);
+                _tcpClient = new TcpClient("127.0.0.1", 5401);
 
-            ClientToServerComunication("{ "+$"UserName: \"{userName}\", Password: \"{password}\" "+" }");
+            ClientToServerComunication("{ "+$" \"UserName\": \"{userName}\", \"Password\": \"{password}\" " +" }");
         }
 
         // Disconenct from the servet
@@ -72,20 +73,24 @@ namespace LocalServer.BLL.Server.BLL
         {
             try
             {
-                //if (_tcpClient.Connected)
-                //{
-                    //NetworkStream stream = _tcpClient.GetStream();
+                if (_tcpClient.Connected)
+                {
+                    NetworkStream stream = _tcpClient.GetStream();
 
-                    while (true)//_tcpClient.Connected)
+                    while (_tcpClient.Connected)
                     {
-                        //byte[] buffer = new byte[_tcpClient.ReceiveBufferSize];
-                        //int read = await stream.ReadAsync(buffer, 0, buffer.Length);
-                        //if (read > 0)
-                        //{
-                            // you have received a message, do something with it
-                        //}
+                        byte[] buffer = new byte[_tcpClient.ReceiveBufferSize];
+                        int read = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        if (read > 0)
+                        {
+                            _data = buffer.SubArray(0, read);
+                            string data = FormatData();
+                            string responseBufferNumber = data.Split('|')[0];
+                            Thread.Sleep(5000);
+                            stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|I MADE IT"));
+                        }
                     }
-                //}
+                }
             }
             catch (Exception ex)
             {
@@ -94,6 +99,13 @@ namespace LocalServer.BLL.Server.BLL
                 _tcpClient.Close();
                 _tcpClient = null;
             }
+        }
+
+        public static T[] SubArray<T>(this T[] array, int offset, int length)
+        {
+            T[] result = new T[length];
+            Array.Copy(array, offset, result, 0, length);
+            return result;
         }
     }
 }

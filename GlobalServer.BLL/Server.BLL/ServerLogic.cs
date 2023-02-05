@@ -13,6 +13,8 @@ using System.Net.Http;
 using GlobalServer.DAL;
 using GlobalServer.DAL.Data.Models;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Net.Http.Headers;
 
 namespace GlobalServer.BLL.Server.BLL
 {
@@ -22,7 +24,8 @@ namespace GlobalServer.BLL.Server.BLL
         private static List<TcpClient> _clients = new List<TcpClient>();
         private static Dictionary<string, Tuple<int,bool>> _aproovedClients = new Dictionary<string, Tuple<int, bool>>();
         private static IOTHomeSecurityDbContext _dbContext = new IOTHomeSecurityDbContext();
-
+        private static Dictionary<int, string> _resposeBuffer = new Dictionary<int, string>();
+        private static int _responseBufferCount = 0;
         private static byte[] _data = new byte[16777216];
 
         private int _port;
@@ -84,7 +87,6 @@ namespace GlobalServer.BLL.Server.BLL
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
             if (_tcpListener is not null)
             {
-                DisconnectClient(client);
                 _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
             }
         }
@@ -107,10 +109,14 @@ namespace GlobalServer.BLL.Server.BLL
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
                 if(AuthenticateClient(client, data))
                 {
-
+                    if(data.Contains('|')) 
+                    {
+                        _resposeBuffer[int.Parse(data.Split('|')[0])] = data.Split('|')[1];
+                    }
                 }
                 else
                 {
+
                     DisconnectClient(client);
                     _aproovedClients.Remove(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
                 }
@@ -140,10 +146,25 @@ namespace GlobalServer.BLL.Server.BLL
                 if (hashedPassword == user.Password)
                 {
                     _aproovedClients[ipAddress] = new Tuple<int, bool>(user.Id, true);
+
+                    NetworkStream stream = client.GetStream();
+                    string sendingData = "{}";
+                    byte[] msg = Encoding.ASCII.GetBytes(sendingData);
+
+                    //Send to Client
+                    stream.Write(msg, 0, msg.Length);
+
                     return true;
                 }
                 else
                 {
+                    NetworkStream stream = client.GetStream();
+                    string sendingData = "{\"Error\":\"Authentication not successful\"}";
+                    byte[] msg = Encoding.ASCII.GetBytes(sendingData);
+
+                    //Send to Client
+                    stream.Write(msg, 0, msg.Length);
+
                     return false;
                 }
             }
@@ -164,13 +185,32 @@ namespace GlobalServer.BLL.Server.BLL
             Console.WriteLine("Client disconnected");
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
+            _aproovedClients.Remove(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
             _clients.Remove(client);
             client = null;
         }
 
-        public static void LocalServerCommunication(int userId, string localServerIp, string message)
+        public static JsonObject LocalServerCommunication(int userId, string message)
         {
-            
+            int container = ++_responseBufferCount;
+            string clientIp = _aproovedClients.Where(aproovedClient => aproovedClient.Value.Item1 == userId).FirstOrDefault().Key;
+            if(clientIp != null)
+            {
+                TcpClient client = _clients.Where(client => ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() == clientIp).First();
+                NetworkStream stream = client.GetStream();
+                byte[] msg = Encoding.ASCII.GetBytes($"{container}|{message}");
+
+                //Send to Client
+                stream.Write(msg, 0, msg.Length);
+
+                _resposeBuffer.Add(container, String.Empty);
+                while (_resposeBuffer[container] == String.Empty)
+                {
+                    Thread.Sleep(500);
+                }
+                Console.WriteLine(_resposeBuffer[container]);
+            }
+            //throw new Exception("There isn't a local server connected associated with that user");
         }
 
         private static string Hash(string data)
