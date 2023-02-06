@@ -40,6 +40,7 @@ namespace LocalServer.BLL.Server.BLL
                 DeviceModificationLogic.DatabaseInitialiser = databaseInitialiser;
                 RoleModificationLogic.DatabaseInitialiser = databaseInitialiser;
                 PermissionModifierLogic.DatabaseInitialiser = databaseInitialiser;
+                GlobalServerComunicationLogic.DatabaseInitialiser = databaseInitialiser;
 
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server

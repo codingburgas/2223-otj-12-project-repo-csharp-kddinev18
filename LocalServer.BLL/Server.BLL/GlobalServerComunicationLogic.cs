@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocalServer.BLL.DataManipulation.BLL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace LocalServer.BLL.Server.BLL
     {
         private static byte[] _data = new byte[16777216];
         private static TcpClient _tcpClient;
+        public static DatabaseInitialiser DatabaseInitialiser { get; set; }
 
         // Connect to the server
         public static void SetUpConnection(string userName, string password)
@@ -99,6 +101,23 @@ namespace LocalServer.BLL.Server.BLL
                 _tcpClient.Close();
                 _tcpClient = null;
             }
+        }
+
+        private static string GetDevices()
+        {
+            return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables
+                .Where(table => table.Name != "Users" || table.Name != "Devices"
+                || table.Name != "Roles" || table.Name != "Permissions")
+                .Select(table => table.Name));
+        }
+
+        private static string GetData(string ipAddress, int pagingSize, int skipAmount)
+        {
+            string deviceName = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Select("IPv4Address", "=", ipAddress).Rows[0]["Name"].ToString();
+
+            return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
+                .Select("", "", "", pagingSize, skipAmount));
         }
 
         public static T[] SubArray<T>(this T[] array, int offset, int length)
