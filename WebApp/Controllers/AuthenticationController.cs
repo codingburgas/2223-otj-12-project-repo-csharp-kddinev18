@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
 using WebApp.BLL.Services;
-using WebApp.DAL;
-using WebApp.DAL.Data.Models;
+using WebApp.DAL.Data;
+using WebApp.DAL.Models;
 
 namespace WebApp.Controllers
 {

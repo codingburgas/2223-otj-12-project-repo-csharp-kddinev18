@@ -208,9 +208,9 @@ namespace GlobalServer.BLL.Server.BLL
                 {
                     Thread.Sleep(500);
                 }
-                Console.WriteLine(_resposeBuffer[container]);
+                return JsonSerializer.Deserialize<JsonObject>(_resposeBuffer[container]);
             }
-            //throw new Exception("There isn't a local server connected associated with that user");
+            throw new Exception("There isn't a local server connected associated with that user");
         }
 
         private static string Hash(string data)

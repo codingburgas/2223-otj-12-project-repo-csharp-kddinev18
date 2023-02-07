@@ -71,6 +71,13 @@ namespace LocalServer.BLL.Server.BLL
             return jObject;
         }
 
+        enum OperationTypes
+        {
+            GetDevices = 1,
+            GetData = 2,
+            SentData = 3
+        }
+
         public static async Task AwaitServerCall()
         {
             try
@@ -88,8 +95,27 @@ namespace LocalServer.BLL.Server.BLL
                             _data = buffer.SubArray(0, read);
                             string data = FormatData();
                             string responseBufferNumber = data.Split('|')[0];
-                            Thread.Sleep(5000);
-                            stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|I MADE IT"));
+                            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Split('|')[1]);
+                            JsonObject arguments = null;
+                            OperationTypes operation = (OperationTypes)Enum.Parse(typeof(OperationTypes), jObject["OperationType"].ToString(), true);
+
+                            switch (operation)
+                            {
+                                case OperationTypes.GetDevices:
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices()}"));
+                                    break;
+                                case OperationTypes.GetData:
+                                    arguments = jObject["Arguments"] as JsonObject;
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
+                                        $"{GetData(arguments["IpAddress"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
+                                    break;
+                                case OperationTypes.SentData:
+                                    arguments = jObject["Arguments"] as JsonObject;
+                                    SendData(arguments["IpAddress"].ToString(), arguments["Data"].ToString());
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
@@ -106,8 +132,8 @@ namespace LocalServer.BLL.Server.BLL
         private static string GetDevices()
         {
             return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables
-                .Where(table => table.Name != "Users" || table.Name != "Devices"
-                || table.Name != "Roles" || table.Name != "Permissions")
+                .Where(table => table.Name != "Users" || table.Name != "Devices" || 
+                table.Name != "Roles" || table.Name != "Permissions" || table.Name != "sys.diagrams")
                 .Select(table => table.Name));
         }
 
@@ -118,6 +144,11 @@ namespace LocalServer.BLL.Server.BLL
 
             return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
                 .Select("", "", "", pagingSize, skipAmount));
+        }
+
+        private static void SendData(string ipAddress, string data)
+        {
+            ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(data));
         }
 
         public static T[] SubArray<T>(this T[] array, int offset, int length)

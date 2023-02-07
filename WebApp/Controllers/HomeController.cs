@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using WebApp.DAL.Data.Models;
+using WebApp.DAL.Models;
+using WebApp.DAL.Data;
 
 namespace WebApp.Controllers
 {

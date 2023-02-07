@@ -1,4 +1,4 @@
-﻿namespace WebApp.DAL.Data.Models
+﻿namespace WebApp.DAL.Models
 {
     public class User
     {

@@ -76,22 +76,6 @@ namespace LocalServer.BLL.Server.BLL
                 table.Insert(args.ToArray());
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
-            /*else if (jObject["Operation"].ToString() == "Send")
-            {
-                string ipAddressDestination = jObject["Address"].ToString();
-                foreach (TcpClient client in clients)
-                {
-                    if (((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() == ipAddressDestination)
-                    {
-                        NetworkStream stream = client.GetStream();
-                        string sendingData = jObject["Data"].ToString();
-                        byte[] msg = Encoding.ASCII.GetBytes(data);
-
-                        //Send to Client
-                        stream.Write(msg, 0, msg.Length);
-                    }
-                }
-            }*/
             else
             {
                 throw new Exception("Wrong operation type");

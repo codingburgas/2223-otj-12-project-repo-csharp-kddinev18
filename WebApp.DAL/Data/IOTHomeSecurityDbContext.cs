@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
-using WebApp.DAL.Data.Models;
+using WebApp.DAL.Models;
 
-namespace WebApp.DAL
+namespace WebApp.DAL.Data
 {
     public partial class IOTHomeSecurityDbContext : DbContext
     {

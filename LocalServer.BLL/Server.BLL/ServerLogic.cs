@@ -147,5 +147,10 @@ namespace LocalServer.BLL.Server.BLL
             _clients.Remove(client);
             client = null;
         }
+
+        public static TcpClient GetClient(string ipAddress)
+        {
+            return _clients.Where(client => ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() == ipAddress).First();
+        }
     }
 }

@@ -3,8 +3,8 @@ using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
-using WebApp.DAL;
-using WebApp.DAL.Data.Models;
+using WebApp.DAL.Data;
+using WebApp.DAL.Models;
 
 namespace WebApp.BLL.Services
 {

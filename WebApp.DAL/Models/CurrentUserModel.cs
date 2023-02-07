@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApp.DAL.Data.Models
+namespace WebApp.DAL.Models
 {
     [Serializable]
     public class CurrentUserModel
