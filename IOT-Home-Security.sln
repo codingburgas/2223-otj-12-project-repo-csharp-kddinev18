@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.BLL", "WebApp.BLL\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.DAL", "WebApp.DAL\WebApp.DAL.csproj", "{F36767E5-C381-4D50-BDC9-0A3A72DDBC25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalServer", "GlobalServer\GlobalServer.csproj", "{38ECC60F-EA0A-439C-BA92-B866FDD1BAA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobalServer", "GlobalServer\GlobalServer.csproj", "{38ECC60F-EA0A-439C-BA92-B866FDD1BAA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalServer.BLL", "GlobalServer.BLL\GlobalServer.BLL.csproj", "{C4DC5173-6B19-44FA-B57D-485847AFCD4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobalServer.BLL", "GlobalServer.BLL\GlobalServer.BLL.csproj", "{C4DC5173-6B19-44FA-B57D-485847AFCD4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalServer.DAL", "GlobalServer.DAL\GlobalServer.DAL.csproj", "{2E47247D-1A8C-4444-8C6F-F20C1E069519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobalServer.DAL", "GlobalServer.DAL\GlobalServer.DAL.csproj", "{2E47247D-1A8C-4444-8C6F-F20C1E069519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

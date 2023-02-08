@@ -1,3 +1,4 @@
+using GlobalServer.BLL.Server.BLL;
 using WebApp.BLL.Services;
 using WebApp.DAL;
 
@@ -7,6 +8,9 @@ namespace WebApp
     {
         public static void Main(string[] args)
         {
+            ServerLogic server = new ServerLogic(5401);
+            server.ServerSetUp(1000 * 1000 * 1000);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

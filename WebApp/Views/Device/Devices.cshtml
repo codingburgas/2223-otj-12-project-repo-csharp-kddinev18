@@ -1,2 +1,8 @@
 ﻿@using System.Text.Json.Nodes;
-@model JsonObject
+@model IEnumerable<JsonObject>
+
+@foreach (JsonObject devices in Model)
+{
+    <h1>@devices["Name"].ToString()</h1>
+    <br/>
+}

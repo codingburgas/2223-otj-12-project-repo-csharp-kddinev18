@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Reflection.PortableExecutable;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Xml.Serialization;
 
 namespace LocalSerevr.DAL
@@ -124,7 +125,7 @@ namespace LocalSerevr.DAL
         public void Delete(string columnName = "", string expression = "", string value = "", bool isTrusted = false, string whereCaluse = "")
         {
             string query = String.Empty;
-            if(whereCaluse != String.Empty && isTrusted)
+            if (whereCaluse != String.Empty && isTrusted)
             {
                 query = $"DELETE FROM [{Name}] WHERE {whereCaluse};";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
@@ -225,7 +226,7 @@ namespace LocalSerevr.DAL
                     throw new Exception($"The operation {expression} is not supported");
             }
 
-            if(isTrusted)
+            if (isTrusted)
             {
                 query = $"UPDATE {Name} SET {updateColumnName} = @UpdateValue WHERE {whereClause};";
             }
@@ -337,6 +338,15 @@ namespace LocalSerevr.DAL
                 rows.Add(row);
             }
             return JsonSerializer.Serialize(rows);
+        }
+        public static string GetTableInfrastructure(DataTable table)
+        {
+            List<string> columns = new List<string>();
+            foreach (DataColumn col in table.Columns)
+            {
+                columns.Add(col.ColumnName);
+            }
+            return JsonSerializer.Serialize(columns);
         }
     }
 }

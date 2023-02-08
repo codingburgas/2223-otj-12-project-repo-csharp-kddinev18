@@ -3,6 +3,10 @@ using System.Text.Json;
 using System.Diagnostics;
 using System.Net;
 using LocalServer.BLL.Server.BLL;
+using LocalServer.BLL.DataManipulation.BLL;
+using System.Reflection.Emit;
+using LocalSerevr.DAL;
+using System.Data;
 
 namespace LocalServer.CLI
 {
@@ -10,7 +14,7 @@ namespace LocalServer.CLI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi");
+            
         }
     }
 }

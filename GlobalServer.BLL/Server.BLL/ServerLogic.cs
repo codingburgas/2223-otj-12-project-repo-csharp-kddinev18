@@ -190,7 +190,7 @@ namespace GlobalServer.BLL.Server.BLL
             client = null;
         }
 
-        public static JsonObject LocalServerCommunication(int userId, string message)
+        public static IEnumerable<JsonObject> LocalServerCommunication(int userId, string message)
         {
             int container = ++_responseBufferCount;
             string clientIp = _aproovedClients.Where(aproovedClient => aproovedClient.Value.Item1 == userId).FirstOrDefault().Key;
@@ -208,7 +208,7 @@ namespace GlobalServer.BLL.Server.BLL
                 {
                     Thread.Sleep(500);
                 }
-                return JsonSerializer.Deserialize<JsonObject>(_resposeBuffer[container]);
+                return JsonSerializer.Deserialize<IEnumerable<JsonObject>>(_resposeBuffer[container]);
             }
             throw new Exception("There isn't a local server connected associated with that user");
         }
