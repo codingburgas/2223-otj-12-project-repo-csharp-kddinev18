@@ -129,12 +129,25 @@ namespace LocalServer.BLL.Server.BLL
             }
         }
 
+        class DeviceNameDTO
+        {
+            public string Name { get; set; }
+        }
+
         private static string GetDevices()
         {
-            return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables
-                .Where(table => table.Name != "Users" || table.Name != "Devices" || 
+            IEnumerable<string> names = DatabaseInitialiser.Database.Tables
+                .Where(table => table.Name != "Users" || table.Name != "Devices" ||
                 table.Name != "Roles" || table.Name != "Permissions" || table.Name != "sys.diagrams")
-                .Select(table => table.Name));
+                .Select(table => table.Name);
+            string test = JsonSerializer.Serialize(names);
+            List<DeviceNameDTO> serializableData = new List<DeviceNameDTO>();
+            foreach (string name in names)
+            {
+                serializableData.Add(new DeviceNameDTO() { Name = name });
+            }
+
+            return JsonSerializer.Serialize(serializableData);
         }
 
         private static string GetData(string ipAddress, int pagingSize, int skipAmount)

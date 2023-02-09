@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         public void LogIn(User user)
         {
             TempData["CurrentUserInformation"] = JsonConvert.SerializeObject(new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext) });
-            RedirectToAction("Devices", "Device");
+            RedirectToAction("Dashboard", "Device");
         }
     }
 }

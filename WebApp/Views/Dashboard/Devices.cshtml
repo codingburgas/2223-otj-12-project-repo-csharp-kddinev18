@@ -3,6 +3,13 @@
 
 @foreach (JsonObject devices in Model)
 {
+    @if(devices["Name"] == null)
+    {
+        <h1>no table for you</h1>
+    }
+    else
+    {
     <h1>@devices["Name"].ToString()</h1>
+    }
     <br/>
 }

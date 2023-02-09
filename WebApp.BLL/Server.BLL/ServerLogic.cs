@@ -10,19 +10,19 @@ using System.Timers;
 using System;
 using System.Data.SqlClient;
 using System.Net.Http;
-using GlobalServer.DAL;
-using GlobalServer.DAL.Data.Models;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Net.Http.Headers;
+using WebApp.DAL.Data;
+using WebApp.DAL.Models;
 
-namespace GlobalServer.BLL.Server.BLL
+namespace WebApp.BLL.Server.BLL
 {
     public class ServerLogic
     {
         private static TcpListener _tcpListener;
         private static List<TcpClient> _clients = new List<TcpClient>();
-        private static Dictionary<string, Tuple<int,bool>> _aproovedClients = new Dictionary<string, Tuple<int, bool>>();
+        private static Dictionary<string, Tuple<int, bool>> _aproovedClients = new Dictionary<string, Tuple<int, bool>>();
         private static IOTHomeSecurityDbContext _dbContext = new IOTHomeSecurityDbContext();
         private static Dictionary<int, string> _resposeBuffer = new Dictionary<int, string>();
         private static int _responseBufferCount = 0;
@@ -107,9 +107,9 @@ namespace GlobalServer.BLL.Server.BLL
                 }
                 // Get the data
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
-                if(AuthenticateClient(client, data))
+                if (AuthenticateClient(client, data))
                 {
-                    if(data.Contains('|')) 
+                    if (data.Contains('|'))
                     {
                         _resposeBuffer[int.Parse(data.Split('|')[0])] = data.Split('|')[1];
                     }
@@ -142,7 +142,7 @@ namespace GlobalServer.BLL.Server.BLL
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
                 User user = _dbContext.Users.Where(user => user.UserName == jObject["UserName"].ToString()).First();
-                string hashedPassword = Hash(String.Concat(jObject["Password"].ToString(), user.Salt));
+                string hashedPassword = Hash(string.Concat(jObject["Password"].ToString(), user.Salt));
                 if (hashedPassword == user.Password)
                 {
                     _aproovedClients[ipAddress] = new Tuple<int, bool>(user.Id, true);
@@ -194,7 +194,7 @@ namespace GlobalServer.BLL.Server.BLL
         {
             int container = ++_responseBufferCount;
             string clientIp = _aproovedClients.Where(aproovedClient => aproovedClient.Value.Item1 == userId).FirstOrDefault().Key;
-            if(clientIp != null)
+            if (clientIp != null)
             {
                 TcpClient client = _clients.Where(client => ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() == clientIp).First();
                 NetworkStream stream = client.GetStream();
@@ -203,8 +203,8 @@ namespace GlobalServer.BLL.Server.BLL
                 //Send to Client
                 stream.Write(msg, 0, msg.Length);
 
-                _resposeBuffer.Add(container, String.Empty);
-                while (_resposeBuffer[container] == String.Empty)
+                _resposeBuffer.Add(container, string.Empty);
+                while (_resposeBuffer[container] == string.Empty)
                 {
                     Thread.Sleep(500);
                 }

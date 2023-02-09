@@ -1,4 +1,4 @@
-using GlobalServer.BLL.Server.BLL;
+using WebApp.BLL.Server.BLL;
 using WebApp.BLL.Services;
 using WebApp.DAL;
 

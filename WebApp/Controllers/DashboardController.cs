@@ -1,6 +1,7 @@
-﻿using GlobalServer.BLL.Server.BLL;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text.Json.Nodes;
+using WebApp.BLL.Server.BLL;
 using WebApp.DAL.Models;
 
 namespace WebApp.Controllers
@@ -12,15 +13,14 @@ namespace WebApp.Controllers
         SentData = 3
     }
 
-    public class DeviceController : Controller
+    public class DashboardController : Controller
     {
         [HttpGet]
         public IActionResult Devices()
         {
             CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
-            return View(
-                ServerLogic.LocalServerCommunication(currentUser.Id,
-                "{\"OperationType\":\"GetDevices\"}"));
+            IEnumerable<JsonObject> model = ServerLogic.LocalServerCommunication(currentUser.Id, "{\"OperationType\":\"GetDevices\"}");
+            return View(model);
         }
     }
 }

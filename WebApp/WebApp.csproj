@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GlobalServer.BLL\GlobalServer.BLL.csproj" />
     <ProjectReference Include="..\WebApp.BLL\WebApp.BLL.csproj" />
     <ProjectReference Include="..\WebApp.DAL\WebApp.DAL.csproj" />
   </ItemGroup>
