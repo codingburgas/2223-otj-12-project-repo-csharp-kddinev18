@@ -19,7 +19,7 @@ namespace WebApp.Controllers
         public IActionResult Devices()
         {
             CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
-            IEnumerable<JsonObject> model = ServerLogic.LocalServerCommunication(currentUser.Id, "{\"OperationType\":\"GetDevices\"}");
+            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUser.Id, "{\"OperationType\":\"GetDevices\"}");
             TempData.Keep();
             return View(model);
         }
@@ -27,11 +27,12 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult DeviceData(string deviceName)
         {
+            deviceName = "Temperature";
             CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
-            IEnumerable<JsonObject> model = ServerLogic.LocalServerCommunication(currentUser.Id, 
-            "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"Temperature\", \"PagingSize\":\"10\", \"SkipAmount\":\"0\"}}");
+            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.Id,
+            "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\"10\", \"SkipAmount\":\"0\"}}"));
             TempData.Keep();
-            return View(model);
+            return View(deviceDataModel);
         }
     }
 }
