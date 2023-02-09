@@ -37,10 +37,12 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void LogIn(User user)
         {
             TempData["CurrentUserInformation"] = JsonConvert.SerializeObject(new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext) });
-            RedirectToAction("Dashboard", "Device");
+            TempData.Keep();
+            RedirectToAction("Devices", "Dashboard");
         }
     }
 }

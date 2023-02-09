@@ -1,4 +1,5 @@
-﻿using LocalServer.BLL.DataManipulation.BLL;
+﻿using LocalSerevr.DAL;
+using LocalServer.BLL.DataManipulation.BLL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -107,11 +108,11 @@ namespace LocalServer.BLL.Server.BLL
                                 case OperationTypes.GetData:
                                     arguments = jObject["Arguments"] as JsonObject;
                                     stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
-                                        $"{GetData(arguments["IpAddress"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
+                                        $"{GetData(arguments["DeviceName"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
                                     break;
                                 case OperationTypes.SentData:
                                     arguments = jObject["Arguments"] as JsonObject;
-                                    SendData(arguments["IpAddress"].ToString(), arguments["Data"].ToString());
+                                    SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
                                     break;
                                 default:
                                     break;
@@ -137,8 +138,8 @@ namespace LocalServer.BLL.Server.BLL
         private static string GetDevices()
         {
             IEnumerable<string> names = DatabaseInitialiser.Database.Tables
-                .Where(table => table.Name != "Users" || table.Name != "Devices" ||
-                table.Name != "Roles" || table.Name != "Permissions" || table.Name != "sys.diagrams")
+                .Where(table => table.Name != "Users" && table.Name != "Devices" &&
+                table.Name != "Roles" && table.Name != "Permissions" && table.Name != "sysdiagrams")
                 .Select(table => table.Name);
             string test = JsonSerializer.Serialize(names);
             List<DeviceNameDTO> serializableData = new List<DeviceNameDTO>();
@@ -150,17 +151,16 @@ namespace LocalServer.BLL.Server.BLL
             return JsonSerializer.Serialize(serializableData);
         }
 
-        private static string GetData(string ipAddress, int pagingSize, int skipAmount)
+        private static string GetData(string deviceName, int pagingSize, int skipAmount)
         {
-            string deviceName = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Select("IPv4Address", "=", ipAddress).Rows[0]["Name"].ToString();
-
-            return JsonSerializer.Serialize(DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
+            return Table.ConvertDataTabletoString(DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
                 .Select("", "", "", pagingSize, skipAmount));
         }
 
-        private static void SendData(string ipAddress, string data)
+        private static void SendData(string deviceName, string data)
         {
+            string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Select("Name", "=", deviceName).Rows[0]["IPv4Address"].ToString();
             ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(data));
         }
 

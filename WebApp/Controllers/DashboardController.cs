@@ -20,6 +20,17 @@ namespace WebApp.Controllers
         {
             CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
             IEnumerable<JsonObject> model = ServerLogic.LocalServerCommunication(currentUser.Id, "{\"OperationType\":\"GetDevices\"}");
+            TempData.Keep();
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult DeviceData(string deviceName)
+        {
+            CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
+            IEnumerable<JsonObject> model = ServerLogic.LocalServerCommunication(currentUser.Id, 
+            "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"Temperature\", \"PagingSize\":\"10\", \"SkipAmount\":\"0\"}}");
+            TempData.Keep();
             return View(model);
         }
     }
