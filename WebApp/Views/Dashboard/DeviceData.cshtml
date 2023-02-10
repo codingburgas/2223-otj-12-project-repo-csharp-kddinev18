@@ -1,1 +1,27 @@
 ﻿@model DeviceDataModel
+<table class="table">
+    <thead>
+        <tr>
+            @foreach(string heading in Model.Infrastructure)
+            {
+                <th>
+                    @heading
+                </th>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (List<string> row in Model.Data)
+        {
+            <tr>
+                @foreach(string data in row)
+                {
+                    <td>
+                        @data
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

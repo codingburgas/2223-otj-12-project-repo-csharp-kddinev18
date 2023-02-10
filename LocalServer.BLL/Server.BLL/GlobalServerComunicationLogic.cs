@@ -3,6 +3,8 @@ using LocalServer.BLL.DataManipulation.BLL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -81,11 +83,13 @@ namespace LocalServer.BLL.Server.BLL
 
         public static async Task AwaitServerCall()
         {
+            string responseBufferNumber = String.Empty;
+            NetworkStream stream = null;
             try
             {
                 if (_tcpClient.Connected)
                 {
-                    NetworkStream stream = _tcpClient.GetStream();
+                    stream = _tcpClient.GetStream();
 
                     while (_tcpClient.Connected)
                     {
@@ -95,7 +99,7 @@ namespace LocalServer.BLL.Server.BLL
                         {
                             _data = buffer.SubArray(0, read);
                             string data = FormatData();
-                            string responseBufferNumber = data.Split('|')[0];
+                            responseBufferNumber = data.Split('|')[0];
                             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Split('|')[1]);
                             JsonObject arguments = null;
                             OperationTypes operation = (OperationTypes)Enum.Parse(typeof(OperationTypes), jObject["OperationType"].ToString(), true);
@@ -123,10 +127,7 @@ namespace LocalServer.BLL.Server.BLL
             }
             catch (Exception ex)
             {
-                // display the error message or whatever
-                _tcpClient.Client.Shutdown(SocketShutdown.Both);
-                _tcpClient.Close();
-                _tcpClient = null;
+                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|Could not retrieve the data"));
             }
         }
 
@@ -153,8 +154,14 @@ namespace LocalServer.BLL.Server.BLL
 
         private static string GetData(string deviceName, int pagingSize, int skipAmount)
         {
-            return Table.ConvertDataTabletoString(DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
-                .Select("", "", "", pagingSize, skipAmount));
+            DataTable table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
+                .Select("", "", "", pagingSize, skipAmount);
+
+            table.Columns.Remove("Id");
+            table.Columns.Remove("DeviceId");
+            table.Columns["When"].SetOrdinal(0);
+
+            return Table.ConvertDataTabletoString(table);
         }
 
         private static void SendData(string deviceName, string data)

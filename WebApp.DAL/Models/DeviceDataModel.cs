@@ -19,10 +19,14 @@ namespace WebApp.DAL.Models
 
             foreach (Dictionary<string, object> row in data)
             {
+                ;
                 Data.Add(new List<string>());
                 foreach (KeyValuePair<string, object> columnData in row)
                 {
-                    Data.Last().Add(columnData.Value.ToString());
+                    if (columnData.Key == "When")
+                        Data.Last().Add(DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().Length - 8), "yyyy-MM-dd'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToLongDateString());
+                    else
+                        Data.Last().Add(columnData.Value.ToString());
                 }
             }
         }
