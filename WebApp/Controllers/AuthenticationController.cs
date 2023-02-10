@@ -38,11 +38,11 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void LogIn(User user)
+        public IActionResult LogIn(User user)
         {
             TempData["CurrentUserInformation"] = JsonConvert.SerializeObject(new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext) });
             TempData.Keep();
-            RedirectToAction("Devices", "Dashboard");
+            return RedirectToAction("Devices", "Dashboard");
         }
     }
 }
