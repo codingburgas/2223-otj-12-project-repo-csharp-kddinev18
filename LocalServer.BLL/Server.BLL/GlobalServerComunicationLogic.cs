@@ -159,7 +159,10 @@ namespace LocalServer.BLL.Server.BLL
 
             table.Columns.Remove("Id");
             table.Columns.Remove("DeviceId");
-            table.Columns["When"].SetOrdinal(0);
+            table.Columns["Created"].SetOrdinal(0);
+
+            table.DefaultView.Sort = "Created desc";
+            table = table.DefaultView.ToTable();
 
             return Table.ConvertDataTabletoString(table);
         }

@@ -24,7 +24,7 @@ namespace WebApp.DAL.Models
                 foreach (KeyValuePair<string, object> columnData in row)
                 {
                     if (columnData.Key == "When")
-                        Data.Last().Add(DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().Length - 8), "yyyy-MM-dd'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).ToLongDateString());
+                        Data.Last().Add(DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().Length - 8), "yyyy-MM-dd'T'HH:mm:ss", null).ToLongDateString());
                     else
                         Data.Last().Add(columnData.Value.ToString());
                 }

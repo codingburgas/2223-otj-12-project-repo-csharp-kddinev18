@@ -1,4 +1,42 @@
-﻿@model DeviceDataModel
+﻿@using System.Text.Json;
+@model DeviceDataModel
+<div>
+    <canvas id="chart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('chart');
+    let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data.First())))');
+    console.log("TEEEEESTTT");
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperature',
+                data: [22.2, 23, 30, 5, 2, 3],
+                borderWidth: 2.5
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
 <table class="table">
     <thead>
         <tr>

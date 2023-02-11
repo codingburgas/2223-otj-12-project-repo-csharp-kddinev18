@@ -17,15 +17,7 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
-            if (TempData["CurrentUserInformation"] is null)
-            {
-                return View(new CurrentUserModel() { Id = 0 });
-            }
-            else
-            {
-                CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
-                return View(currentUser);
-            }
+            return View();
         }
 
         public IActionResult Privacy()

@@ -1,9 +1,32 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@using WebApp.DAL.Models
-@model CurrentUserModel
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>@Model.Id Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div>
+    <canvas id="chart"></canvas>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('chart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date"],
+            datasets: [{
+                label: 'Temperature',
+                data: [22.2, 23, 30, 5, 2, 3],
+                borderWidth: 2.5
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

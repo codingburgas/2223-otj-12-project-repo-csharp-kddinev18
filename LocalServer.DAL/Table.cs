@@ -58,7 +58,7 @@ namespace LocalSerevr.DAL
         public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int skipAmount = 0)
         {
             string query = String.Empty;
-            string paging = pagingSize != 0 ? $"ORDER BY {String.Join(", ", FindPrimaryKeys().Select(column => $"[{column.Name}]"))} OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
+            string paging = pagingSize != 0 ? $"ORDER BY {String.Join(", ", FindPrimaryKeys().Select(column => $"[{column.Name}]"))} DESC OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
             string columns = String.Join(", ", Columns.Select(column => $"[{column.Name}]"));
 
             if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
