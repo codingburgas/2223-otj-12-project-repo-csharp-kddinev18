@@ -88,9 +88,9 @@ namespace WebApp.Controllers
             {
                 deviceName = currentUser.LastSeenDevice,
                 chartType = deviceDataModel.ChartType,
-                xData = deviceDataModel.XData,
-                yData = deviceDataModel.YData,
-                zData = deviceDataModel.ZData,
+                xData = deviceDataModel.Infrastructure[deviceDataModel.XData],
+                yData = deviceDataModel.Infrastructure[deviceDataModel.YData],
+                zData = deviceDataModel.Infrastructure[deviceDataModel.ZData],
                 skipAmount = deviceDataModel.SkipAmount,
                 pageIndex = deviceDataModel.PageIndex,
                 pagingSize = deviceDataModel.PagingSize
@@ -111,9 +111,9 @@ namespace WebApp.Controllers
             {
                 deviceName = currentUser.LastSeenDevice,
                 chartType = deviceDataModel.ChartType,
-                xData = deviceDataModel.XData,
-                yData = deviceDataModel.YData,
-                zData = deviceDataModel.ZData,
+                xData = deviceDataModel.Infrastructure[deviceDataModel.XData],
+                yData = deviceDataModel.Infrastructure[deviceDataModel.YData],
+                zData = deviceDataModel.Infrastructure[deviceDataModel.ZData],
                 skipAmount = deviceDataModel.SkipAmount,
                 pageIndex = deviceDataModel.PageIndex,
                 pagingSize = deviceDataModel.PagingSize
