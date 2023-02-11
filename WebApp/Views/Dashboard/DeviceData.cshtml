@@ -103,12 +103,12 @@ else if (Model.ChartType == "2AxisLine")
                 labels: doubleAxisLabels,
                 datasets: [
                     {
-                        label: 'Temperature',
+                        label: '@Html.Raw(Model.Infrastructure[Model.YData])',
                         data: doubleAxisdata,
                         borderWidth: 2.5
                     },
                     {
-                        label: 'Temperature2',
+                        label: '@Html.Raw(Model.Infrastructure[Model.ZData])',
                         data: doubleAxisSecondData,
                         borderWidth: 2.5
                     }]
@@ -139,7 +139,7 @@ else
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Temperature',
+                    label: '@Html.Raw(Model.Infrastructure[Model.YData])',
                     data: data,
                     borderWidth: 2.5
                 }]
@@ -154,3 +154,11 @@ else
         });
     </script>
 }
+<div class="d-flex justify-content-end">
+    <a asp-controller="Dashboard" type="button" class="btn btn-info p-2 bd-highlight" style="margin: 15px 5px -5px 5px" asp-action="PreviusPage" asp-route-data="@JsonSerializer.Serialize(Model)">
+        <span class="material-icons">chevron_left</span>
+    </a>
+    <a asp-controller="Dashboard" type="button" class="btn btn-info p-2 bd-highlight" style="margin: 15px 5px -5px 5px" asp-action="NextPage" asp-route-data="@JsonSerializer.Serialize(Model)">
+        <span class="material-icons">navigate_next</span>
+    </a>
+</div>

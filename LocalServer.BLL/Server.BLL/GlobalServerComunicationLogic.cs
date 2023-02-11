@@ -78,7 +78,8 @@ namespace LocalServer.BLL.Server.BLL
         {
             GetDevices = 1,
             GetData = 2,
-            SentData = 3
+            SentData = 3,
+            GetCount = 4
         }
 
         public static async Task AwaitServerCall()
@@ -118,26 +119,21 @@ namespace LocalServer.BLL.Server.BLL
                                     arguments = jObject["Arguments"] as JsonObject;
                                     SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
                                     break;
+                                case OperationTypes.GetCount:
+                                    arguments = jObject["Arguments"] as JsonObject;
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + GetCount(arguments["DeviceName"].ToString())));
+                                    break;
                                 default:
                                     break;
                             }
-                        }
-                        else if(read == 0)
-                        {
-                            Console.WriteLine("Server dead");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|Could not retrieve the data"));
+                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|Could not retrieve the data, {ex.Message}"));
             }
-        }
-
-        class DeviceNameDTO
-        {
-            public string Name { get; set; }
         }
 
         private static string GetDevices()
@@ -147,10 +143,10 @@ namespace LocalServer.BLL.Server.BLL
                 table.Name != "Roles" && table.Name != "Permissions" && table.Name != "sysdiagrams")
                 .Select(table => table.Name);
             string test = JsonSerializer.Serialize(names);
-            List<DeviceNameDTO> serializableData = new List<DeviceNameDTO>();
+            List<object> serializableData = new List<object>();
             foreach (string name in names)
             {
-                serializableData.Add(new DeviceNameDTO() { Name = name });
+                serializableData.Add(new { Name = name });
             }
 
             return JsonSerializer.Serialize(serializableData);
@@ -176,6 +172,15 @@ namespace LocalServer.BLL.Server.BLL
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", deviceName).Rows[0]["IPv4Address"].ToString();
             ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(data));
+        }
+
+        private static string GetCount(string deviceName)
+        {
+            List<object> count = new List<object>
+            {
+                new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First().GetRowsCount() }
+            };
+            return JsonSerializer.Serialize(count);
         }
 
         public static T[] SubArray<T>(this T[] array, int offset, int length)

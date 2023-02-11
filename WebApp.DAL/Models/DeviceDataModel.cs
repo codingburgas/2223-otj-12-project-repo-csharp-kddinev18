@@ -20,7 +20,6 @@ namespace WebApp.DAL.Models
 
             foreach (Dictionary<string, object> row in data)
             {
-                ;
                 Data.Add(new List<string>());
                 foreach (KeyValuePair<string, object> columnData in row)
                 {
@@ -50,5 +49,11 @@ namespace WebApp.DAL.Models
         public int YData { get; set; }
         public int ZData { get; set; }
         public string ChartType { get; set; }
+
+        public int Count { get; set; }
+        public int PagingSize { get; set; } = 10;
+        public int SkipAmount { get; set; }
+        public int PageIndex { get; set; }
+        public int NumberOfPages { get; set; }
     }
 }
