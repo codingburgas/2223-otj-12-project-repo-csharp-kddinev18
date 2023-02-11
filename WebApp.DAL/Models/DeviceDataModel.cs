@@ -39,7 +39,8 @@ namespace WebApp.DAL.Models
             Infrastructure = new List<string>();
             Data = new List<List<string>>();
             XData = 0;
-            YData = 1;
+            YData = 0;
+            ZData = 0;
             ChartType = "table";
         }
         public List<string> Infrastructure { get; set; }
@@ -47,6 +48,7 @@ namespace WebApp.DAL.Models
 
         public int XData { get; set; }
         public int YData { get; set; }
+        public int ZData { get; set; }
         public string ChartType { get; set; }
     }
 }

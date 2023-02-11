@@ -26,24 +26,29 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData)
+        public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData, string zData)
         {
             CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
 
             DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.Id,
             "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\"10\", \"SkipAmount\":\"0\"}}"));
-            if(chartType == null)
-                deviceDataModel.ChartType = "table";
+       
+            if(chartType == "none")
+                deviceDataModel.ChartType = "none";
             else
                 deviceDataModel.ChartType = chartType;
-            if(xData == null)
+            if(xData == "none")
                 deviceDataModel.XData = 0;
             else
                 deviceDataModel.XData = deviceDataModel.Infrastructure.IndexOf(xData);
-            if (yData == null)
-                deviceDataModel.YData = 1;
+            if (yData == "none")
+                deviceDataModel.YData = 0;
             else
                 deviceDataModel.YData = deviceDataModel.Infrastructure.IndexOf(yData);
+            if (zData == "none")
+                deviceDataModel.ZData = 0;
+            else
+                deviceDataModel.ZData = deviceDataModel.Infrastructure.IndexOf(zData);
 
             currentUser.LastSeenDevice = deviceName;
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUser);
@@ -62,7 +67,8 @@ namespace WebApp.Controllers
                 deviceName = currentUser.LastSeenDevice,
                 chartType = chartData["ChartType"],
                 xData = chartData["XData"],
-                yData = chartData["YData"]
+                yData = chartData["YData"],
+                zData = chartData["ZData"]
             });
         }
     }
