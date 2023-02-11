@@ -1,32 +1,3 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div>
-    <canvas id="chart"></canvas>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    const ctx = document.getElementById('chart');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date", "Date"],
-            datasets: [{
-                label: 'Temperature',
-                data: [22.2, 23, 30, 5, 2, 3],
-                borderWidth: 2.5
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>

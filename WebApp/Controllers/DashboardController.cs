@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
 using WebApp.BLL.Server.BLL;
@@ -25,14 +26,44 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeviceData(string deviceName)
+        public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData)
         {
-            deviceName = "Temperature";
-            CurrentUserModel currentUser = JsonConvert.DeserializeObject<CurrentUserModel>(TempData["CurrentUserInformation"].ToString());
+            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+
             DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.Id,
             "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\"10\", \"SkipAmount\":\"0\"}}"));
-            TempData.Keep();
+            if(chartType == null)
+                deviceDataModel.ChartType = "table";
+            else
+                deviceDataModel.ChartType = chartType;
+            if(xData == null)
+                deviceDataModel.XData = 0;
+            else
+                deviceDataModel.XData = deviceDataModel.Infrastructure.IndexOf(xData);
+            if (yData == null)
+                deviceDataModel.YData = 1;
+            else
+                deviceDataModel.YData = deviceDataModel.Infrastructure.IndexOf(yData);
+
+            currentUser.LastSeenDevice = deviceName;
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUser);
+
             return View(deviceDataModel);
+        }
+
+        [HttpPost]
+        public IActionResult SetChartArguments(IFormCollection chartData)
+        {
+            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+
+
+            return RedirectToAction("DeviceData", new
+            {
+                deviceName = currentUser.LastSeenDevice,
+                chartType = chartData["ChartType"],
+                xData = chartData["XData"],
+                yData = chartData["YData"]
+            });
         }
     }
 }

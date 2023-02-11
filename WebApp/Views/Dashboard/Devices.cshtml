@@ -3,6 +3,9 @@
 
 @foreach (Dictionary<string, object> devices in Model)
 {
-    <h1><a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="DeviceData">@devices["Name"].ToString()</a></h1>
-    <br/>
+    <h1>
+       <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="DeviceData"
+       asp-route-deviceName="@devices["Name"].ToString()">@devices["Name"].ToString()</a>
+    </h1>
+    <br />
 }

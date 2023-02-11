@@ -1,22 +1,99 @@
 ﻿@using System.Text.Json;
 @model DeviceDataModel
-<div>
-    <canvas id="chart"></canvas>
-</div>
+<form asp-asp-controller="Dashboard" asp-action="SetChartArguments">
+    <div class="d-flex justify-content-between align-items-center form-group">
+        <div class="p-2 bd-highlight">
+            <label>Choose a chart type:</label>
+            <select id="ChartType" name="ChartType">
+                <option value="Table">Table</option>
+                <option value="bar">Bar</option>
+                <option value="line">Line</option>
+                <option value="pie">Pie</option>
+                <option value="doughnut">Doughnut</option>
+                <option value="radar">Radar</option>
+                <option value="bubble">Bubble</option>
+                <option value="polarArea">PolarArea</option>
+                <option value="scatter">Scatter</option>
+            </select>
+        </div>
+        <div class="p-2 bd-highlight">
+            <label>Choose X data:</label>
+            <select id="XData" name="XData">
+                @foreach (string infrastructure in Model.Infrastructure)
+                {
+                    <option value="@infrastructure">@infrastructure</option>
+                }
+            </select>
+        </div>
+        <div class="p-2 bd-highlight">
+            <label>Choose Y data:</label>
+            <select id="YData" name="YData">
+                @foreach (string infrastructure in Model.Infrastructure)
+                {
+                    <option value="@infrastructure">@infrastructure</option>
+                }
+            </select>
+        </div>
+        <div class="p-2 bd-highlight">
+            <input type="submit" value="Refresh" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+
+@if (Model.ChartType == "table")
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (string heading in Model.Infrastructure)
+                {
+                    <th>
+                        @heading
+                    </th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (List<string> row in Model.Data)
+            {
+                <tr>
+                    @foreach (string data in row)
+                    {
+                        <td>
+                            @data
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        <canvas id="chart"></canvas>
+    </div>
+}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
     const ctx = document.getElementById('chart');
-    let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data.First())))');
-    console.log("TEEEEESTTT");
+
+    let chartType = '@Html.Raw(Model.ChartType)';
+    console.log(chartType);
+    let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[Model.XData])))');
+    let data = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[Model.YData])))');
+    console.log(labels);
+    console.log(data);
     new Chart(ctx, {
-        type: 'line',
+        type: chartType,
         data: {
             labels: labels,
             datasets: [{
                 label: 'Temperature',
-                data: [22.2, 23, 30, 5, 2, 3],
+                data: data,
                 borderWidth: 2.5
             }]
         },
@@ -29,37 +106,3 @@
         }
     });
 </script>
-
-
-
-
-
-
-
-
-<table class="table">
-    <thead>
-        <tr>
-            @foreach(string heading in Model.Infrastructure)
-            {
-                <th>
-                    @heading
-                </th>
-            }
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (List<string> row in Model.Data)
-        {
-            <tr>
-                @foreach(string data in row)
-                {
-                    <td>
-                        @data
-                    </td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>

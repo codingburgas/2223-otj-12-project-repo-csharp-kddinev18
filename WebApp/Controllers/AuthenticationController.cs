@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LogIn(User user)
         {
-            TempData["CurrentUserInformation"] = JsonConvert.SerializeObject(new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext) });
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", new CurrentUserModel() { Id = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" });
             TempData.Keep();
             return RedirectToAction("Devices", "Dashboard");
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebApp.DAL.Models
 {
@@ -23,14 +24,29 @@ namespace WebApp.DAL.Models
                 Data.Add(new List<string>());
                 foreach (KeyValuePair<string, object> columnData in row)
                 {
-                    if (columnData.Key == "When")
-                        Data.Last().Add(DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().Length - 8), "yyyy-MM-dd'T'HH:mm:ss", null).ToLongDateString());
+                    if (columnData.Key == "Created")
+                    {
+                        DateTime dateTime = DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().LastIndexOf('.')), "yyyy-MM-dd'T'HH:mm:ss", null);
+                        Data.Last().Add(dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString());
+                    }
                     else
                         Data.Last().Add(columnData.Value.ToString());
                 }
             }
         }
+        public DeviceDataModel()
+        {
+            Infrastructure = new List<string>();
+            Data = new List<List<string>>();
+            XData = 0;
+            YData = 1;
+            ChartType = "table";
+        }
         public List<string> Infrastructure { get; set; }
         public List<List<string>> Data { get; set; }
+
+        public int XData { get; set; }
+        public int YData { get; set; }
+        public string ChartType { get; set; }
     }
 }

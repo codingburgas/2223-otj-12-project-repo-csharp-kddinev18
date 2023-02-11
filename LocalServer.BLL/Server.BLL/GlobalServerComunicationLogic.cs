@@ -122,6 +122,10 @@ namespace LocalServer.BLL.Server.BLL
                                     break;
                             }
                         }
+                        else if(read == 0)
+                        {
+                            Console.WriteLine("Server dead");
+                        }
                     }
                 }
             }

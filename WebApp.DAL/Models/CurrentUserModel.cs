@@ -10,5 +10,6 @@ namespace WebApp.DAL.Models
     public class CurrentUserModel
     {
         public int Id { get; set; }
+        public string LastSeenDevice { get; set; } = string.Empty;
     }
 }
