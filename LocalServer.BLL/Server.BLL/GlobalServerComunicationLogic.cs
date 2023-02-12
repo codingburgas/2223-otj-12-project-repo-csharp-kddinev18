@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using System.Xml.Serialization;
 
 namespace LocalServer.BLL.Server.BLL
 {
@@ -28,7 +29,7 @@ namespace LocalServer.BLL.Server.BLL
             if (_tcpClient == null)
                 _tcpClient = new TcpClient("127.0.0.1", 5401);
 
-            ClientToServerComunication("{ "+$" \"UserName\": \"{userName}\", \"Password\": \"{password}\" " +" }");
+            ClientToServerComunication("{ " + $" \"UserName\": \"{userName}\", \"Password\": \"{password}\" " + " }");
         }
 
         // Disconenct from the servet
@@ -67,7 +68,7 @@ namespace LocalServer.BLL.Server.BLL
 
             string data = FormatData();
             // Format tha data
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Contains('|') ? data.Split('|')[1] : data);
             if (jObject.ContainsKey("Error"))
                 throw new Exception(jObject["Error"].ToString());
 
@@ -79,7 +80,8 @@ namespace LocalServer.BLL.Server.BLL
             GetDevices = 1,
             GetData = 2,
             SentData = 3,
-            GetCount = 4
+            GetCount = 4,
+            Authenticate = 5,
         }
 
         public static async Task AwaitServerCall()
@@ -108,7 +110,8 @@ namespace LocalServer.BLL.Server.BLL
                             switch (operation)
                             {
                                 case OperationTypes.GetDevices:
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices()}"));
+                                    arguments = jObject["Arguments"] as JsonObject;
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices(int.Parse(arguments["UserId"].ToString()))}"));
                                     break;
                                 case OperationTypes.GetData:
                                     arguments = jObject["Arguments"] as JsonObject;
@@ -123,6 +126,10 @@ namespace LocalServer.BLL.Server.BLL
                                     arguments = jObject["Arguments"] as JsonObject;
                                     stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + GetCount(arguments["DeviceName"].ToString())));
                                     break;
+                                case OperationTypes.Authenticate:
+                                    arguments = jObject["Arguments"] as JsonObject;
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + Authenticate(arguments["UserName"].ToString(), arguments["Password"].ToString())));
+                                    break;
                                 default:
                                     break;
                             }
@@ -136,15 +143,29 @@ namespace LocalServer.BLL.Server.BLL
             }
         }
 
-        private static string GetDevices()
+        private static string GetDevices(int userId)
         {
-            IEnumerable<string> names = DatabaseInitialiser.Database.Tables
-                .Where(table => table.Name != "Users" && table.Name != "Devices" &&
-                table.Name != "Roles" && table.Name != "Permissions" && table.Name != "sysdiagrams")
-                .Select(table => table.Name);
-            string test = JsonSerializer.Serialize(names);
+            List<string> deviceNames = new List<string>();
+
+            int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
+                .Select("UserId", "=", userId.ToString()).Rows[0]["RoleId"].ToString());
+
+            DataTable permissions = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
+                .Select("RoleId", "=", roleId.ToString());
+            for (int i = 0; i < permissions.Rows.Count; i++)
+            {
+                if (bool.Parse(permissions.Rows[i]["CanRead"].ToString()))
+                {
+                    int deviceId = int.Parse(permissions.Rows[i]["DeviceId"].ToString());
+                    DataTable device = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                        .Select("DeviceId", "=", deviceId.ToString());
+
+                    if (bool.Parse(device.Rows[0]["IsAprooved"].ToString()))
+                        deviceNames.Add(device.Rows[0]["Name"].ToString());
+                }
+            }
             List<object> serializableData = new List<object>();
-            foreach (string name in names)
+            foreach (string name in deviceNames)
             {
                 serializableData.Add(new { Name = name });
             }
@@ -181,6 +202,15 @@ namespace LocalServer.BLL.Server.BLL
                 new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First().GetRowsCount() }
             };
             return JsonSerializer.Serialize(count);
+        }
+
+        private static string Authenticate(string userName, string password)
+        {
+            List<object> user = new List<object>
+            {
+                new { UserId = UserAuthenticationLogic.LogIn(userName, password) }
+            };
+            return JsonSerializer.Serialize(user);
         }
 
         public static T[] SubArray<T>(this T[] array, int offset, int length)

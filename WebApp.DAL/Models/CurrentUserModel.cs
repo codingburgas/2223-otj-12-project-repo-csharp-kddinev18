@@ -9,7 +9,8 @@ namespace WebApp.DAL.Models
     [Serializable]
     public class CurrentUserModel
     {
-        public int Id { get; set; }
+        public int GlobalId { get; set; }
+        public int LocalId { get; set; }
         public string LastSeenDevice { get; set; } = string.Empty;
     }
 }

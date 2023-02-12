@@ -15,7 +15,7 @@ namespace WebApp.Controllers
         public IActionResult Devices()
         {
             CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUser.Id, "{\"OperationType\":\"GetDevices\"}");
+            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUser.GlobalId, "{\"OperationType\":\"GetDevices\", \"Arguments\" : {\"UserId\":\""+ currentUser.LocalId + "\"}}");
             return View(model);
         }
 
@@ -23,10 +23,10 @@ namespace WebApp.Controllers
         public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData, string zData, int skipAmount, int pageIndex, int pagingSize = 10)
         {
             CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            int count = int.Parse(ServerLogic.LocalServerCommunication(currentUser.Id,
+            int count = int.Parse(ServerLogic.LocalServerCommunication(currentUser.GlobalId,
             "{\"OperationType\":\"GetCount\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\"}}").First()["Count"].ToString());
 
-            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.Id,
+            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.GlobalId,
             "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\""+ pagingSize + "\", \"SkipAmount\":\""+ skipAmount + "\"}}"));
             deviceDataModel.Count = count;
             deviceDataModel.PageIndex = pageIndex;
