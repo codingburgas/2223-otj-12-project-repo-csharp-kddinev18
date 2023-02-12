@@ -1,4 +1,5 @@
 ﻿using LocalSerevr.DAL;
+using LocalServer.BLL.Server.BLL;
 using LocalServer.DTO.Models;
 using System;
 using System.Collections.Generic;
@@ -78,13 +79,6 @@ namespace LocalServer.BLL.DataManipulation.BLL
             DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("DeviceId", "=", deviceId.ToString()).Rows[0];
 
-            if (bool.Parse(dataRow["isAprooved"].ToString()))
-            {
-                DatabaseInitialiser.Database.Tables.Remove(
-                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == dataRow["Name"].ToString()).First());
-
-                DatabaseInitialiser.Database.SaveDatabaseInfrastructure();
-            }
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Delete("DeviceId", "=", deviceId.ToString());
         }

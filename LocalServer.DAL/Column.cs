@@ -36,7 +36,11 @@
                         break;
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;
-                        Table foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
+                        Table foreignKeyTable;
+                        if (foreignKeyColumn.Name == "DeviceId")
+                            foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Name == "Devices").First();
+                        else
+                            foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
                         container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ON DELETE CASCADE";
                         break;
                     case "CHECK":

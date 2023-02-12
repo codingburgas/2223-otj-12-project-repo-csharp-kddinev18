@@ -25,7 +25,6 @@ namespace LocalServer.BLL.Server.BLL
         private static int _success = 0;
         private static int _error = 1;
 
-        public DatabaseInitialiser DatabaseInitialiser { get; set; }
         public ServerLogic(int port)
         {
             _port = port;

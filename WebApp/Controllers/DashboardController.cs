@@ -73,6 +73,7 @@ namespace WebApp.Controllers
             });
         }
 
+        [HttpPost]
         public IActionResult PreviusPage(string data)
         {
             CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
@@ -96,6 +97,8 @@ namespace WebApp.Controllers
                 pagingSize = deviceDataModel.PagingSize
             });
         }
+
+        [HttpPost]
         public IActionResult NextPage(string data)
         {
             CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
@@ -118,6 +121,15 @@ namespace WebApp.Controllers
                 pageIndex = deviceDataModel.PageIndex,
                 pagingSize = deviceDataModel.PagingSize
             });
+        }
+
+        [HttpPost]
+        public void SendData(IFormCollection data)
+        {
+            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+
+            ServerLogic.LocalServerCommunication(currentUser.GlobalId,
+                "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\""+ currentUser.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");
         }
     }
 }

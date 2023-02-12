@@ -154,11 +154,21 @@ else
         });
     </script>
 }
-<div class="d-flex justify-content-end">
-    <a asp-controller="Dashboard" type="button" class="btn btn-info p-2 bd-highlight" style="margin: 15px 5px -5px 5px" asp-action="PreviusPage" asp-route-data="@JsonSerializer.Serialize(Model)">
-        <span class="material-icons">chevron_left</span>
-    </a>
-    <a asp-controller="Dashboard" type="button" class="btn btn-info p-2 bd-highlight" style="margin: 15px 5px -5px 5px" asp-action="NextPage" asp-route-data="@JsonSerializer.Serialize(Model)">
-        <span class="material-icons">navigate_next</span>
-    </a>
+<div class="d-flex bd-highlight align-content-center flex-wrap">
+    <div class="p-2 flex-grow-1 bd-highlight">
+        <form asp-asp-controller="Dashboard" asp-action="SendData">
+            <div class="d-flex justify-content-between align-items-center form-group">
+                <input type="text" class="form-control" id="data" name="data">
+                <input type="submit" value="Send Data" class="btn btn-primary" style="margin: 0px 0px 0px 25px" />
+            </div>
+        </form>
+    </div>
+    <div class="p-2 bd-highlight">
+        <a asp-controller="Dashboard" type="button" class="btn btn-info" asp-action="PreviusPage" asp-route-data="@JsonSerializer.Serialize(Model)">
+            <span class="material-icons">chevron_left</span>
+        </a>
+        <a asp-controller="Dashboard" type="button" class="btn btn-info" asp-action="NextPage" asp-route-data="@JsonSerializer.Serialize(Model)">
+            <span class="material-icons">navigate_next</span>
+        </a>
+    </div>
 </div>

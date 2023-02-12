@@ -13,23 +13,26 @@ namespace WebApp.DAL.Models
         {
             Infrastructure = new List<string>();
             Data = new List<List<string>>();
-            foreach (KeyValuePair<string, object> infrasstructure in data.First())
+            if (data.Count() != 0)
             {
-                Infrastructure.Add(infrasstructure.Key);
-            }
-
-            foreach (Dictionary<string, object> row in data)
-            {
-                Data.Add(new List<string>());
-                foreach (KeyValuePair<string, object> columnData in row)
+                foreach (KeyValuePair<string, object> infrasstructure in data.First())
                 {
-                    if (columnData.Key == "Created")
+                    Infrastructure.Add(infrasstructure.Key);
+                }
+
+                foreach (Dictionary<string, object> row in data)
+                {
+                    Data.Add(new List<string>());
+                    foreach (KeyValuePair<string, object> columnData in row)
                     {
-                        DateTime dateTime = DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().LastIndexOf('.')), "yyyy-MM-dd'T'HH:mm:ss", null);
-                        Data.Last().Add(dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString());
+                        if (columnData.Key == "Created")
+                        {
+                            DateTime dateTime = DateTime.ParseExact(columnData.Value.ToString().Substring(0, columnData.Value.ToString().LastIndexOf('.')), "yyyy-MM-dd'T'HH:mm:ss", null);
+                            Data.Last().Add(dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString());
+                        }
+                        else
+                            Data.Last().Add(columnData.Value.ToString());
                     }
-                    else
-                        Data.Last().Add(columnData.Value.ToString());
                 }
             }
         }

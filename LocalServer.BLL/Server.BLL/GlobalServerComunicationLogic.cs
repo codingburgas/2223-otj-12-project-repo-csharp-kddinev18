@@ -79,7 +79,7 @@ namespace LocalServer.BLL.Server.BLL
         {
             GetDevices = 1,
             GetData = 2,
-            SentData = 3,
+            SendData = 3,
             GetCount = 4,
             Authenticate = 5,
         }
@@ -118,9 +118,10 @@ namespace LocalServer.BLL.Server.BLL
                                     stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
                                         $"{GetData(arguments["DeviceName"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
                                     break;
-                                case OperationTypes.SentData:
+                                case OperationTypes.SendData:
                                     arguments = jObject["Arguments"] as JsonObject;
                                     SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
+                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + "[{\"Message\":\"Data Sent\"}]"));
                                     break;
                                 case OperationTypes.GetCount:
                                     arguments = jObject["Arguments"] as JsonObject;
@@ -188,7 +189,7 @@ namespace LocalServer.BLL.Server.BLL
             return Table.ConvertDataTabletoString(table);
         }
 
-        private static void SendData(string deviceName, string data)
+        public static void SendData(string deviceName, string data)
         {
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", deviceName).Rows[0]["IPv4Address"].ToString();

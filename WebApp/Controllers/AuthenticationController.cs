@@ -27,8 +27,15 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult Register(User newUser)
         {
-            _userAuthenticationService.Register(newUser, _dbContext);
-            return RedirectToAction("LogIn");
+            try
+            {
+                _userAuthenticationService.Register(newUser, _dbContext);
+                return RedirectToAction("LogIn");
+            }
+            catch(Exception ex)
+            {
+                return RedirectToAction("Register");
+            }
         }
 
         [HttpGet]
@@ -41,7 +48,11 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LogIn(User user)
         {
-            TempDataExtensions.Put(TempData, "CurrentUserInformation", new CurrentUserModel() { GlobalId = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" });
+            CurrentUserModel currentUserModel = new CurrentUserModel() { GlobalId = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" };
+            if (currentUserModel.GlobalId == -1)
+                return RedirectToAction("LogIn");
+
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("SubLogIn");
         }
 
