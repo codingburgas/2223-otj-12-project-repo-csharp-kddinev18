@@ -45,7 +45,7 @@ namespace WebApp.Controllers
 
             IEnumerable<Dictionary<string, object>> counts = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
             "{\"OperationType\":\"GetCount\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\"}}");
-            int count;
+            int count = 0;
             if (currentUserModel.LocalId == 0)
             {
                 return RedirectToAction("SubLogIn", "Authentication");
@@ -195,7 +195,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendData(IFormCollection data)
+        public void IActionResult SendData(IFormCollection data, string deviceData)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
             if (currentUserModel.LocalId == 0)
@@ -207,6 +207,7 @@ namespace WebApp.Controllers
             {
                 return RedirectToAction("LogIn", "Authentication");
             }
+
 
             ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
                 "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\"" + currentUserModel.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");
