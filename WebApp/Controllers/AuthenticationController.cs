@@ -51,18 +51,11 @@ namespace WebApp.Controllers
         public IActionResult LogIn(User user)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
-            {
-                if(currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
-            }
 
             try
             {
                 currentUserModel = new CurrentUserModel() { GlobalId = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" };
+                TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             }
             catch (Exception ex)
             {
@@ -70,7 +63,6 @@ namespace WebApp.Controllers
                 return LogIn();
             }
 
-            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("SubLogIn");
         }
 
@@ -93,6 +85,7 @@ namespace WebApp.Controllers
                     throw new Exception($"{response.First()["Error"]}");
 
                 currentUserModel.LocalId = int.Parse(response.First()["UserId"].ToString());
+                TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
 
             }
             catch (Exception ex)
@@ -101,7 +94,6 @@ namespace WebApp.Controllers
                 return LogIn();
             }
             
-            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("Devices", "Dashboard");
         }
 

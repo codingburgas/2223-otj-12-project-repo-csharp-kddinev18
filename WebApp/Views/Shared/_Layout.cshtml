@@ -25,13 +25,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authenticate" asp-action="Devices">Devices</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Devices">My Devices</a>
                         </li>
                     </ul>
                     @if (TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation").GlobalId == 0)
@@ -46,8 +40,8 @@
                     {
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Account
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="nav-link dropdown-item" asp-area="" asp-controller="Authentication" asp-action="SignOut">Sign Out</a></li>

@@ -1,6 +1,9 @@
 ﻿<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @using System.Text.Json;
 @model DeviceDataModel
+@{
+    ViewData["Title"] = "DeviceData";
+}
 <form asp-asp-controller="Dashboard" asp-action="SetChartArguments">
     <div class="d-flex justify-content-between align-items-center form-group">
         <div class="p-2 bd-highlight">
@@ -55,8 +58,12 @@
     </div>
 </form>
 
-
-@if (Model.ChartType == "table")
+@if (TempData["Error"] != null)
+{
+    <div class="text-danger">@TempData["Error"].ToString()</div>
+    TempData["Error"] = null;
+}
+else if (Model.ChartType == "table")
 {
     <table class="table table-bordered">
         <thead>

@@ -15,15 +15,16 @@ namespace WebApp.Controllers
         public IActionResult Devices()
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
+                return RedirectToAction("SubLogIn", "Authentication");
+
             }
-            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId, "{\"OperationType\":\"GetDevices\", \"Arguments\" : {\"UserId\":\""+ currentUserModel.LocalId + "\"}}");
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
+            }
+            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId, "{\"OperationType\":\"GetDevices\", \"Arguments\" : {\"UserId\":\"" + currentUserModel.LocalId + "\"}}");
             return View(model);
         }
 
@@ -31,30 +32,55 @@ namespace WebApp.Controllers
         public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData, string zData, int skipAmount, int pageIndex, int pagingSize = 10)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
-            }
-            int count = int.Parse(ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
-            "{\"OperationType\":\"GetCount\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\"}}").First()["Count"].ToString());
+                return RedirectToAction("SubLogIn", "Authentication");
 
-            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
-            "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\""+ pagingSize + "\", \"SkipAmount\":\""+ skipAmount + "\"}}"));
+            }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
+            }
+
+
+            IEnumerable<Dictionary<string, object>> counts = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
+            "{\"OperationType\":\"GetCount\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\"}}");
+            int count;
+            if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("SubLogIn", "Authentication");
+
+            }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
+            }
+
+
+            IEnumerable<Dictionary<string, object>> DeviceData = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
+            "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\"" + pagingSize + "\", \"SkipAmount\":\"" + skipAmount + "\"}}");
+            DeviceDataModel deviceDataModel;
+            if (DeviceData.First().ContainsKey("Error"))
+            {
+                TempData["Error"] = counts.First()["Error"];
+                deviceDataModel = new DeviceDataModel();
+            }
+            else
+                deviceDataModel = new DeviceDataModel(DeviceData);
+
+
             deviceDataModel.Count = count;
             deviceDataModel.PageIndex = pageIndex;
             deviceDataModel.PagingSize = pagingSize;
             deviceDataModel.SkipAmount = skipAmount;
             deviceDataModel.NumberOfPages = (int)Math.Ceiling((double)count / deviceDataModel.PagingSize);
 
+
             if (chartType == "none")
                 deviceDataModel.ChartType = "none";
             else
                 deviceDataModel.ChartType = chartType;
-            if(xData == "none")
+            if (xData == "none")
                 deviceDataModel.XData = 0;
             else
                 deviceDataModel.XData = deviceDataModel.Infrastructure.IndexOf(xData);
@@ -67,6 +93,7 @@ namespace WebApp.Controllers
             else
                 deviceDataModel.ZData = deviceDataModel.Infrastructure.IndexOf(zData);
 
+
             currentUserModel.LastSeenDevice = deviceName;
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
 
@@ -77,13 +104,14 @@ namespace WebApp.Controllers
         public IActionResult SetChartArguments(IFormCollection chartData)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
+                return RedirectToAction("SubLogIn", "Authentication");
+
+            }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
             }
 
 
@@ -101,13 +129,14 @@ namespace WebApp.Controllers
         public IActionResult PreviusPage(string data)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
+                return RedirectToAction("SubLogIn", "Authentication");
+
+            }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
             }
             DeviceDataModel deviceDataModel = JsonConvert.DeserializeObject<DeviceDataModel>(data);
 
@@ -134,14 +163,16 @@ namespace WebApp.Controllers
         public IActionResult NextPage(string data)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId == 0)
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId == 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
+                return RedirectToAction("SubLogIn", "Authentication");
+
             }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
+            }
+
             DeviceDataModel deviceDataModel = JsonConvert.DeserializeObject<DeviceDataModel>(data);
 
             if (deviceDataModel.NumberOfPages - 1 != deviceDataModel.PageIndex)
@@ -164,20 +195,21 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public void SendData(IFormCollection data)
+        public IActionResult SendData(IFormCollection data)
         {
-            /*CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId != 0)
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.LocalId == 0)
             {
-                if (currentUserModel.LocalId != 0)
-                {
-                    return RedirectToAction("SubLogIn");
-                }
-                return RedirectToAction("Devices", "Dashboard");
+                return RedirectToAction("SubLogIn", "Authentication");
+
+            }
+            else if (currentUserModel.LocalId == 0)
+            {
+                return RedirectToAction("LogIn", "Authentication");
             }
 
             ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
-                "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\""+ currentUserModel.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");*/
+                "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\"" + currentUserModel.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");
         }
     }
 }

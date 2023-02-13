@@ -1,28 +1,41 @@
 ﻿@using System.Text.Json.Nodes;
 @model IEnumerable<Dictionary<string, object>>
+@{
+    ViewData["Title"] = "Devices";
+}
 <h1>Your Devices:</h1>
 <hr />
 <div class="d-flex flex-wrap">
-    @for(int i = 0;i<10;i++)
-    {
     @foreach (Dictionary<string, object> devices in Model)
     {
-        <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="DeviceData"
-       asp-route-deviceName="@devices["Name"].ToString()"
-       asp-route-chartType="table"
-       asp-route-xData="none"
-       asp-route-yData="none"
-       asp-route-zData="none">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">@devices["Name"].ToString()</h5>
+        int i = 1;
+        <div class="d-style btn-outline-primary btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-4">
+                    <h4 class="pt-3 text-170 text-600 text-primary-d1 letter-spacing">
+                        Device:
+                    </h4>
+
+                    <div class="text-secondary-d1 text-120">
+                        <p class="text-180">No. @i</p>
+                    </div>
+                </div>
+
+                <div class="mb-0 col-12 col-md-4">
+                    <p class="fs-4">DeviceName</p>
+                </div>
+
+                <div class="col-12 col-md-4 text-center">
+                   <a class="f-n-hover btn btn-info btn-raised px-4 py-25 w-75 text-600" asp-area="" asp-controller="Dashboard" asp-action="DeviceData"
+                   asp-route-deviceName="@devices["Name"].ToString()"
+                   asp-route-chartType="table"
+                   asp-route-xData="none"
+                   asp-route-yData="none"
+                   asp-route-zData="none">Open Terminal</a>
                 </div>
             </div>
-        </a>
-        <h1>
-        </h1>
-        <br />
-    }
+
+        </div>
+        i++;
     }
 </div>
