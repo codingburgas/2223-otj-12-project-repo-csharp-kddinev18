@@ -139,7 +139,7 @@ namespace LocalServer.BLL.Server.BLL
                             }
                             catch (Exception ex)
                             {
-                                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|"+"{[\"Error\":\"" + ex.Message + "\"]}"));
+                                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|"+"[{\"Error\":\"" + ex.Message + "\"}]"));
                             }
                         }
                     }

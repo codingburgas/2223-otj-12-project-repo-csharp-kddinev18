@@ -208,8 +208,7 @@ namespace WebApp.BLL.Server.BLL
                 {
                     Thread.Sleep(500);
                 }
-                string data = _resposeBuffer[container].Substring(4, _resposeBuffer[container].Length - 6);
-                return JsonSerializer.Deserialize<IEnumerable<Dictionary<string, object>>>(data);
+                return JsonSerializer.Deserialize<IEnumerable<Dictionary<string, object>>>(_resposeBuffer[container]);
             }
             throw new Exception("There isn't a local server connected associated with that user");
         }

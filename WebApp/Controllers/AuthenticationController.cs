@@ -104,5 +104,26 @@ namespace WebApp.Controllers
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("Devices", "Dashboard");
         }
+
+        [HttpGet]
+        public IActionResult SignOutFromLocalServer()
+        {
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            currentUserModel.LocalId = 0;
+            currentUserModel.LastSeenDevice = "";
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
+            return SubLogIn();
+        }
+
+        [HttpGet]
+        public IActionResult SignOut()
+        {
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            currentUserModel.LocalId = 0;
+            currentUserModel.GlobalId = 0;
+            currentUserModel.LastSeenDevice = "";
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

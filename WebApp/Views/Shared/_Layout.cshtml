@@ -44,8 +44,8 @@
                                     Dropdown
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><button class="dropdown-item" type="button">Sign Out</button></li>
-                                    <li><button class="dropdown-item" type="button">Sign Out from the local server</button></li>
+                                    <li><a class="nav-link dropdown-item" asp-area="" asp-controller="Authentication" asp-action="SignOut">Sign Out</a></li>
+                                    <li><a class="nav-link dropdown-item" asp-area="" asp-controller="Authentication" asp-action="SignOutFromLocalServer">Sign Out from the local server</a></li>
                                 </ul>
                             </li>
                         </ul>
