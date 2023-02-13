@@ -100,39 +100,46 @@ namespace LocalServer.BLL.Server.BLL
                         int read = await stream.ReadAsync(buffer, 0, buffer.Length);
                         if (read > 0)
                         {
-                            _data = buffer.SubArray(0, read);
-                            string data = FormatData();
-                            responseBufferNumber = data.Split('|')[0];
-                            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Split('|')[1]);
-                            JsonObject arguments = null;
-                            OperationTypes operation = (OperationTypes)Enum.Parse(typeof(OperationTypes), jObject["OperationType"].ToString(), true);
-
-                            switch (operation)
+                            try
                             {
-                                case OperationTypes.GetDevices:
-                                    arguments = jObject["Arguments"] as JsonObject;
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices(int.Parse(arguments["UserId"].ToString()))}"));
-                                    break;
-                                case OperationTypes.GetData:
-                                    arguments = jObject["Arguments"] as JsonObject;
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
-                                        $"{GetData(arguments["DeviceName"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
-                                    break;
-                                case OperationTypes.SendData:
-                                    arguments = jObject["Arguments"] as JsonObject;
-                                    SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + "[{\"Message\":\"Data Sent\"}]"));
-                                    break;
-                                case OperationTypes.GetCount:
-                                    arguments = jObject["Arguments"] as JsonObject;
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + GetCount(arguments["DeviceName"].ToString())));
-                                    break;
-                                case OperationTypes.Authenticate:
-                                    arguments = jObject["Arguments"] as JsonObject;
-                                    stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + Authenticate(arguments["UserName"].ToString(), arguments["Password"].ToString())));
-                                    break;
-                                default:
-                                    break;
+                                _data = buffer.SubArray(0, read);
+                                string data = FormatData();
+                                responseBufferNumber = data.Split('|')[0];
+                                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Split('|')[1]);
+                                JsonObject arguments = null;
+                                OperationTypes operation = (OperationTypes)Enum.Parse(typeof(OperationTypes), jObject["OperationType"].ToString(), true);
+
+                                switch (operation)
+                                {
+                                    case OperationTypes.GetDevices:
+                                        arguments = jObject["Arguments"] as JsonObject;
+                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices(int.Parse(arguments["UserId"].ToString()))}"));
+                                        break;
+                                    case OperationTypes.GetData:
+                                        arguments = jObject["Arguments"] as JsonObject;
+                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
+                                            $"{GetData(arguments["DeviceName"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
+                                        break;
+                                    case OperationTypes.SendData:
+                                        arguments = jObject["Arguments"] as JsonObject;
+                                        SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
+                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + "[{\"Message\":\"Data Sent\"}]"));
+                                        break;
+                                    case OperationTypes.GetCount:
+                                        arguments = jObject["Arguments"] as JsonObject;
+                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + GetCount(arguments["DeviceName"].ToString())));
+                                        break;
+                                    case OperationTypes.Authenticate:
+                                        arguments = jObject["Arguments"] as JsonObject;
+                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + Authenticate(arguments["UserName"].ToString(), arguments["Password"].ToString())));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|"+"{[\"Error\":\"" + ex.Message + "\"]}"));
                             }
                         }
                     }
@@ -140,7 +147,7 @@ namespace LocalServer.BLL.Server.BLL
             }
             catch (Exception ex)
             {
-                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|Could not retrieve the data, {ex.Message}"));
+                Console.WriteLine(ex.Message);
             }
         }
 

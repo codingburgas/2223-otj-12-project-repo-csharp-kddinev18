@@ -28,7 +28,7 @@
                                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                     <div class="form-outline flex-fill mb-0">
                                         <label asp-for="Password" class="control-label"></label>
-                                        <input asp-for="Password" class="form-control" />
+                                        <input asp-for="Password" type="password" class="form-control" />
                                     </div>
                                 </div>
 
@@ -38,7 +38,13 @@
                                         I agree all statements in <a asp-area="" asp-controller="Home" asp-action="Privacy">Terms of service</a>
                                     </label>
                                 </div>
-
+                                @{
+                                    if (TempData["Error"] != null)
+                                    {
+                                        <div class="text-danger">@TempData["Error"].ToString()</div>
+                                        TempData["Error"] = null;
+                                    }
+                                }
                                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                     <input type="submit" class="btn btn-primary btn-lg" value="Sign In" />
                                 </div>

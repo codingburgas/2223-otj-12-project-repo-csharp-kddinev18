@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
@@ -30,12 +31,13 @@ namespace WebApp.Controllers
             try
             {
                 _userAuthenticationService.Register(newUser, _dbContext);
-                return RedirectToAction("LogIn");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return RedirectToAction("Register");
+                TempData["Error"] = ex.Message;
+                return Register();
             }
+            return RedirectToAction("LogIn");
         }
 
         [HttpGet]
@@ -48,9 +50,25 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LogIn(User user)
         {
-            CurrentUserModel currentUserModel = new CurrentUserModel() { GlobalId = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" };
-            if (currentUserModel.GlobalId == -1)
-                return RedirectToAction("LogIn");
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId != 0)
+            {
+                if(currentUserModel.LocalId != 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
+
+            try
+            {
+                currentUserModel = new CurrentUserModel() { GlobalId = _userAuthenticationService.LogIn(user, _dbContext), LastSeenDevice = "" };
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return LogIn();
+            }
 
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("SubLogIn");
@@ -66,9 +84,23 @@ namespace WebApp.Controllers
         public IActionResult SubLogIn(User user)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            currentUserModel.LocalId = int.Parse(ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
-                "{\"OperationType\" : \"Authenticate\", \"Arguments\" : {\"UserName\" : \"" + user.UserName + "\", \"Password\" : \"" + user.Password + "\"}}").First()["UserId"].ToString());
+            try
+            {
+                IEnumerable<Dictionary<string, object>> response = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
+                "{\"OperationType\" : \"Authenticate\", \"Arguments\" : {\"UserName\" : \"" + user.UserName + "\", \"Password\" : \"" + user.Password + "\"}}");
 
+                if (response.First().ContainsKey("Error"))
+                    throw new Exception($"{response.First()["Error"]}");
+
+                currentUserModel.LocalId = int.Parse(response.First()["UserId"].ToString());
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return LogIn();
+            }
+            
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
             return RedirectToAction("Devices", "Dashboard");
         }

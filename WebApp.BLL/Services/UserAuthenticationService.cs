@@ -116,6 +116,9 @@ namespace WebApp.BLL.Services
 
         public void Register(User user, IOTHomeSecurityDbContext dbContext)
         {
+            if (user.ArgreedWithTheTerms == false)
+                throw new Exception("Must agree with the terms and conditions");
+
             // Checks if the email is in corrent format
             CheckUsername(user.UserName);
             // Checks if the email is in corrent format
@@ -145,7 +148,7 @@ namespace WebApp.BLL.Services
 
             // If there are no users with the given user name trow an exception
             if (users.Count == 0)
-                return -1;
+                throw new Exception("Wrong credentials");
 
             // For every user check is the password matches
             foreach (User user in users)
@@ -157,7 +160,7 @@ namespace WebApp.BLL.Services
                 }
             }
             // Throws exception if the user couldn't log in
-            return -1;
+            throw new Exception("Wrong credentials");
         }
     }
 }

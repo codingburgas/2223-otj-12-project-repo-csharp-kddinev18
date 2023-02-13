@@ -34,6 +34,7 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", new CurrentUserModel());
             return View();
         }
 

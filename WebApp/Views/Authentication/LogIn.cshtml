@@ -21,6 +21,7 @@
                                     <div class="form-outline flex-fill mb-0">
                                         <label asp-for="UserName" class="form-label"></label>
                                         <input asp-for="UserName" class="form-control" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
                                     </div>
                                 </div>
 
@@ -28,16 +29,23 @@
                                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                     <div class="form-outline flex-fill mb-0">
                                         <label asp-for="Password" class="control-label"></label>
-                                        <input asp-for="Password" class="form-control" />
+                                        <input asp-for="Password" type="password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+
                                     </div>
                                 </div>
-
                                 <div class="form-check d-flex justify-content-center mb-5">
                                     <label class="form-check-label" for="form2Example3">
                                         Don't have an account <a asp-area="" asp-controller="Authentication" asp-action="Register">Sign Up</a>
                                     </label>
                                 </div>
-
+                                @{
+                                    if (TempData["Error"] != null)
+                                    {
+                                        <div class="text-danger">@TempData["Error"].ToString()</div>
+                                        TempData["Error"] = null;
+                                    }
+                                }
                                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                     <input type="submit" class="btn btn-primary btn-lg" value="Sign In" />
                                 </div>
