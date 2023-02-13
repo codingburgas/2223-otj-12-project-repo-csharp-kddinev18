@@ -1,15 +1,28 @@
 ﻿@using System.Text.Json.Nodes;
 @model IEnumerable<Dictionary<string, object>>
-
-@foreach (Dictionary<string, object> devices in Model)
-{
-    <h1>
-       <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="DeviceData"
+<h1>Your Devices:</h1>
+<hr />
+<div class="d-flex flex-wrap">
+    @for(int i = 0;i<10;i++)
+    {
+    @foreach (Dictionary<string, object> devices in Model)
+    {
+        <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="DeviceData"
        asp-route-deviceName="@devices["Name"].ToString()"
        asp-route-chartType="table"
        asp-route-xData="none"
        asp-route-yData="none"
-       asp-route-zData="none">@devices["Name"].ToString()</a>
-    </h1>
-    <br />
-}
+       asp-route-zData="none">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Header</div>
+                <div class="card-body">
+                    <h5 class="card-title">@devices["Name"].ToString()</h5>
+                </div>
+            </div>
+        </a>
+        <h1>
+        </h1>
+        <br />
+    }
+    }
+</div>

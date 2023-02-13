@@ -51,9 +51,9 @@ namespace WebApp.Controllers
         public IActionResult LogIn(User user)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            if (currentUserModel.GlobalId != 0)
+            if (currentUserModel.GlobalId == 0)
             {
-                if(currentUserModel.LocalId != 0)
+                if(currentUserModel.LocalId == 0)
                 {
                     return RedirectToAction("SubLogIn");
                 }
@@ -112,7 +112,7 @@ namespace WebApp.Controllers
             currentUserModel.LocalId = 0;
             currentUserModel.LastSeenDevice = "";
             TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
-            return SubLogIn();
+            return RedirectToAction("SubLogIn");
         }
 
         [HttpGet]

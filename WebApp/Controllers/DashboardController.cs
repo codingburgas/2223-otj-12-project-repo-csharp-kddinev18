@@ -14,19 +14,35 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Devices()
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUser.GlobalId, "{\"OperationType\":\"GetDevices\", \"Arguments\" : {\"UserId\":\""+ currentUser.LocalId + "\"}}");
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId == 0)
+            {
+                if (currentUserModel.LocalId == 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
+            IEnumerable<Dictionary<string, object>> model = ServerLogic.LocalServerCommunication(currentUserModel.GlobalId, "{\"OperationType\":\"GetDevices\", \"Arguments\" : {\"UserId\":\""+ currentUserModel.LocalId + "\"}}");
             return View(model);
         }
 
         [HttpGet]
         public IActionResult DeviceData(string deviceName, string chartType, string xData, string yData, string zData, int skipAmount, int pageIndex, int pagingSize = 10)
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
-            int count = int.Parse(ServerLogic.LocalServerCommunication(currentUser.GlobalId,
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId == 0)
+            {
+                if (currentUserModel.LocalId == 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
+            int count = int.Parse(ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
             "{\"OperationType\":\"GetCount\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\"}}").First()["Count"].ToString());
 
-            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUser.GlobalId,
+            DeviceDataModel deviceDataModel = new DeviceDataModel(ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
             "{\"OperationType\":\"GetData\", \"Arguments\" : { \"DeviceName\":\"" + deviceName + "\", \"PagingSize\":\""+ pagingSize + "\", \"SkipAmount\":\""+ skipAmount + "\"}}"));
             deviceDataModel.Count = count;
             deviceDataModel.PageIndex = pageIndex;
@@ -51,8 +67,8 @@ namespace WebApp.Controllers
             else
                 deviceDataModel.ZData = deviceDataModel.Infrastructure.IndexOf(zData);
 
-            currentUser.LastSeenDevice = deviceName;
-            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUser);
+            currentUserModel.LastSeenDevice = deviceName;
+            TempDataExtensions.Put(TempData, "CurrentUserInformation", currentUserModel);
 
             return View(deviceDataModel);
         }
@@ -60,12 +76,20 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult SetChartArguments(IFormCollection chartData)
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId == 0)
+            {
+                if (currentUserModel.LocalId == 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
 
 
             return RedirectToAction("DeviceData", new
             {
-                deviceName = currentUser.LastSeenDevice,
+                deviceName = currentUserModel.LastSeenDevice,
                 chartType = chartData["ChartType"],
                 xData = chartData["XData"],
                 yData = chartData["YData"],
@@ -76,7 +100,15 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult PreviusPage(string data)
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId == 0)
+            {
+                if (currentUserModel.LocalId == 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
             DeviceDataModel deviceDataModel = JsonConvert.DeserializeObject<DeviceDataModel>(data);
 
             if (deviceDataModel.PageIndex != 0)
@@ -87,7 +119,7 @@ namespace WebApp.Controllers
 
             return RedirectToAction("DeviceData", new
             {
-                deviceName = currentUser.LastSeenDevice,
+                deviceName = currentUserModel.LastSeenDevice,
                 chartType = deviceDataModel.ChartType,
                 xData = deviceDataModel.Infrastructure[deviceDataModel.XData],
                 yData = deviceDataModel.Infrastructure[deviceDataModel.YData],
@@ -101,7 +133,15 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult NextPage(string data)
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId == 0)
+            {
+                if (currentUserModel.LocalId == 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
             DeviceDataModel deviceDataModel = JsonConvert.DeserializeObject<DeviceDataModel>(data);
 
             if (deviceDataModel.NumberOfPages - 1 != deviceDataModel.PageIndex)
@@ -112,7 +152,7 @@ namespace WebApp.Controllers
 
             return RedirectToAction("DeviceData", new
             {
-                deviceName = currentUser.LastSeenDevice,
+                deviceName = currentUserModel.LastSeenDevice,
                 chartType = deviceDataModel.ChartType,
                 xData = deviceDataModel.Infrastructure[deviceDataModel.XData],
                 yData = deviceDataModel.Infrastructure[deviceDataModel.YData],
@@ -126,10 +166,18 @@ namespace WebApp.Controllers
         [HttpPost]
         public void SendData(IFormCollection data)
         {
-            CurrentUserModel currentUser = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            /*CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
+            if (currentUserModel.GlobalId != 0)
+            {
+                if (currentUserModel.LocalId != 0)
+                {
+                    return RedirectToAction("SubLogIn");
+                }
+                return RedirectToAction("Devices", "Dashboard");
+            }
 
-            ServerLogic.LocalServerCommunication(currentUser.GlobalId,
-                "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\""+ currentUser.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");
+            ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
+                "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\""+ currentUserModel.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");*/
         }
     }
 }
