@@ -1,0 +1,109 @@
+#include "ESP8266WiFi.h" //which one of these should be used ?
+#include <Servo.h>
+const char* ssid = "Kal@04";
+const char* password = "!kpoli08042200";
+
+const IPAddress serverIP(192, 168, 0, 195);  // the address to be accessed
+uint16_t serverPort = 5400;                  // server port number
+
+WiFiClient client;  // Declare a client object to connect to the server
+#define SERVO_PIN 2 // ESP32 pin GIOP26 connected to servo motor
+
+Servo servoMotor;
+void setup() {
+  Serial.begin(115200);
+  Serial.println();
+  servoMotor.attach(SERVO_PIN);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.setSleep(false);  // Turn off wifi sleep in STA mode to improve response speed
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+    Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  if (client.connect(serverIP, serverPort))
+  {
+    client.print(R"rawliteral(
+    {
+      "Operation": "Authenticate",
+      "Name": "ServoMotor",
+      "Columns": [
+        {
+          "Name": "Id",
+          "Type": "int",
+          "Constraints": [
+            {
+              "Constraint": "PRIMARY KEY",
+              "AdditionalInformation": ""
+            },
+            {
+              "Constraint": "NOT NULL",
+              "AdditionalInformation": ""
+            }
+          ]
+        },
+        {
+          "Name": "State",
+          "Type": "nvarchar(50)",
+          "Constraints": [
+            {
+              "Constraint": "NOT NULL",
+              "AdditionalInformation": ""
+            }
+          ]
+        }
+      ]
+    })rawliteral");
+    client.stop();
+  }
+  else
+  {
+    client.stop();
+  }
+}
+
+void loop() {
+  Serial.println("Try to access the server");
+  if (client.connect(serverIP, serverPort))  // Try to access the target address
+  {
+    Serial.println("Access successful");
+    while (client.connected() || client.available())  // If connected or received unread data
+    {
+      if (client.available())  // If there is data to read
+      {
+        String line = client.readStringUntil('\n');  // Read data to newline
+        Serial.print("Read data:");
+        Serial.println(line);
+        if(line == "lock")
+        {
+          for (int pos = 0; pos <= 180; pos += 1) {
+            // in steps of 1 degree
+            servoMotor.write(pos);
+          }
+          client.print("{\"Operation\":\"Insert\",\"Name\":\"ServoMotor\",\"Columns\":[\""+line+"\"]}");
+        }
+        else if(line == "unlock")
+        {
+          // rotates from 180 degrees to 0 degrees
+          for (int pos = 180; pos >= 0; pos -= 1) {
+            servoMotor.write(pos);
+          }
+          client.print("{\"Operation\":\"Insert\",\"Name\":\"ServoMotor\",\"Columns\":[\""+line+"\"]}");
+        }
+      }
+    }
+
+    Serial.println("Close the current connection");
+    client.stop();  // Close the client
+  } else {
+    Serial.println("Access failed");
+    client.stop();  // Close the client
+  }
+  delay(1000);
+}

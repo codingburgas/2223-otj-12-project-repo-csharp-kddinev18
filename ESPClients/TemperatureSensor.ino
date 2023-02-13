@@ -1,0 +1,100 @@
+//#include <WiFi.h> //which one of these should be used ?
+#include "ESP8266WiFi.h" //which one of these should be used ?
+#include "DHT.h"
+// D4 = 2;
+#define DHTPIN 2 
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+const char* ssid = "Kal@04";
+const char* password = "!kpoli08042200";
+
+const IPAddress serverIP(192, 168, 0, 195);  // the address to be accessed
+uint16_t serverPort = 5400;                  // server port number
+
+WiFiClient client;  // Declare a client object to connect to the server
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println();
+
+  WiFi.mode(WIFI_STA);
+  WiFi.setSleep(false);  // Turn off wifi sleep in STA mode to improve response speed
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+    Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  if (client.connect(serverIP, serverPort))
+  {
+    client.print(R"rawliteral(
+    {
+      "Operation": "Authenticate",
+      "Name": "Temperature",
+      "Columns": [
+        {
+          "Name": "Id",
+          "Type": "int",
+          "Constraints": [
+            {
+              "Constraint": "PRIMARY KEY",
+              "AdditionalInformation": ""
+            },
+            {
+              "Constraint": "NOT NULL",
+              "AdditionalInformation": ""
+            }
+          ]
+        },
+        {
+          "Name": "Temperature",
+          "Type": "decimal(5,2)",
+          "Constraints": [
+            {
+              "Constraint": "NOT NULL",
+              "AdditionalInformation": ""
+            }
+          ]
+        },
+        {
+          "Name": "Humidity",
+          "Type": "decimal(5,2)",
+          "Constraints": [
+            {
+              "Constraint": "NOT NULL",
+              "AdditionalInformation": ""
+            }
+          ]
+        }
+      ]
+    })rawliteral");
+    client.stop();
+  }
+  else
+  {
+    client.stop();
+  }
+  dht.begin();
+}
+
+void loop() {
+  Serial.println("Try to access the server");
+  if (client.connect(serverIP, serverPort))  // Try to access the target address
+  {
+    Serial.println("Access successful");
+    String h = String(dht.readHumidity());
+    String t = String(dht.readTemperature());
+    client.print("{\"Operation\":\"Insert\",\"Name\":\"Temperature\",\"Columns\":[\""+t+"\", \""+h+"\"]}");  // Send data to the server
+    delay(10000);
+    client.stop();  // Close the client
+  } else {
+    Serial.println("Access failed");
+    client.stop();  // Close the client
+  }
+  delay(1000 * 10);
+}
