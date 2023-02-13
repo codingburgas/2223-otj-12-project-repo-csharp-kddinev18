@@ -195,7 +195,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public void IActionResult SendData(IFormCollection data, string deviceData)
+        public IActionResult SendData(IFormCollection data, string deviceData)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
             if (currentUserModel.LocalId == 0)
@@ -207,10 +207,23 @@ namespace WebApp.Controllers
             {
                 return RedirectToAction("LogIn", "Authentication");
             }
+            DeviceDataModel deviceDataModel = JsonConvert.DeserializeObject<DeviceDataModel>(deviceData);
 
 
             ServerLogic.LocalServerCommunication(currentUserModel.GlobalId,
                 "{\"OperationType\":\"SendData\", \"Arguments\" : {\"DeviceName\":\"" + currentUserModel.LastSeenDevice + "\",\"Data\":\"" + data["data"].ToString() + "\"}}");
+
+            return RedirectToAction("DeviceData", new
+            {
+                deviceName = currentUserModel.LastSeenDevice,
+                chartType = deviceDataModel.ChartType,
+                xData = deviceDataModel.Infrastructure[deviceDataModel.XData],
+                yData = deviceDataModel.Infrastructure[deviceDataModel.YData],
+                zData = deviceDataModel.Infrastructure[deviceDataModel.ZData],
+                skipAmount = deviceDataModel.SkipAmount,
+                pageIndex = deviceDataModel.PageIndex,
+                pagingSize = deviceDataModel.PagingSize
+            });
         }
     }
 }
