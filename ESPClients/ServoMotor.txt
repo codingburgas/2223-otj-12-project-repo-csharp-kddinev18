@@ -1,22 +1,19 @@
-//#include <WiFi.h> //which one of these should be used ?
 #include "ESP8266WiFi.h" //which one of these should be used ?
-#include "DHT.h"
-// D4 = 2;
-#define DHTPIN 2 
-#define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
-
-const char* ssid = "Kal@04";
-const char* password = "!kpoli08042200";
+#include <Servo.h>
+const char* ssid = "****";
+const char* password = "****";
 
 const IPAddress serverIP(192, 168, 0, 195);  // the address to be accessed
 uint16_t serverPort = 5400;                  // server port number
 
 WiFiClient client;  // Declare a client object to connect to the server
+#define SERVO_PIN 2 // ESP32 pin GIOP26 connected to servo motor
 
+Servo servoMotor;
 void setup() {
   Serial.begin(115200);
   Serial.println();
+  servoMotor.attach(SERVO_PIN);
 
   WiFi.mode(WIFI_STA);
   WiFi.setSleep(false);  // Turn off wifi sleep in STA mode to improve response speed
@@ -35,7 +32,7 @@ void setup() {
     client.print(R"rawliteral(
     {
       "Operation": "Authenticate",
-      "Name": "Temperature",
+      "Name": "ServoMotor",
       "Columns": [
         {
           "Name": "Id",
@@ -52,18 +49,8 @@ void setup() {
           ]
         },
         {
-          "Name": "Temperature",
-          "Type": "decimal(5,2)",
-          "Constraints": [
-            {
-              "Constraint": "NOT NULL",
-              "AdditionalInformation": ""
-            }
-          ]
-        },
-        {
-          "Name": "Humidity",
-          "Type": "decimal(5,2)",
+          "Name": "State",
+          "Type": "nvarchar(50)",
           "Constraints": [
             {
               "Constraint": "NOT NULL",
@@ -79,7 +66,6 @@ void setup() {
   {
     client.stop();
   }
-  dht.begin();
 }
 
 void loop() {
@@ -87,14 +73,37 @@ void loop() {
   if (client.connect(serverIP, serverPort))  // Try to access the target address
   {
     Serial.println("Access successful");
-    String h = String(dht.readHumidity());
-    String t = String(dht.readTemperature());
-    client.print("{\"Operation\":\"Insert\",\"Name\":\"Temperature\",\"Columns\":[\""+t+"\", \""+h+"\"]}");  // Send data to the server
-    delay(10000);
+    while (client.connected() || client.available())  // If connected or received unread data
+    {
+      if (client.available())  // If there is data to read
+      {
+        String line = client.readStringUntil('\n');  // Read data to newline
+        Serial.print("Read data:");
+        Serial.println(line);
+        if(line == "lock")
+        {
+          for (int pos = 0; pos <= 180; pos += 1) {
+            // in steps of 1 degree
+            servoMotor.write(pos);
+          }
+          client.print("{\"Operation\":\"Insert\",\"Name\":\"ServoMotor\",\"Columns\":[\""+line+"\"]}");
+        }
+        else if(line == "unlock")
+        {
+          // rotates from 180 degrees to 0 degrees
+          for (int pos = 180; pos >= 0; pos -= 1) {
+            servoMotor.write(pos);
+          }
+          client.print("{\"Operation\":\"Insert\",\"Name\":\"ServoMotor\",\"Columns\":[\""+line+"\"]}");
+        }
+      }
+    }
+
+    Serial.println("Close the current connection");
     client.stop();  // Close the client
   } else {
     Serial.println("Access failed");
     client.stop();  // Close the client
   }
-  delay(1000 * 10);
+  delay(1000);
 }

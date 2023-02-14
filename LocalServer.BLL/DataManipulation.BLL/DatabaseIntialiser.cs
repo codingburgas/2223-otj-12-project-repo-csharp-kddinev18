@@ -18,11 +18,11 @@ namespace LocalServer.BLL.DataManipulation.BLL
         {
             _deleteTimer = deleteTimer;
             Database = new Database(_connectionString);
+            CreateDefaultDatabaseStructure();
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = deleteTimer;
             timer.Elapsed += TimerOnElapsed;
             timer.Start();
-            CreateDefaultDatabaseStructure();
         }
         public void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {

@@ -125,7 +125,7 @@ namespace WebApp.Controllers
             });
         }
 
-        [HttpPost]
+        
         public IActionResult PreviusPage(string data)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");
@@ -159,7 +159,7 @@ namespace WebApp.Controllers
             });
         }
 
-        [HttpPost]
+        
         public IActionResult NextPage(string data)
         {
             CurrentUserModel currentUserModel = TempDataExtensions.Get<CurrentUserModel>(TempData, "CurrentUserInformation");

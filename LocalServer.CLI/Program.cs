@@ -14,8 +14,8 @@ namespace LocalServer.CLI
     {
         static void Main(string[] args)
         {
-            ServerLogic server = new ServerLogic(5400);
-            server.ServerSetUp(1000 * 60 * 100);
+            ServerLogic server = new ServerLogic(5400, 200 * 60 * 1000);
+            server.ServerSetUp();
 
             string userName = Console.ReadLine();
             string password = Console.ReadLine();

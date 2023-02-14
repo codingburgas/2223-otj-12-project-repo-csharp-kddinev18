@@ -22,7 +22,5 @@ namespace WebApp.DAL.Models
         public string Salt { get; set; }
         public DateTime DateRegisterd { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "You must agree with the terms and conditions")]
-        public bool ArgreedWithTheTerms { get; set; }
     }
 }

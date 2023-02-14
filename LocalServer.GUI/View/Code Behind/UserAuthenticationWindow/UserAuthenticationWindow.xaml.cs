@@ -35,8 +35,8 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
                 InitializeComponent();
                 if (Server == null)
                 {
-                    Server = new ServerLogic(5400);
-                    Server.ServerSetUp(200 * 60 * 1000);
+                    Server = new ServerLogic(5400, 200 * 60 * 1000);
+                    Server.ServerSetUp();
                 }
 
                 LogInPage = new LogInPage(this);

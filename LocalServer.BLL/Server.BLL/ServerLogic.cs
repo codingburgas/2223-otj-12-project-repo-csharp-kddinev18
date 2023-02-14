@@ -24,23 +24,23 @@ namespace LocalServer.BLL.Server.BLL
         private int _port;
         private static int _success = 0;
         private static int _error = 1;
-
-        public ServerLogic(int port)
+        private static DatabaseInitialiser _databaseInitialiser;
+        public ServerLogic(int port, long deleteTiemr)
         {
             _port = port;
+            _databaseInitialiser = new DatabaseInitialiser(deleteTiemr);
         }
-        public void ServerSetUp(long deleteTimer)
+        public void ServerSetUp()
         {
             try
             {
-                DatabaseInitialiser databaseInitialiser = new DatabaseInitialiser(deleteTimer);
-                ClientHandlingLogic.DatabaseInitialiser = databaseInitialiser;
-                UserAuthenticationLogic.DatabaseInitialiser = databaseInitialiser;
-                UserModifierLogic.DatabaseInitialiser = databaseInitialiser;
-                DeviceModificationLogic.DatabaseInitialiser = databaseInitialiser;
-                RoleModificationLogic.DatabaseInitialiser = databaseInitialiser;
-                PermissionModifierLogic.DatabaseInitialiser = databaseInitialiser;
-                GlobalServerComunicationLogic.DatabaseInitialiser = databaseInitialiser;
+                ClientHandlingLogic.DatabaseInitialiser = _databaseInitialiser;
+                UserAuthenticationLogic.DatabaseInitialiser = _databaseInitialiser;
+                UserModifierLogic.DatabaseInitialiser = _databaseInitialiser;
+                DeviceModificationLogic.DatabaseInitialiser = _databaseInitialiser;
+                RoleModificationLogic.DatabaseInitialiser = _databaseInitialiser;
+                PermissionModifierLogic.DatabaseInitialiser = _databaseInitialiser;
+                GlobalServerComunicationLogic.DatabaseInitialiser = _databaseInitialiser;
 
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 // Starts the server
@@ -124,13 +124,24 @@ namespace LocalServer.BLL.Server.BLL
             {
                 string response = $"{_error}|{ex.Message}";
                 // send data to the client
-                client.Client.Send(Encoding.ASCII.GetBytes(response));
+                try
+                {
+                    client.Client.Send(Encoding.ASCII.GetBytes(response));
+                }
+                catch (Exception) 
+                {
+                    DisconnectClient(client);  
+                }
             }
             finally
             {
                 FlushBuffer();
             }
-            client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+            try
+            {
+                client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+            }
+            catch (Exception) { }
         }
 
         // Clear the buffer

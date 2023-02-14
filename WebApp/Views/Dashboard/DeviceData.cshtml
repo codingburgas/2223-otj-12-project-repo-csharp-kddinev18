@@ -163,7 +163,7 @@ else
 }
 <div class="d-flex bd-highlight align-content-center flex-wrap">
     <div class="p-2 flex-grow-1 bd-highlight">
-        <form asp-asp-controller="Dashboard" asp-action="SendData">
+        <form asp-asp-controller="Dashboard" asp-action="SendData" asp-route-deviceData="@JsonSerializer.Serialize(Model)">
             <div class="d-flex justify-content-between align-items-center form-group">
                 <input type="text" class="form-control" id="data" name="data">
                 <input type="submit" value="Send Data" class="btn btn-primary" style="margin: 0px 0px 0px 25px" />

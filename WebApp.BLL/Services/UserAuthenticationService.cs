@@ -116,9 +116,6 @@ namespace WebApp.BLL.Services
 
         public void Register(User user, IOTHomeSecurityDbContext dbContext)
         {
-            if (user.ArgreedWithTheTerms == false)
-                throw new Exception("Must agree with the terms and conditions");
-
             // Checks if the email is in corrent format
             CheckUsername(user.UserName);
             // Checks if the email is in corrent format

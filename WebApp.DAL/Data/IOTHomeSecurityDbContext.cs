@@ -23,7 +23,6 @@ namespace WebApp.DAL.Data
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Ignore(e => e.ArgreedWithTheTerms);
                 // Set the property DateRegisterd to have type datetime in the database
                 entity.Property(e => e.DateRegisterd).HasColumnType("datetime");
 
