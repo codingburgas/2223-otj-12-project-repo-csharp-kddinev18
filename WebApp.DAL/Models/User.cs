@@ -25,6 +25,5 @@ namespace WebApp.DAL.Models
         public string Password { get; set; }
         public string Salt { get; set; }
         public DateTime DateRegisterd { get; set; } = DateTime.Now;
-
     }
 }

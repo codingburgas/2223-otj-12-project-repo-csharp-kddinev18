@@ -25,10 +25,7 @@ namespace LocalServer.BLL.Server.BLL
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
             if (jObject["Operation"].ToString() == "Authenticate")
             {
-                if (!DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
-                {
-                    CreateDeviceTable(ipAddress, jObject);
-                }
+                CreateDeviceTable(ipAddress, jObject);
             }
             else if (jObject["Operation"].ToString() == "Insert")
             {
@@ -55,6 +52,11 @@ namespace LocalServer.BLL.Server.BLL
 
         private static void CreateDeviceTable(string ipAddress, JsonObject jObject)
         {
+            if (!DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
+            {
+                return;
+            }
+
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("Name", jObject["Name"].ToString(), "IPv4Address", "=", ipAddress);
 
             Table newTable = new Table(jObject["Name"].ToString(), DatabaseInitialiser.Database);
@@ -73,7 +75,10 @@ namespace LocalServer.BLL.Server.BLL
                     }
                     else
                     {
-                        newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), constraint["AdditionalInformation"].ToString()));
+                        newColumn.AddConstraint(new Tuple<string, object>(
+                            constraint["Constraint"].ToString(), 
+                            constraint["AdditionalInformation"].ToString())
+                        );
                     }
                 }
                 newTable.Columns.Add(newColumn);
@@ -95,11 +100,13 @@ namespace LocalServer.BLL.Server.BLL
         public static bool AddClients(TcpClient client)
         {
             string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
-            string devicesJson = Table.ConvertDataTabletoString(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
+            string devicesJson = Table.ConvertDataTabletoString(DatabaseInitialiser.Database.Tables
+                .Where(table => table.Name == "Devices").First().Select("IPv4Address", "=", clientIpAddress));
             List<JsonObject> devices = JsonSerializer.Deserialize<List<JsonObject>>(devicesJson);
             if (devices.Count == 0)
             {
-                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Insert(clientIpAddress, clientIpAddress, "false");
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                    .Insert(clientIpAddress, clientIpAddress, "false");
                 DatabaseInitialiser.Database.SaveDatabaseData();
 
                 return false;
@@ -117,7 +124,8 @@ namespace LocalServer.BLL.Server.BLL
 
         public static void AprooveClient(string ipAddress)
         {
-            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("IsAprooved", "true", "IPv4Address", "=", ipAddress);
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Update("IsAprooved", "true", "IPv4Address", "=", ipAddress);
 
             string deviceId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString();
