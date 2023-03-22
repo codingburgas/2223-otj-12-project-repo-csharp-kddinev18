@@ -54,13 +54,12 @@ namespace WebApp.DAL.Repositories
             try
             {
                 User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
-                if(user != null)
+                if (user == null)
                 {
-                    _context.Users.Remove(user);
-                    _context.SaveChanges();
-                }
-                else
                     throw new ArgumentException("Cannot find the user you have requested for deletion");
+                }
+                _context.SaveChanges();
+                _context.Users.Remove(user);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -92,8 +91,8 @@ namespace WebApp.DAL.Repositories
             {
                 IEnumerable<User> users = _context.Users.Skip(skipAmount).Take(pagingSize);
 
-                ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject >();
-                foreach (User user in users) 
+                ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject>();
+                foreach (User user in users)
                 {
                     userTransferObject.Add(new UserResponseDataTransferObject()
                     {
@@ -119,7 +118,34 @@ namespace WebApp.DAL.Repositories
 
         public IResponseDataTransferObject GetUserById(int userId, ref string errorMessage)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
+                if (user == null)
+                {
+                    throw new ArgumentException("Cannot find the user you have requested for deletion");
+                }
+                return new UserResponseDataTransferObject() {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email
+                };
+            }
+            catch (ArgumentNullException ex)
+            {
+                errorMessage = "Data violation. Please check the date you have entered";
+                return null;
+            }
+            catch (ArgumentException ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "General error Please check the date you have entered";
+                return null;
+            }
         }
 
         public bool UpdateUser(IRequestDataTransferObject user, ref string errorMessage)
