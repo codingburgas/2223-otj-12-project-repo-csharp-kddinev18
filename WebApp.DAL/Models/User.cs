@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApp.DTO;
 
 namespace WebApp.DAL.Models
 {
     public class User
     {
+        public User() { }
+        public User(IRequestDataTransferObject user) { }
         public int Id { get; set; }
         [Display(Name = "Username")]
         [Required(ErrorMessage = "UserName is required.")]

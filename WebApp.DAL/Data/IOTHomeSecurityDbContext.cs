@@ -5,7 +5,7 @@ using WebApp.DAL.Models;
 
 namespace WebApp.DAL.Data
 {
-    public partial class IOTHomeSecurityDbContext : DbContext
+    public partial class IOTHomeSecurityDbContext : DbContext, IIOTHomeSecurityDbContext
     {
         public IOTHomeSecurityDbContext() { }
         public IOTHomeSecurityDbContext(DbContextOptions<IOTHomeSecurityDbContext> options) : base(options) { }
