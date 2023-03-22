@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.DTO;
 using WebApp.DTO.Interfaces;
 
 namespace WebApp.DAL.Repositories.Interfaces
 {
-    internal interface IRepository
+    public interface IDeviceDataRepository
     {
-        public Task<IEnumerable<IResponseDataTransferObject>> GetAsync(int pagingSize, int skipAmount);
+        public IEnumerable<IResponseDataTransferObject> Get(DateTime from, DateTime to, int pagingSize, int skipAmount)
+        {
+
+        }
     }
 }

@@ -22,172 +22,73 @@ namespace WebApp.DAL.Repositories
             _context = context as IOTHomeSecurityDbContext;
         }
 
-        public bool AddUser(IRequestDataTransferObject user, ref string errorMessage)
+        public async Task<bool> AddUserAsync(IRequestDataTransferObject user)
         {
-            try
-            {
-                User newUser = new User(user);
-                _context.Users.Add(newUser);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (DbUpdateException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "General error Please check the date you have entered";
-                return false;
-            }
+            User newUser = new User(user);
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public bool DeleteUser(int userId, ref string errorMessage)
+        public async Task<bool> DeleteUserAsync(int userId)
         {
-            try
+            User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
+            if (user == null)
             {
-                User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
-                if (user == null)
-                {
-                    throw new ArgumentException("Cannot find the user you have requested for deletion");
-                }
-                _context.SaveChanges();
-                _context.Users.Remove(user);
+                throw new ArgumentException("Cannot find the user you have requested for deletion");
             }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (DbUpdateException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (ArgumentException ex)
-            {
-                errorMessage = ex.Message;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "General error Please check the date you have entered";
-                return false;
-            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public IEnumerable<IResponseDataTransferObject> Get(int pagingSize, int skipAmount, ref string errorMessage)
+        public async Task<IEnumerable<IResponseDataTransferObject>> GetAsync(int pagingSize, int skipAmount)
         {
-            try
-            {
-                IEnumerable<User> users = _context.Users.Skip(skipAmount).Take(pagingSize);
+            ICollection<User> users = await _context.Users.Skip(skipAmount).Take(pagingSize).ToListAsync();
 
-                ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject>();
-                foreach (User user in users)
+            ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject>();
+            foreach (User user in users)
+            {
+                userTransferObject.Add(new UserResponseDataTransferObject()
                 {
-                    userTransferObject.Add(new UserResponseDataTransferObject()
-                    {
-                        Id = user.Id,
-                        UserName = user.UserName,
-                        Email = user.Email
-                    });
-                }
-
-                return userTransferObject;
-            }
-            catch (ArgumentNullException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return null;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "General error Please check the date you have entered";
-                return null;
-            }
-        }
-
-        public IResponseDataTransferObject GetUserById(int userId, ref string errorMessage)
-        {
-            try
-            {
-                User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
-                if (user == null)
-                {
-                    throw new ArgumentException("Cannot find the user you have requested for deletion");
-                }
-                return new UserResponseDataTransferObject() {
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email
-                };
+                });
             }
-            catch (ArgumentNullException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return null;
-            }
-            catch (ArgumentException ex)
-            {
-                errorMessage = ex.Message;
-                return null;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "General error Please check the date you have entered";
-                return null;
-            }
+
+            return userTransferObject;
         }
 
-        public bool UpdateUser(int userId, ref string errorMessage)
+        public async Task<IResponseDataTransferObject> GetUserByIdAsync(int userId)
         {
-            try
+            User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
             {
-                User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
-                if (user == null)
-                {
-                    throw new ArgumentException("Cannot find the user you have requested for deletion");
-                }
-                user.UserName = user.UserName;
-                user.Email = user.Email;
-                user.Password = user.Password;
+                throw new ArgumentException("Cannot find the user you have requested for deletion");
+            }
+            return new UserResponseDataTransferObject()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+        }
 
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
+        public async Task<bool> UpdateUserAsync(int userId)
+        {
+            User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
             {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
+                throw new ArgumentException("Cannot find the user you have requested for deletion");
             }
-            catch (DbUpdateException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (ArgumentNullException ex)
-            {
-                errorMessage = "Data violation. Please check the date you have entered";
-                return false;
-            }
-            catch (ArgumentException ex)
-            {
-                errorMessage = ex.Message;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "General error Please check the date you have entered";
-                return false;
-            }
+            user.UserName = user.UserName;
+            user.Email = user.Email;
+            user.Password = user.Password;
+
+            await _context.SaveChangesAsync();
 
             return true;
         }

@@ -27,60 +27,71 @@ namespace LocalServer.BLL.Server.BLL
             {
                 if (!DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
                 {
-                    DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("Name", jObject["Name"].ToString(), "IPv4Address", "=", ipAddress);
-
-                    Table newTable = new Table(jObject["Name"].ToString(), DatabaseInitialiser.Database);
-                    foreach (JsonObject column in JsonSerializer.Deserialize<List<JsonObject>>(jObject["Columns"].ToString()))
-                    {
-                        Column newColumn = new Column(column["Name"].ToString(), column["Type"].ToString(), newTable);
-                        foreach (JsonObject constraint in JsonSerializer.Deserialize<List<JsonObject>>(column["Constraints"].ToString()))
-                        {
-                            if (constraint["Constraint"].ToString() == "FOREIGN KEY")
-                            {
-                                string tableName = constraint["AdditionalInformation"].ToString().Split(", ")[0];
-                                string columnsName = constraint["AdditionalInformation"].ToString().Split(", ")[1];
-                                Column foreignKeyColumn = DatabaseInitialiser.Database.Tables.Where(table => table.Name == tableName).First()
-                                    .Columns.Where(column => column.Name == columnsName).First();
-                                newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), foreignKeyColumn));
-                            }
-                            else
-                            {
-                                newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), constraint["AdditionalInformation"].ToString()));
-                            }
-                        }
-                        newTable.Columns.Add(newColumn);
-                    }
-                    Column systemTimeColumn = new Column("Created", "datetime2(7)", newTable);
-                    systemTimeColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
-
-                    Column systemColumn = new Column("DeviceId", "int", newTable);
-                    systemColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
-                        DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
-
-                    newTable.Columns.Add(systemTimeColumn);
-                    newTable.Columns.Add(systemColumn);
-
-                    DatabaseInitialiser.Database.Tables.Add(newTable);
-                    DatabaseInitialiser.Database.SaveDatabaseInfrastructure();
+                    CreateDeviceTable(ipAddress, jObject);
                 }
             }
             else if (jObject["Operation"].ToString() == "Insert")
             {
-                Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
-                List<string> insertData = new List<string>();
-
-                List<string> args = JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString());
-                args.Add(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                    .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString());
-
-                table.Insert(args.ToArray());
-                DatabaseInitialiser.Database.SaveDatabaseData();
+                InsertDeviceData(ipAddress, jObject);
             }
             else
             {
                 throw new Exception("Wrong operation type");
             }
         }
+
+        private static void InsertDeviceData(string ipAddress, JsonObject jObject)
+        {
+            Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
+            List<string> insertData = new List<string>();
+
+            List<string> args = JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString());
+            args.Add(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
+                .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString());
+
+            table.Insert(args.ToArray());
+            DatabaseInitialiser.Database.SaveDatabaseData();
+        }
+
+        private static void CreateDeviceTable(string ipAddress, JsonObject jObject)
+        {
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("Name", jObject["Name"].ToString(), "IPv4Address", "=", ipAddress);
+
+            Table newTable = new Table(jObject["Name"].ToString(), DatabaseInitialiser.Database);
+            foreach (JsonObject column in JsonSerializer.Deserialize<List<JsonObject>>(jObject["Columns"].ToString()))
+            {
+                Column newColumn = new Column(column["Name"].ToString(), column["Type"].ToString(), newTable);
+                foreach (JsonObject constraint in JsonSerializer.Deserialize<List<JsonObject>>(column["Constraints"].ToString()))
+                {
+                    if (constraint["Constraint"].ToString() == "FOREIGN KEY")
+                    {
+                        string tableName = constraint["AdditionalInformation"].ToString().Split(", ")[0];
+                        string columnsName = constraint["AdditionalInformation"].ToString().Split(", ")[1];
+                        Column foreignKeyColumn = DatabaseInitialiser.Database.Tables.Where(table => table.Name == tableName).First()
+                            .Columns.Where(column => column.Name == columnsName).First();
+                        newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), foreignKeyColumn));
+                    }
+                    else
+                    {
+                        newColumn.AddConstraint(new Tuple<string, object>(constraint["Constraint"].ToString(), constraint["AdditionalInformation"].ToString()));
+                    }
+                }
+                newTable.Columns.Add(newColumn);
+            }
+            Column systemTimeColumn = new Column("Created", "datetime2(7)", newTable);
+            systemTimeColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
+
+            Column systemColumn = new Column("DeviceId", "int", newTable);
+            systemColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
+
+            newTable.Columns.Add(systemTimeColumn);
+            newTable.Columns.Add(systemColumn);
+
+            DatabaseInitialiser.Database.Tables.Add(newTable);
+            DatabaseInitialiser.Database.SaveDatabaseInfrastructure();
+        }
+
         public static bool AddClients(TcpClient client)
         {
             string clientIpAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
