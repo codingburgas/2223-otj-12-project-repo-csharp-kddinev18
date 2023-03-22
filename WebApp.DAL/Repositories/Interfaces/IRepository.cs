@@ -10,6 +10,6 @@ namespace WebApp.DAL.Repositories.Interfaces
 {
     internal interface IRepository
     {
-        public ICollection<IResponseDataTransferObject> Get (int pagingSize, int skipAmount, ref string errorMessage);
+        public IEnumerable<IResponseDataTransferObject> Get (int pagingSize, int skipAmount, ref string errorMessage);
     }
 }

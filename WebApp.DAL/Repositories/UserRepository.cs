@@ -86,9 +86,35 @@ namespace WebApp.DAL.Repositories
             return true;
         }
 
-        public ICollection<IResponseDataTransferObject> Get(int pagingSize, int skipAmount, ref string errorMessage)
+        public IEnumerable<IResponseDataTransferObject> Get(int pagingSize, int skipAmount, ref string errorMessage)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IEnumerable<User> users = _context.Users.Skip(skipAmount).Take(pagingSize);
+
+                ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject >();
+                foreach (User user in users) 
+                {
+                    userTransferObject.Add(new UserResponseDataTransferObject()
+                    {
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        Email = user.Email
+                    });
+                }
+
+                return userTransferObject;
+            }
+            catch (ArgumentNullException ex)
+            {
+                errorMessage = "Data violation. Please check the date you have entered";
+                return null;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "General error Please check the date you have entered";
+                return null;
+            }
         }
 
         public IResponseDataTransferObject GetUserById(int userId, ref string errorMessage)
