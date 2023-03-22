@@ -9,6 +9,6 @@ namespace WebApp.DAL.Repositories.Interfaces
 {
     internal interface IRepository
     {
-        public IResponseDataTranferObject Get (int pagingSize, int skipAmount);
+        public ICollection<IResponseDataTranferObject> Get (int pagingSize, int skipAmount);
     }
 }

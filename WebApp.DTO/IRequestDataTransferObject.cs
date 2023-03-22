@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApp.DTO
 {
-    internal interface IRequestDataTransferObject
+    public interface IRequestDataTransferObject
     {
     }
 }
