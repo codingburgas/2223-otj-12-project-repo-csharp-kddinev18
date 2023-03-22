@@ -10,6 +10,10 @@ namespace WebApp.DAL.Models
         public User(IRequestDataTransferObject user) 
         {
             UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
+            if (dataTrasferObject.Id.HasValue)
+            {
+                Id = dataTrasferObject.Id.Value;
+            }
             UserName = dataTrasferObject.UserName;
             Email = dataTrasferObject.Email;
             Password = dataTrasferObject.Password;

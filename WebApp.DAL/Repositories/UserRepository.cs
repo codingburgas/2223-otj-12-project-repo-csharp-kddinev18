@@ -148,9 +148,48 @@ namespace WebApp.DAL.Repositories
             }
         }
 
-        public bool UpdateUser(IRequestDataTransferObject user, ref string errorMessage)
+        public bool UpdateUser(int userId, ref string errorMessage)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
+                if (user == null)
+                {
+                    throw new ArgumentException("Cannot find the user you have requested for deletion");
+                }
+                user.UserName = user.UserName;
+                user.Email = user.Email;
+                user.Password = user.Password;
+
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                errorMessage = "Data violation. Please check the date you have entered";
+                return false;
+            }
+            catch (DbUpdateException ex)
+            {
+                errorMessage = "Data violation. Please check the date you have entered";
+                return false;
+            }
+            catch (ArgumentNullException ex)
+            {
+                errorMessage = "Data violation. Please check the date you have entered";
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "General error Please check the date you have entered";
+                return false;
+            }
+
+            return true;
         }
     }
 }
