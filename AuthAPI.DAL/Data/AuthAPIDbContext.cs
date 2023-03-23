@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AuthAPI.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.DAL.Models;
 
 namespace AuthAPI.DAL.Data
 {
@@ -53,7 +53,7 @@ namespace AuthAPI.DAL.Data
                     .HasMaxLength(128);
 
                 entity.HasIndex(e => e.UserName)
-                    .IsUnique()
+                    .IsUnique();
             });
             OnModelCreatingPartial(modelBuilder);
         }

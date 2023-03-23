@@ -1,25 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AuthAPI.DAL.Data;
+using AuthAPI.DAL.Models;
+using AuthAPI.DAL.Repositories.Interfaces;
+using AuthAPI.DTO;
+using AuthAPI.DTO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.DAL.Data;
-using WebApp.DAL.Models;
-using WebApp.DAL.Repositories.Interfaces;
-using WebApp.DTO;
-using WebApp.DTO.Interfaces;
 
-namespace WebApp.DAL.Repositories
+namespace AuthAPI.DAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private IOTHomeSecurityDbContext _context;
+        private AuthAPIDbContext _context;
         public UserRepository() { }
-        public UserRepository(IIOTHomeSecurityDbContext context)
+        public UserRepository(IAuthAPIDbContext context)
         {
-            _context = context as IOTHomeSecurityDbContext;
+            _context = context as AuthAPIDbContext;
         }
 
         public async Task<bool> AddUserAsync(IRequestDataTransferObject user)
@@ -31,9 +31,9 @@ namespace WebApp.DAL.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteUserAsync(int userId)
+        public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            User user = _context.Users.Where(user => user.Id == userId).FirstOrDefault();
+            User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new ArgumentException("Cannot find the user you have requested for deletion");
@@ -44,30 +44,29 @@ namespace WebApp.DAL.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<IResponseDataTransferObject>> GetAsync(int pagingSize, int skipAmount)
+        public async Task<IResponseDataTransferObject> GetUserAsync(IRequestDataTransferObject user)
         {
-            ICollection<User> users = await _context.Users.Skip(skipAmount).Take(pagingSize).ToListAsync();
-
-            ICollection<UserResponseDataTransferObject> userTransferObject = new List<UserResponseDataTransferObject>();
-            foreach (User user in users)
+            UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
+            User users = await _context.Users.Where(users => users.UserName == dataTrasferObject.UserName)
+                .Where(users=>users.Password == dataTrasferObject.Password).FirstOrDefaultAsync();
+            if (users == null)
             {
-                userTransferObject.Add(new UserResponseDataTransferObject()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email
-                });
+                throw new ArgumentException("Cannot find the user you have requested");
             }
-
-            return userTransferObject;
+            return new UserResponseDataTransferObject()
+            {
+                Id = users.Id,
+                UserName = users.UserName,
+                Email = users.Email
+            };
         }
 
-        public async Task<IResponseDataTransferObject> GetUserByIdAsync(int userId)
+        public async Task<IResponseDataTransferObject> GetUserByIdAsync(Guid userId)
         {
             User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
             if (user == null)
             {
-                throw new ArgumentException("Cannot find the user you have requested for deletion");
+                throw new ArgumentException("Cannot find the user you have requested");
             }
             return new UserResponseDataTransferObject()
             {
@@ -77,7 +76,7 @@ namespace WebApp.DAL.Repositories
             };
         }
 
-        public async Task<bool> UpdateUserAsync(int userId)
+        public async Task<bool> UpdateUserAsync(Guid userId)
         {
             User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
             if (user == null)

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using AuthAPI.DTO.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.DTO.Interfaces;
 
-namespace WebApp.DTO
+namespace AuthAPI.DTO
 {
     public class UserResponseDataTransferObject : IResponseDataTransferObject
     {
