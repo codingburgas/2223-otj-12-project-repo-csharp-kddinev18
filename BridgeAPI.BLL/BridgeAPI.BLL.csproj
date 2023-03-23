@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthAPI.DAL\AuthAPI.DAL.csproj" />
+    <ProjectReference Include="..\BridgeAPI.DAL\BridgeAPI.DAL.csproj" />
+    <ProjectReference Include="..\BridgeAPI.DTO\BridgeAPI.DTO.csproj" />
   </ItemGroup>
 
 </Project>

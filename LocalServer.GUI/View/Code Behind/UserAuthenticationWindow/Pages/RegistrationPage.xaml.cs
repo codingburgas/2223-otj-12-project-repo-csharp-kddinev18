@@ -1,5 +1,5 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
-using LocalServerGUI.Models;
+using LocalServer.GUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

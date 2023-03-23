@@ -1,8 +1,8 @@
-﻿using AuthAPI.BLL.Interfaces;
-using AuthAPI.DAL.Repositories;
-using AuthAPI.DAL.Repositories.Interfaces;
-using AuthAPI.DTO;
-using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DAL.Repositories;
+using BridgeAPI.DAL.Repositories.Interfaces;
+using BridgeAPI.DTO;
+using BridgeAPI.DTO.Interfaces;
+using BridgeAPI.BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.BLL
+namespace BridgeAPI.BLL
 {
     public class AuthenticationService : IAuthenticationService
     {

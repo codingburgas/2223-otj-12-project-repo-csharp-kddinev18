@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthAPI.Controllers
+namespace BridgeAPI.Controllers
 {
     public class AuthenticationController : Controller
     {
@@ -12,13 +12,13 @@ namespace AuthAPI.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> Login()
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public Task<IActionResult> Register()
+        public IActionResult Register()
         {
             return View();
         }

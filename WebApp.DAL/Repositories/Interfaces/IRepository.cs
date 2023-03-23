@@ -8,7 +8,7 @@ using WebApp.DTO.Interfaces;
 
 namespace WebApp.DAL.Repositories.Interfaces
 {
-    internal interface IRepository
+    public interface IRepository
     {
         public Task<IEnumerable<IResponseDataTransferObject>> GetAsync(int pagingSize, int skipAmount);
     }

@@ -1,4 +1,4 @@
-﻿using LocalSerevr.DAL;
+﻿using LocalServer.DAL;
 using LocalServer.DTO.Models;
 using System;
 using System.Collections.Generic;

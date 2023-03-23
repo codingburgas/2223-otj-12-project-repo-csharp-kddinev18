@@ -1,6 +1,6 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServer.BLL.Server.BLL;
-using LocalServerGUI.Models;
+using LocalServer.GUI.Models;
 using LocalServerGUI.View.Code_Behind.MainWindow.Pages;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
 using System;

@@ -1,6 +1,6 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServer.DTO.Models;
-using LocalServerGUI.Models;
+using LocalServer.GUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

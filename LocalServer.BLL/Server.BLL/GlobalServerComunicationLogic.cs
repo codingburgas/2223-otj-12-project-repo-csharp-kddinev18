@@ -1,5 +1,5 @@
-﻿using LocalSerevr.DAL;
-using LocalServer.BLL.DataManipulation.BLL;
+﻿using LocalServer.BLL.DataManipulation.BLL;
+using LocalServer.DAL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

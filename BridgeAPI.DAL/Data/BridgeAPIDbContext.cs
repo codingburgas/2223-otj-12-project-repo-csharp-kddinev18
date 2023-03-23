@@ -1,4 +1,4 @@
-﻿using AuthAPI.DAL.Models;
+﻿using BridgeAPI.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.DAL.Data
+namespace BridgeAPI.DAL.Data
 {
-    public partial class AuthAPIDbContext : DbContext, IAuthAPIDbContext
+    public partial class BridgeAPIDbContext : DbContext, IBridgeAPIDbContext
     {
-        public AuthAPIDbContext() { }
-        public AuthAPIDbContext(DbContextOptions<AuthAPIDbContext> options) : base(options) { }
+        public BridgeAPIDbContext() { }
+        public BridgeAPIDbContext(DbContextOptions<BridgeAPIDbContext> options) : base(options) { }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

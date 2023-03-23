@@ -12,11 +12,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthAPI.DTO\AuthAPI.DTO.csproj" />
+    <ProjectReference Include="..\BridgeAPI.DTO\BridgeAPI.DTO.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.BLL.Interfaces
+namespace BridgeAPI.DAL.Data
 {
-    public interface ITokenService
+    public interface IBridgeAPIDbContext
     {
     }
 }

@@ -1,15 +1,15 @@
-﻿using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DTO.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.DAL.Repositories.Interfaces
+namespace BridgeAPI.DAL.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<bool> AddUserAsync (IRequestDataTransferObject user);
+        Task<bool> AddUserAsync(IRequestDataTransferObject user);
         Task<IResponseDataTransferObject> GetUserByIdAsync(Guid userId);
         Task<IResponseDataTransferObject> GetUserAsync(IRequestDataTransferObject user);
         Task<bool> UpdateUserAsync(Guid userId);

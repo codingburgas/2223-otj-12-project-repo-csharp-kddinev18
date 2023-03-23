@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalServerGUI.Models
+namespace LocalServer.GUI.Models
 {
     public class PermissionBindingInformation
     {

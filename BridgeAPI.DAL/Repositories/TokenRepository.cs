@@ -1,14 +1,14 @@
-﻿using AuthAPI.DAL.Models;
-using AuthAPI.DAL.Repositories.Interfaces;
-using AuthAPI.DTO;
-using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DTO;
+using BridgeAPI.DTO.Interfaces;
+using BridgeAPI.DAL.Models;
+using BridgeAPI.DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.DAL.Repositories
+namespace BridgeAPI.DAL.Repositories
 {
     public class TokenRepository : ITokenRepository
     {
@@ -22,8 +22,10 @@ namespace AuthAPI.DAL.Repositories
                 Id = Guid.NewGuid(),
                 UserName = userObject.UserName,
                 Email = userObject.Email,
-                Role = "Test"
+                //Role = "Test"
             });
+            throw new NotImplementedException();
+
         }
 
         public Task<bool> DeleteExpiredToken()

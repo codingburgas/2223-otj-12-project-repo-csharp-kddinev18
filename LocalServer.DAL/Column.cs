@@ -1,4 +1,4 @@
-﻿namespace LocalSerevr.DAL
+﻿namespace LocalServer.DAL
 {
     public class Column
     {
@@ -31,7 +31,7 @@
                         container += " UNIQUE ";
                         break;
                     case "PRIMARY KEY":
-                        if(constraint.Item2 as string != "multiple")
+                        if (constraint.Item2 as string != "multiple")
                             container += " IDENTITY(1,1) ";
                         break;
                     case "FOREIGN KEY":

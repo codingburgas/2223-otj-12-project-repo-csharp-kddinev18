@@ -9,9 +9,6 @@ namespace WebApp.DAL.Repositories.Interfaces
 {
     public interface IDeviceDataRepository
     {
-        public IEnumerable<IResponseDataTransferObject> Get(DateTime from, DateTime to, int pagingSize, int skipAmount)
-        {
-
-        }
+        public IEnumerable<IResponseDataTransferObject> Get(DateTime from, DateTime to, int pagingSize, int skipAmount);
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.DTO.Interfaces
+namespace BridgeAPI.BLL.Interfaces
 {
-    public interface IRequestDataTransferObject
+    public interface ITokenService
     {
     }
 }

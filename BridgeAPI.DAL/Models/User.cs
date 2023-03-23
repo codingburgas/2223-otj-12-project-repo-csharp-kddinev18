@@ -1,13 +1,13 @@
-﻿using AuthAPI.DTO;
-using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DTO;
+using BridgeAPI.DTO.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthAPI.DAL.Models
+namespace BridgeAPI.DAL.Models
 {
     public class User
     {
         public User() { }
-        public User(IRequestDataTransferObject user) 
+        public User(IRequestDataTransferObject user)
         {
             UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
             if (dataTrasferObject.Id.HasValue)

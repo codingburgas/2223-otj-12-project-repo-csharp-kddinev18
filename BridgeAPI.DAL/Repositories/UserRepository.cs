@@ -1,8 +1,8 @@
-﻿using AuthAPI.DAL.Data;
-using AuthAPI.DAL.Models;
-using AuthAPI.DAL.Repositories.Interfaces;
-using AuthAPI.DTO;
-using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DTO;
+using BridgeAPI.DTO.Interfaces;
+using BridgeAPI.DAL.Data;
+using BridgeAPI.DAL.Models;
+using BridgeAPI.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,15 +11,15 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthAPI.DAL.Repositories
+namespace BridgeAPI.DAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private AuthAPIDbContext _context;
+        private BridgeAPIDbContext _context;
         public UserRepository() { }
-        public UserRepository(IAuthAPIDbContext context)
+        public UserRepository(IBridgeAPIDbContext context)
         {
-            _context = context as AuthAPIDbContext;
+            _context = context as BridgeAPIDbContext;
         }
 
         public async Task<bool> AddUserAsync(IRequestDataTransferObject user)
@@ -48,7 +48,7 @@ namespace AuthAPI.DAL.Repositories
         {
             UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
             User users = await _context.Users.Where(users => users.UserName == dataTrasferObject.UserName)
-                .Where(users=>users.Password == dataTrasferObject.Password).FirstOrDefaultAsync();
+                .Where(users => users.Password == dataTrasferObject.Password).FirstOrDefaultAsync();
             if (users == null)
             {
                 throw new ArgumentException("Cannot find the user you have requested");

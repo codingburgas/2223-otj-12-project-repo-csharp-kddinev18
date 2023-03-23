@@ -1,4 +1,4 @@
-﻿using AuthAPI.DTO.Interfaces;
+﻿using BridgeAPI.DTO.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace AuthAPI.DTO
+namespace BridgeAPI.DTO
 {
     public class UserRequestDataTrasferObject : IRequestDataTransferObject
     {

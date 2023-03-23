@@ -1,6 +1,6 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServer.DTO.Models;
-using LocalServerGUI.Models;
+using LocalServer.GUI.Models;
 using LocalServerGUI.View.Code_Behind.AddRole;
 using LocalServerGUI.View.Code_Behind.AddUser;
 using System;

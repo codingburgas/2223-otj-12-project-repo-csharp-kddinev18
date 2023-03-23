@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Serialization;
 
-namespace LocalSerevr.DAL
+namespace LocalServer.DAL
 {
     public class Table
     {
@@ -14,7 +14,7 @@ namespace LocalSerevr.DAL
         public string Name { get; set; }
         public HashSet<Column> Columns { get; set; }
 
-        private string _insertQueryContainer = String.Empty;
+        private string _insertQueryContainer = string.Empty;
         private bool _isDataInserted = false;
 
         public Table(string name, Database database)
@@ -33,13 +33,13 @@ namespace LocalSerevr.DAL
         }
         public void DiscardInsertQuery()
         {
-            _insertQueryContainer = String.Empty;
+            _insertQueryContainer = string.Empty;
             _isDataInserted = false;
         }
         public void Create()
         {
-            string columns = String.Join(' ', Columns.Select(column => column.ToString()));
-            string query = $"CREATE TABLE [{Name}] \n(\n{columns}\n PRIMARY KEY ({String.Join(',', FindPrimaryKeys().Select(column => column.Name))})\n);";
+            string columns = string.Join(' ', Columns.Select(column => column.ToString()));
+            string query = $"CREATE TABLE [{Name}] \n(\n{columns}\n PRIMARY KEY ({string.Join(',', FindPrimaryKeys().Select(column => column.Name))})\n);";
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 command.ExecuteNonQuery();
@@ -57,11 +57,11 @@ namespace LocalSerevr.DAL
         }
         public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int skipAmount = 0)
         {
-            string query = String.Empty;
-            string paging = pagingSize != 0 ? $"ORDER BY {String.Join(", ", FindPrimaryKeys().Select(column => $"[{column.Name}]"))} DESC OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
-            string columns = String.Join(", ", Columns.Select(column => $"[{column.Name}]"));
+            string query = string.Empty;
+            string paging = pagingSize != 0 ? $"ORDER BY {string.Join(", ", FindPrimaryKeys().Select(column => $"[{column.Name}]"))} DESC OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
+            string columns = string.Join(", ", Columns.Select(column => $"[{column.Name}]"));
 
-            if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
+            if (columnName == string.Empty && expression == string.Empty && value == string.Empty)
             {
                 query = $"SELECT {columns} FROM [{Name}] {paging};";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
@@ -124,8 +124,8 @@ namespace LocalSerevr.DAL
         }
         public void Delete(string columnName = "", string expression = "", string value = "", bool isTrusted = false, string whereCaluse = "")
         {
-            string query = String.Empty;
-            if (whereCaluse != String.Empty && isTrusted)
+            string query = string.Empty;
+            if (whereCaluse != string.Empty && isTrusted)
             {
                 query = $"DELETE FROM [{Name}] WHERE {whereCaluse};";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
@@ -134,7 +134,7 @@ namespace LocalSerevr.DAL
                 }
                 return;
             }
-            if (columnName == String.Empty && expression == String.Empty && value == String.Empty)
+            if (columnName == string.Empty && expression == string.Empty && value == string.Empty)
             {
                 query = $"DELETE FROM [{Name}];";
                 using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
@@ -181,9 +181,9 @@ namespace LocalSerevr.DAL
         }
         public void Insert(params string[] data)
         {
-            if (_insertQueryContainer == String.Empty)
+            if (_insertQueryContainer == string.Empty)
             {
-                string columns = String.Empty;
+                string columns = string.Empty;
                 foreach (Column column in Columns)
                 {
                     if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT") &&
@@ -197,7 +197,7 @@ namespace LocalSerevr.DAL
             }
             int integerContainer = 0;
             float floatContainer = 0;
-            string dataString = String.Empty;
+            string dataString = string.Empty;
             foreach (string value in data)
             {
                 if (int.TryParse(value, out integerContainer) || float.TryParse(value, out floatContainer) || value == "NULL")
@@ -215,7 +215,7 @@ namespace LocalSerevr.DAL
         }
         public void Update(string updateColumnName, string updateValue, string conditionColumnName, string expression, string coditionValue, bool isTrusted = false, string whereClause = "")
         {
-            string query = String.Empty;
+            string query = string.Empty;
             if (!isTrusted)
             {
                 if (!Columns.Select(column => column.Name).Contains(updateColumnName))

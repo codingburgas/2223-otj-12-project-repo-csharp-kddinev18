@@ -12,8 +12,8 @@ using System.Xml.Serialization;
 using System.Data;
 using System.Net.Http;
 using System.Xml.Linq;
-using LocalSerevr.DAL;
 using LocalServer.BLL.DataManipulation.BLL;
+using LocalServer.DAL;
 
 namespace LocalServer.BLL.Server.BLL
 {

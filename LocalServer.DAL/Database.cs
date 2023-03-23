@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 
-namespace LocalSerevr.DAL
+namespace LocalServer.DAL
 {
     public class Database
     {
@@ -40,7 +40,7 @@ namespace LocalSerevr.DAL
         }
         public void CloseConnection()
         {
-            _connectionString = String.Empty;
+            _connectionString = string.Empty;
             _sqlConnection.Close();
         }
 
@@ -82,7 +82,7 @@ namespace LocalSerevr.DAL
         private void LoadTableColumns(Table table)
         {
             Stopwatch stopwatch = new Stopwatch();
-            
+
             string query = "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT, CHARACTER_MAXIMUM_LENGTH " +
                            "FROM INFORMATION_SCHEMA.COLUMNS " +
                            "WHERE TABLE_NAME = @TableName;";
@@ -94,7 +94,7 @@ namespace LocalSerevr.DAL
                     while (reader.Read())
                     {
                         SqlDbType dbType;
-                        if (Enum.TryParse<SqlDbType>(reader[1].ToString(), true, out dbType))
+                        if (Enum.TryParse(reader[1].ToString(), true, out dbType))
                         {
                             Column column = new Column(reader[0].ToString(), reader[4].ToString() == "" || dbType.ToString() == "Image" || dbType.ToString() == "Text"
                                 ? dbType.ToString() : dbType.ToString() + $"({reader[4].ToString()})", table);
@@ -139,7 +139,7 @@ namespace LocalSerevr.DAL
             List<Column> primaryKerys = table.FindPrimaryKeysThroughQuery();
             foreach (Column col in primaryKerys)
             {
-                if(primaryKerys.Count > 1)
+                if (primaryKerys.Count > 1)
                 {
                     table.Columns.Where(column => column.Name == col.Name).First().Constraints.Add(new Tuple<string, object>("PRIMARY KEY", "multiple"));
                 }
@@ -204,7 +204,7 @@ namespace LocalSerevr.DAL
 
         private void SaveTableChanges(HashSet<Table> newInfrastructure, HashSet<Table> oldInfrastructure)
         {
-            string query = String.Empty;
+            string query = string.Empty;
             IEnumerable<string> added = newInfrastructure.Select(table => table.Name).Except(oldInfrastructure.Select(table => table.Name));
             foreach (string tableName in added)
             {
@@ -219,7 +219,7 @@ namespace LocalSerevr.DAL
 
         private void SaveColumnChanges(HashSet<Table> newInfrastructure, HashSet<Table> oldInfrastructure)
         {
-            string query = String.Empty;
+            string query = string.Empty;
             IEnumerable<string> tablesNames = newInfrastructure.Select(table => table.Name).Except(
                 newInfrastructure.Select(table => table.Name).Except(oldInfrastructure.Select(table => table.Name)).Union(
                     oldInfrastructure.Select(table => table.Name).Except(newInfrastructure.Select(table => table.Name))));
@@ -248,8 +248,8 @@ namespace LocalSerevr.DAL
                 if (table.IsDataInserted())
                 {
                     string query = table.GetInsertQuery();
-                    query = query.Substring(0, query.Length - 1)+';';
-                    using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                    query = query.Substring(0, query.Length - 1) + ';';
+                    using (SqlCommand command = new SqlCommand(query, GetConnection()))
                     {
                         command.ExecuteNonQuery();
                     }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace LocalServerGUI.Models
+namespace LocalServer.GUI.Models
 {
     public class UserBindingInformation
     {
