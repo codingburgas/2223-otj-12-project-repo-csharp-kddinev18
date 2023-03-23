@@ -1,4 +1,4 @@
-﻿namespace WebApp.DTO.Interfaces
+﻿namespace AuthAPI.DTO.Interfaces
 {
     public interface IResponseDataTransferObject
     {

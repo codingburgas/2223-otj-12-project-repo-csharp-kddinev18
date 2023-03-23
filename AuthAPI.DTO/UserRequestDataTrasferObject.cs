@@ -1,13 +1,13 @@
-﻿using System;
+﻿using AuthAPI.DTO.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using WebApp.DTO.Interfaces;
 
-namespace WebApp.DTO
+namespace AuthAPI.DTO
 {
     public class UserRequestDataTrasferObject : IRequestDataTransferObject
     {

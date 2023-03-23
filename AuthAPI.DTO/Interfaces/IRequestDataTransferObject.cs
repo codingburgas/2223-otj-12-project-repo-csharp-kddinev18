@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApp.DTO.Interfaces
+namespace AuthAPI.DTO.Interfaces
 {
     public interface IRequestDataTransferObject
     {

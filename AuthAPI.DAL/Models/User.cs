@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using WebApp.DTO;
-using WebApp.DTO.Interfaces;
+﻿using AuthAPI.DTO;
+using AuthAPI.DTO.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.DAL.Models
+namespace AuthAPI.DAL.Models
 {
     public class User
     {

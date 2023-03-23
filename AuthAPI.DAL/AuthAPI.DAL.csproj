@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Interfaces\" />
+    <ProjectReference Include="..\AuthAPI.DTO\AuthAPI.DTO.csproj" />
   </ItemGroup>
 
 </Project>
