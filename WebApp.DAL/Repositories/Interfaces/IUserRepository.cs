@@ -8,7 +8,7 @@ using WebApp.DTO.Interfaces;
 
 namespace WebApp.DAL.Repositories.Interfaces
 {
-    internal interface IUserRepository : IRepository
+    public interface IUserRepository : IRepository
     {
         Task<bool> AddUserAsync (IRequestDataTransferObject user);
         Task<bool> UpdateUserAsync(int userId);
