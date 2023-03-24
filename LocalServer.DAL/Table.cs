@@ -186,7 +186,7 @@ namespace LocalServer.DAL
                 string columns = string.Empty;
                 foreach (Column column in Columns)
                 {
-                    if (column.Constraints.Any(constraint => constraint.Item1 == "PRIMARY KEY" || constraint.Item1 == "DEFAULT") &&
+                    if (column.Constraints.Any(constraint => constraint.Item1 == "DEFAULT") &&
                         !column.Constraints.Any(constraint => constraint.Item1 == "FOREIGN KEY"))
                         continue;
 

@@ -42,13 +42,13 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 Table rolesTable = new Table("Roles", Database);
 
-                Column roleId = new Column("RoleId", "Int", rolesTable);
+                Column roleId = new Column("Id", "nvarchar(36)", rolesTable);
                 roleId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
                 roleId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 Column name = new Column("Name", "nvarchar(64)", rolesTable);
-                roleId.AddConstraint(new Tuple<string, object>("UNIQUE", null));
-                roleId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+                name.AddConstraint(new Tuple<string, object>("UNIQUE", null));
+                name.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
                 rolesTable.Columns.Add(roleId);
                 rolesTable.Columns.Add(name);
@@ -60,7 +60,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 Table devicesTable = new Table("Devices", Database);
 
-                Column deviceId = new Column("DeviceId", "int", devicesTable);
+                Column deviceId = new Column("Id", "nvarchar(36)", devicesTable);
                 deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
                 deviceId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
@@ -86,7 +86,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 Table userTables = new Table("Users", Database);
 
-                Column userId = new Column("UserId", "int", userTables);
+                Column userId = new Column("Id", "nvarchar(36)", userTables);
                 userId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
                 userId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
@@ -103,7 +103,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 Column salt = new Column("Salt", "nvarchar(32)", userTables);
                 salt.AddConstraint(new Tuple<string, object>("NOT NULL", null));
 
-                Column roleId = new Column("RoleId", "int", userTables);
+                Column roleId = new Column("RoleId", "nvarchar(36)", userTables);
                 roleId.AddConstraint(new Tuple<string, object>("NOT NULL", null));
                 roleId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Roles").First().FindPrimaryKeys().First()));
@@ -121,15 +121,15 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 Table permissionTable = new Table("Permissions", Database);
 
-                Column roleId = new Column("RoleId", "int", permissionTable);
+                Column roleId = new Column("RoleId", "nvarchar(36)", permissionTable);
                 roleId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Roles").First().FindPrimaryKeys().First()));
-                roleId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
+                roleId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", ""));
 
-                Column deviceId = new Column("DeviceId", "int", permissionTable);
+                Column deviceId = new Column("DeviceId", "nvarchar(36)", permissionTable);
                 deviceId.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
                     Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
-                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", "multiple"));
+                deviceId.AddConstraint(new Tuple<string, object>("PRIMARY KEY", ""));
 
                 Column canCreate = new Column("CanCreate", "bit", permissionTable);
                 canCreate.AddConstraint(new Tuple<string, object>("NOT NULL", null));

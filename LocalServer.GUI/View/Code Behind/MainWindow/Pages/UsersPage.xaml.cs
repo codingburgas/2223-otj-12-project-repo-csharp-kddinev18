@@ -87,9 +87,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // Assign the inital of the icon
                     Initials = userInformation.UserName.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId,
+                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.Id,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.Id
                 });
             }
             // Assign the datagrid the collection
@@ -114,9 +114,9 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
                     // Assign the inital of the icon
                     Initials = userInformation.UserName.Substring(0, 1),
                     // If the user is admin enable the edit button, otherwise disable it
-                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId,
+                    EditButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.Id,
                     // If the user is admin enable the remove button, otherwise disable it
-                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.UserId
+                    RemoveButton = CurrentUserInformation.IsAdmin && CurrentUserInformation.UserId != userInformation.Id
                 });
             }
             // Assign the datagrid the collection
@@ -195,7 +195,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Edit a uesr
-            UserModifierLogic.EditUser(dataRow.UserId, dataRow.UserName, dataRow.Email, dataRow.Role);
+            UserModifierLogic.EditUser(dataRow.Id, dataRow.UserName, dataRow.Email, dataRow.Role);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -208,7 +208,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Remove the user
-            UserModifierLogic.RemoveUser(dataRow.UserId);
+            UserModifierLogic.RemoveUser(dataRow.Id);
             // Update the grid
             UpdateDataGrid(-1);
         }

@@ -30,18 +30,9 @@
                     case "UNIQUE":
                         container += " UNIQUE ";
                         break;
-                    case "PRIMARY KEY":
-                        if (constraint.Item2 as string != "multiple")
-                            container += " IDENTITY(1,1) ";
-                        break;
                     case "FOREIGN KEY":
                         Column foreignKeyColumn = constraint.Item2 as Column;
-                        Table foreignKeyTable;
-                        if (foreignKeyColumn.Name == "DeviceId")
-                            foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Name == "Devices").First();
-                        else
-                            foreignKeyTable = ParentTable.Database.Tables.Where(table => table.Columns.Select(column => column.Name).Contains(foreignKeyColumn.Name)).First();
-                        container += $" FOREIGN KEY REFERENCES {foreignKeyTable.Name}({foreignKeyColumn.Name}) ON DELETE CASCADE";
+                        container += $" FOREIGN KEY REFERENCES {foreignKeyColumn.ParentTable.Name}({foreignKeyColumn.Name}) ON DELETE CASCADE";
                         break;
                     case "CHECK":
                         container += $" CHECK {constraint.Item2 as string} ";

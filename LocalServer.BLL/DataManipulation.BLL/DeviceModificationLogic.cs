@@ -25,7 +25,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 devices.Add(new DeviceInformation
                 {
-                    DeviceId = int.Parse(data["DeviceId"].ToString()),
+                    Id = new Guid (data["Id"].ToString()),
                     IPv4Address = data["IPv4Address"].ToString(),
                     Name = data["Name"].ToString(),
                     IsAprooved = bool.Parse(data["IsAprooved"].ToString())
@@ -43,7 +43,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 devices.Add(new DeviceInformation
                 {
-                    DeviceId = int.Parse(data["DeviceId"].ToString()),
+                    Id = new Guid(data["Id"].ToString()),
                     IPv4Address = data["IPv4Address"].ToString(),
                     Name = data["Name"].ToString(),
                     IsAprooved = bool.Parse(data["IsAprooved"].ToString())
@@ -58,29 +58,29 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 .Where(table => table.Name == "Devices").First().GetRowsCount();
         }
 
-        public static void EditDevice(int deviceId, string name, bool isAprooved)
+        public static void EditDevice(Guid deviceId, string name, bool isAprooved)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First();
-            if (bool.Parse(table.Select("DeviceId", "=", deviceId.ToString()).Rows[0]["IsAprooved"].ToString()) != isAprooved)
+            if (bool.Parse(table.Select("Id", "=", deviceId.ToString()).Rows[0]["IsAprooved"].ToString()) != isAprooved)
             {
                 foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
                 {
                     DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
-                        .Insert(item["RoleId"].ToString(), deviceId.ToString(), "false", "false", "false", "false");
+                        .Insert(item["Id"].ToString(), deviceId.ToString(), "false", "false", "false", "false");
                 }
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
-            table.Update("IsAprooved", isAprooved.ToString(), "DeviceId", "=", deviceId.ToString());
-            table.Update("Name", name, "DeviceId", "=", deviceId.ToString());
+            table.Update("IsAprooved", isAprooved.ToString(), "Id", "=", deviceId.ToString());
+            table.Update("Name", name, "Id", "=", deviceId.ToString());
         }
 
-        public static void RemoveDevice(int deviceId)
+        public static void RemoveDevice(Guid deviceId)
         {
             DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Select("DeviceId", "=", deviceId.ToString()).Rows[0];
+                .Select("Id", "=", deviceId.ToString()).Rows[0];
 
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Delete("DeviceId", "=", deviceId.ToString());
+                .Delete("Id", "=", deviceId.ToString());
         }
     }
 }

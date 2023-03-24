@@ -12,12 +12,12 @@ namespace LocalServer.GUI.Models
     {
         public DeviceBindingInformation(DeviceInformation deviceInformation)
         {
-            DeviceId = deviceInformation.DeviceId;
+            Id = deviceInformation.Id;
             IPv4Address = deviceInformation.IPv4Address;
             Name = deviceInformation.Name;
             IsAprooved = deviceInformation.IsAprooved;
         }
-        public int DeviceId { get; set; }
+        public Guid Id { get; set; }
         public string IPv4Address { get; set; }
         public string Name { get; set; }
         public bool IsAprooved { get; set; }

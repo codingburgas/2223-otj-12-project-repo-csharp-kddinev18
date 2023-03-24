@@ -44,7 +44,7 @@ namespace LocalServer.BLL.Server.BLL
 
             List<string> args = JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString());
             args.Add(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString());
+                .Select("IPv4Address", "=", ipAddress).Rows[0]["Id"].ToString());
 
             table.Insert(args.ToArray());
             DatabaseInitialiser.Database.SaveDatabaseData();
@@ -60,6 +60,22 @@ namespace LocalServer.BLL.Server.BLL
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Update("Name", jObject["Name"].ToString(), "IPv4Address", "=", ipAddress);
 
             Table newTable = new Table(jObject["Name"].ToString(), DatabaseInitialiser.Database);
+
+            Column systemIdColumn = new Column("Id", "nvarchar(36)", newTable);
+            systemIdColumn.AddConstraint(new Tuple<string, object>("PRIMARY KEY", ""));
+            systemIdColumn.AddConstraint(new Tuple<string, object>("NOT NULL", ""));
+
+            Column systemTimeColumn = new Column("Created", "datetime2(7)", newTable);
+            systemTimeColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
+
+            Column systemColumn = new Column("DeviceId", "nvarchar(36)", newTable);
+            systemColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
+
+            newTable.Columns.Add(systemIdColumn);
+            newTable.Columns.Add(systemTimeColumn);
+            newTable.Columns.Add(systemColumn);
+
             foreach (JsonObject column in JsonSerializer.Deserialize<List<JsonObject>>(jObject["Columns"].ToString()))
             {
                 Column newColumn = new Column(column["Name"].ToString(), column["Type"].ToString(), newTable);
@@ -83,15 +99,6 @@ namespace LocalServer.BLL.Server.BLL
                 }
                 newTable.Columns.Add(newColumn);
             }
-            Column systemTimeColumn = new Column("Created", "datetime2(7)", newTable);
-            systemTimeColumn.AddConstraint(new Tuple<string, object>("DEFAULT", "GETDATE()"));
-
-            Column systemColumn = new Column("DeviceId", "int", newTable);
-            systemColumn.AddConstraint(new Tuple<string, object>("FOREIGN KEY",
-                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().FindPrimaryKeys().First()));
-
-            newTable.Columns.Add(systemTimeColumn);
-            newTable.Columns.Add(systemColumn);
 
             DatabaseInitialiser.Database.Tables.Add(newTable);
             DatabaseInitialiser.Database.SaveDatabaseInfrastructure();
@@ -106,7 +113,7 @@ namespace LocalServer.BLL.Server.BLL
             if (devices.Count == 0)
             {
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                    .Insert(clientIpAddress, clientIpAddress, "false");
+                    .Insert(Guid.NewGuid().ToString(), clientIpAddress, clientIpAddress, "false");
                 DatabaseInitialiser.Database.SaveDatabaseData();
 
                 return false;
@@ -128,12 +135,12 @@ namespace LocalServer.BLL.Server.BLL
                 .Update("IsAprooved", "true", "IPv4Address", "=", ipAddress);
 
             string deviceId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Select("IPv4Address", "=", ipAddress).Rows[0]["DeviceId"].ToString();
+                .Select("IPv4Address", "=", ipAddress).Rows[0]["Id"].ToString();
 
             foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Select().Rows)
             {
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
-                    .Insert(item["RoleId"].ToString(), deviceId, "false", "false", "false", "false");
+                    .Insert(item["Id"].ToString(), deviceId, "false", "false", "false", "false");
             }
             DatabaseInitialiser.Database.SaveDatabaseData();
         }

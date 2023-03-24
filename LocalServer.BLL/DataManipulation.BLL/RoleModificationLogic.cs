@@ -21,7 +21,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 roles.Add(new RoleInformation()
                 {
-                    RoleId = int.Parse(data["RoleId"].ToString()),
+                    Id = new Guid(data["RoleId"].ToString()),
                     Name = data["Name"].ToString()
                 });
             }
@@ -37,7 +37,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 roles.Add(new RoleInformation()
                 {
-                    RoleId = int.Parse(data["RoleId"].ToString()),
+                    Id = new Guid(data["RoleId"].ToString()),
                     Name = data["Name"].ToString()
                 });
             }
@@ -50,16 +50,16 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 .Where(table => table.Name == "Roles").First().GetRowsCount();
         }
 
-        public static void EditRole(int roleId, string roleName)
+        public static void EditRole(Guid roleId, string roleName)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First();
-            table.Update("Name", roleName, "RoleId", "=", roleId.ToString());
+            table.Update("Name", roleName, "Id", "=", roleId.ToString());
         }
 
-        public static void RemoveRole(int roleId)
+        public static void RemoveRole(Guid roleId)
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
-                .Delete("RoleId", "=", roleId.ToString());
+                .Delete("Id", "=", roleId.ToString());
         }
 
         public static void AddRole(string name)
@@ -67,11 +67,12 @@ namespace LocalServer.BLL.DataManipulation.BLL
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert(name);
             DatabaseInitialiser.Database.SaveDatabaseData();
             int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
-                .Select("Name", "=", name).Rows[0]["RoleId"].ToString());
+                .Select("Name", "=", name).Rows[0]["Id"].ToString());
 
             foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)
             {
-                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First().Insert(roleId.ToString(), item["DeviceId"].ToString(), "false", "false", "false", "false");
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
+                    .Insert(roleId.ToString(), item["DeviceId"].ToString(), "false", "false", "false", "false");
             }
             DatabaseInitialiser.Database.SaveDatabaseData();
         }

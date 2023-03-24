@@ -12,10 +12,10 @@ namespace LocalServer.GUI.Models
     {
         public RoleBindingInformation(RoleInformation roleInformation)
         {
-            RoleId = roleInformation.RoleId;
+            Id = roleInformation.Id;
             Name = roleInformation.Name;
         }
-        public int RoleId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
         public Brush BgColor { get; set; }

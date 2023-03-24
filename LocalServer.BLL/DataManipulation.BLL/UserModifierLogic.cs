@@ -13,18 +13,18 @@ namespace LocalServer.BLL.DataManipulation.BLL
     {
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
 
-        public static UserInformation GetCurrentUserInformation(int userId)
+        public static UserInformation GetCurrentUserInformation(Guid userId)
         {
             DataRow dataRow = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Select("UserId", "=", userId.ToString()).Rows[0];
+                .First().Select("Id", "=", userId.ToString()).Rows[0];
             return new UserInformation()
             {
-                UserId = userId,
+                Id = userId,
                 UserName = dataRow["UserName"].ToString(),
                 Email = dataRow["Email"].ToString(),
                 Role = DatabaseInitialiser.Database.Tables
                 .Where(table => table.Name == "Roles").First()
-                .Select("RoleId", "=", dataRow["RoleId"].ToString()).Rows[0]["Name"].ToString()
+                .Select("Id", "=", dataRow["RoleId"].ToString()).Rows[0]["Name"].ToString()
             };
         }
 
@@ -37,12 +37,12 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 users.Add(new UserInformation()
                 {
-                    UserId = int.Parse(data["UserId"].ToString()),
+                    Id = new Guid(data["Id"].ToString()),
                     Email = data["Email"].ToString(),
                     UserName = data["UserName"].ToString(),
                     Role = DatabaseInitialiser.Database.Tables
                     .Where(table => table.Name == "Roles").First()
-                    .Select("RoleId", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
+                    .Select("Id", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
                 });
             }
             return users;
@@ -57,12 +57,12 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 users.Add(new UserInformation()
                 {
-                    UserId = int.Parse(data["UserId"].ToString()),
+                    Id = new Guid(data["UserId"].ToString()),
                     Email = data["Email"].ToString(),
                     UserName = data["UserName"].ToString(),
                     Role = DatabaseInitialiser.Database.Tables
                     .Where(table => table.Name == "Roles").First()
-                    .Select("RoleId", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
+                    .Select("Id", "=", data["Id"].ToString()).Rows[0]["Name"].ToString()
                 });
             }
             return users;
@@ -74,29 +74,29 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 .Where(table => table.Name == "Users").First().GetRowsCount();
         }
 
-        public static void EditUser(int userId, string userName, string email, string role)
+        public static void EditUser(Guid userId, string userName, string email, string role)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First();
-            table.Update("UserName", userName, "UserId", "=", userId.ToString());
-            table.Update("Email", email, "UserId", "=", userId.ToString());
+            table.Update("UserName", userName, "Id", "=", userId.ToString());
+            table.Update("Email", email, "Id", "=", userId.ToString());
             string roleId = string.Empty;
             try
             {
                 roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
-                    .Select("Name", "=", role).Rows[0]["RoleId"].ToString();
+                    .Select("Name", "=", role).Rows[0]["Id"].ToString();
             }
             catch (Exception)
             {
                 roleId = UserAuthenticationLogic.AddRole(role);
             }
 
-            table.Update("RoleId", roleId.ToString(), "UserId", "=", userId.ToString());
+            table.Update("Id", roleId.ToString(), "Id", "=", userId.ToString());
         }
 
-        public static void RemoveUser(int userId)
+        public static void RemoveUser(Guid userId)
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
-                .Delete("UserId", "=", userId.ToString());
+                .Delete("Id", "=", userId.ToString());
         }
     }
 }

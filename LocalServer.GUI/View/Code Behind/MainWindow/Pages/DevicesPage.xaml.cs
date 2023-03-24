@@ -168,7 +168,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Edit a uesr
-            DeviceModificationLogic.EditDevice(dataRow.DeviceId, dataRow.Name, dataRow.IsAprooved);
+            DeviceModificationLogic.EditDevice(dataRow.Id, dataRow.Name, dataRow.IsAprooved);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -181,7 +181,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Remove the user
-            DeviceModificationLogic.RemoveDevice(dataRow.DeviceId);
+            DeviceModificationLogic.RemoveDevice(dataRow.Id);
             // Update the grid
             UpdateDataGrid(-1);
         }

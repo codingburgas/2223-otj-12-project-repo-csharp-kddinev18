@@ -186,7 +186,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Edit a uesr
-            RoleModificationLogic.EditRole(dataRow.RoleId, dataRow.Name);
+            RoleModificationLogic.EditRole(dataRow.Id, dataRow.Name);
 
             // Update the grid
             UpdateDataGrid(0);
@@ -199,7 +199,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
             // Get the row the user clickd on
             RoleBindingInformation dataRow = (RoleBindingInformation)RolesDataGrid.SelectedItem;
             // Remove the user
-            RoleModificationLogic.RemoveRole(dataRow.RoleId);
+            RoleModificationLogic.RemoveRole(dataRow.Id);
             // Update the grid
             UpdateDataGrid(-1);
         }

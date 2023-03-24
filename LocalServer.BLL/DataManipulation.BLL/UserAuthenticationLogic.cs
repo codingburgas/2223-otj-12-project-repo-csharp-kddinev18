@@ -120,7 +120,8 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 .First().Select("Name", "=", "Admin");
             if (dataTable.Rows.Count == 0)
             {
-                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert("Admin");
+                DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+                    .Insert(Guid.NewGuid().ToString(),"Admin");
                 DatabaseInitialiser.Database.SaveDatabaseData();
             }
             else
@@ -131,12 +132,12 @@ namespace LocalServer.BLL.DataManipulation.BLL
         public static string AddRole(string roleName)
         {
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
-                .First().Insert(roleName);
+                .First().Insert(Guid.NewGuid().ToString(),roleName);
 
             DatabaseInitialiser.Database.SaveDatabaseData();
 
             string roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
-                .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
+                .First().Select("Name", "=", roleName).Rows[0]["Id"].ToString();
 
             foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)
             {
@@ -149,7 +150,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             return roleId;
         }
 
-        public static int Register(string userName, string email, string password)
+        public static Guid Register(string userName, string email, string password)
         {
             // Add admin role
             AddAdminRole();
@@ -164,15 +165,16 @@ namespace LocalServer.BLL.DataManipulation.BLL
             string salt = GetSalt(userName);
             // Hashes the password combinded with the salt
             string hashPassword = Hash(password + salt);
-
+            Guid adminRole = new Guid(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
+                .First().Select("Name", "=", "Admin").Rows[0]["Id"].ToString());
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Insert(userName, email, hashPassword, salt, "1");
+                .First().Insert(Guid.NewGuid().ToString(), userName, email, hashPassword, salt, adminRole.ToString());
             DatabaseInitialiser.Database.SaveDatabaseData();
 
             DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName);
 
-            return int.Parse(dataTable.Rows[0]["UserId"].ToString());
+            return new Guid(dataTable.Rows[0]["Id"].ToString());
         }
 
         public static void RegisterMember(string userName, string email, string password, string roleName)
@@ -181,7 +183,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             try
             {
                 roleId = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
-                    .First().Select("Name", "=", roleName).Rows[0]["RoleId"].ToString();
+                    .First().Select("Name", "=", roleName).Rows[0]["Id"].ToString();
             }
             catch (Exception)
             {
@@ -199,11 +201,11 @@ namespace LocalServer.BLL.DataManipulation.BLL
             string hashPassword = Hash(password + salt);
 
             DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Insert(userName, email, hashPassword, salt, roleId);
+                .First().Insert(Guid.NewGuid().ToString(), userName, email, hashPassword, salt, roleId);
             DatabaseInitialiser.Database.SaveDatabaseData();
         }
 
-        public static int LogIn(string userName, string password)
+        public static Guid LogIn(string userName, string password)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
                 .First().Select("UserName", "=", userName);
@@ -211,23 +213,23 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 throw new Exception("Wrong credentials");
             }
-            string hashPassword = Hash(password + dataTable.Rows[0]["UserId"]);
+            string hashPassword = Hash(password + dataTable.Rows[0]["Id"]);
             if (hashPassword == dataTable.Rows[0]["Password"])
             {
                 throw new Exception("Wrong credentials");
             }
 
-            return int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Select("UserName", "=", userName).Rows[0]["UserId"].ToString());
+            return new Guid (DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
+                .First().Select("UserName", "=", userName).Rows[0]["Id"].ToString());
         }
 
-        public static bool IsAdmin(int userId)
+        public static bool IsAdmin(Guid userId)
         {
             DataTable dataTable = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users")
-                .First().Select("UserId", "=", userId.ToString());
+                .First().Select("Id", "=", userId.ToString());
 
             return DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles")
-                .First().Select("RoleId", "=", dataTable.Rows[0]["RoleId"].ToString()).Rows[0]["Name"].ToString() == "Admin";
+                .First().Select("Id", "=", dataTable.Rows[0]["RoleId"].ToString()).Rows[0]["Name"].ToString() == "Admin";
         }
     }
 }

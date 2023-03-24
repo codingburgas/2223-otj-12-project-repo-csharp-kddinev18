@@ -12,6 +12,6 @@ namespace BridgeAPI.BLL.Interfaces
         public void ServerSetUp();
         public void ServerShutDown();
         public TcpClient GetClient(string clientIP);
-        public Task<string> LocalServerCommunication(string message);
+        public string LocalServerCommunication(string message);
     }
 }

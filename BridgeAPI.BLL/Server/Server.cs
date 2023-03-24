@@ -110,7 +110,7 @@ namespace BridgeAPI.BLL
             }
             catch (ArgumentNullException ex)
             {
-                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\""+ ex.Message +"\"}";
+                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\"" + ex.Message + "\"}";
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
                 DisconnectClient(client);
             }
@@ -146,7 +146,7 @@ namespace BridgeAPI.BLL
             return _clients.Where(client => GetClientIP(client) == clientIP).FirstOrDefault();
         }
 
-        public Task<string> LocalServerCommunication(string message)
+        public string LocalServerCommunication(string message)
         {
             JsonObject jObject;
             TcpClient client;
@@ -159,7 +159,23 @@ namespace BridgeAPI.BLL
             {
                 throw new Exception("JSON request is in incorrect format");
             }
-            client.Client.Send(Encoding.ASCII.GetBytes(message));
+            Guid guid = Guid.NewGuid();
+            client.Client.Send(Encoding.ASCII.GetBytes("{\"RequestId\": \"" + guid + "\", {" + message + "}}"));
+
+            _responseBuffer.Add(guid, string.Empty);
+
+            int iterations = 0;
+            while (string.IsNullOrEmpty(_responseBuffer[guid])) 
+            {
+                if(iterations >= 50) 
+                {
+                    throw new Exception("Request timeout");
+                }
+                Thread.Sleep(500);
+                iterations++;
+            }
+
+            return _responseBuffer[guid];
         }
     }
 }
