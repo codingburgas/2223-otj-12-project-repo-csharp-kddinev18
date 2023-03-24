@@ -55,7 +55,6 @@
         <!--Members Datagrid-->
         <DataGrid Grid.Row="5" x:Name="RolesDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding RoleId}"/>
 
                 <DataGridTemplateColumn Header="Icon" IsReadOnly="True" Width="0.1*">
                     <DataGridTemplateColumn.CellTemplate>

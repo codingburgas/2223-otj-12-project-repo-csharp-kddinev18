@@ -57,12 +57,12 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 users.Add(new UserInformation()
                 {
-                    Id = new Guid(data["UserId"].ToString()),
+                    Id = new Guid(data["Id"].ToString()),
                     Email = data["Email"].ToString(),
                     UserName = data["UserName"].ToString(),
                     Role = DatabaseInitialiser.Database.Tables
                     .Where(table => table.Name == "Roles").First()
-                    .Select("Id", "=", data["Id"].ToString()).Rows[0]["Name"].ToString()
+                    .Select("Id", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString()
                 });
             }
             return users;

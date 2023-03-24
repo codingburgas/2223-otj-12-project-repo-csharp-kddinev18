@@ -21,7 +21,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 roles.Add(new RoleInformation()
                 {
-                    Id = new Guid(data["RoleId"].ToString()),
+                    Id = new Guid(data["Id"].ToString()),
                     Name = data["Name"].ToString()
                 });
             }
@@ -37,7 +37,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 roles.Add(new RoleInformation()
                 {
-                    Id = new Guid(data["RoleId"].ToString()),
+                    Id = new Guid(data["Id"].ToString()),
                     Name = data["Name"].ToString()
                 });
             }

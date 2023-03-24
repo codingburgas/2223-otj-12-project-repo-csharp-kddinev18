@@ -31,7 +31,6 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
         public Lazy<DevicesPage> DevicesPage { get; set; }
         public Lazy<RolesPage> RolesPage { get; set; }
         public Lazy<PermissionsPage> PermissionsPage { get; set; }
-        public Lazy<HomePage> HomePage { get; set; }
         public LocalServerMainWindow(ServerLogic server)
         {
             Server = server;
@@ -48,8 +47,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             DevicesPage = new Lazy<DevicesPage>();
             RolesPage = new Lazy<RolesPage>();
             PermissionsPage = new Lazy<PermissionsPage>();
-            HomePage = new Lazy<HomePage>();
-            ShowPage(HomePage.Value);
+            ShowPage(UsersPage.Value);
         }
         // Shows a page
         public void ShowPage(Page page)
@@ -99,11 +97,6 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
                     _isMaximized = true;
                 }
             }
-        }
-
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShowPage(HomePage.Value);
         }
 
         // Invoked every time MembersButton is clicked

@@ -32,15 +32,6 @@
                         <!--Menu Separator-->
                         <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#7e5fdc"/>
                         <!--Menu Buttons-->
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button x:Name="HomeButton" Style="{StaticResource menuButton}" Click="HomeButton_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Home"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
                         
                         <StackPanel DockPanel.Dock="Top">
                             <Button x:Name="UsersButton" Style="{StaticResource menuButton}" Click="UsersButton_Click">
