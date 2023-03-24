@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿
+
+using BridgeAPI.BLL.Interfaces;
 
 namespace BridgeAPI.Controllers
 {
@@ -12,7 +13,13 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login()
+        public IActionResult Login(string request)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LocalServerLogin(string request)
         {
             return View();
         }

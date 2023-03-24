@@ -175,7 +175,10 @@ namespace BridgeAPI.BLL
                 iterations++;
             }
 
-            return _responseBuffer[guid];
+            string response = _responseBuffer[guid];
+            _responseBuffer.Remove(guid);
+
+            return response;
         }
     }
 }

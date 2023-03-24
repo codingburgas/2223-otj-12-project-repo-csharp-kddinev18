@@ -22,22 +22,33 @@ namespace BridgeAPI.BLL.Services
             _server = server;
         }
 
-        public Task<IResponseDataTransferObject> LogInAsync(string message)
+        public async Task<string> GetDeviceDataAsync(string message)
         {
-            string response = _server.LocalServerCommunication(message);
+            return await Task.Run(() => _server.LocalServerCommunication(message));
+        }
+
+        public async Task<IResponseDataTransferObject> LogInAsync(string message)
+        {
+            string response = await Task.Run(()=>_server.LocalServerCommunication(message));
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
 
-            UserResponseDataTransferObject responseData = new UserResponseDataTransferObject()
+            return new UserResponseDataTransferObject()
             {
                 Id = new Guid(jObject["Id"].ToString()),
                 UserName = jObject["UserName"].ToString(),
-                Email = jObject["Email"].ToString(),
-            }
+                Email = jObject["Email"].ToString()
+            };
         }
 
-        public Task<string> LogOutAsync(string message)
+        public async Task<bool> PostDeviceDataAsync(string message)
         {
-            throw new NotImplementedException();
+            string response = await Task.Run(() => _server.LocalServerCommunication(message));
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
+            if (jObject["Status"].ToString() == "Success")
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
