@@ -16,17 +16,22 @@ namespace BridgeAPI.BLL
 {
     public class Server : IServer
     {
-        private static IAuthenticationService _authentication;
+        private IAuthenticationService _authentication;
 
-        private static TcpListener _tcpListener;
-        private static List<TcpClient> _clients = new List<TcpClient>();
-        private static Dictionary<string, bool> _clientsIP = new Dictionary<string, bool>();
-        private static byte[] _data = new byte[16777216];
+        private TcpListener _tcpListener;
+        private List<TcpClient> _clients;
+        private Dictionary<string, bool> _clientsIP;
+        private Dictionary<Guid, string> _responseBuffer;
+        private byte[] _data;
         private int _port;
         public Server(IAuthenticationService authentication)
         {
             _port = 5401;
+            _data = new byte[16777216];
+            _clientsIP = new Dictionary<string, bool>();
+            _clients = new List<TcpClient>();
             _authentication = authentication;
+            _responseBuffer = new Dictionary<Guid, string>();
         }
         public void ServerSetUp()
         {
@@ -54,12 +59,12 @@ namespace BridgeAPI.BLL
             _tcpListener = null;
         }
 
-        public static string GetClientIP(TcpClient client)
+        public string GetClientIP(TcpClient client)
         {
             return ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
         }
 
-        public static void AcceptClients(IAsyncResult asyncResult)
+        public void AcceptClients(IAsyncResult asyncResult)
         {
             TcpClient client = null;
             try
@@ -80,7 +85,7 @@ namespace BridgeAPI.BLL
             }
         }
 
-        public async static void ReciveClientInput(IAsyncResult asyncResult)
+        public async void ReciveClientInput(IAsyncResult asyncResult)
         {
             TcpClient client = asyncResult.AsyncState as TcpClient;
             int reciever;
@@ -121,12 +126,12 @@ namespace BridgeAPI.BLL
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
         }
 
-        public static void FlushBuffer()
+        public void FlushBuffer()
         {
             Array.Clear(_data, 0, _data.Length);
         }
 
-        public static void DisconnectClient(TcpClient client)
+        public void DisconnectClient(TcpClient client)
         {
             Console.WriteLine("Client disconnected");
             client.Client.Shutdown(SocketShutdown.Both);
@@ -134,6 +139,27 @@ namespace BridgeAPI.BLL
             _clients.Remove(client);
             _clientsIP.Remove(GetClientIP(client));
             client = null;
+        }
+
+        public TcpClient GetClient(string clientIP)
+        {
+            return _clients.Where(client => GetClientIP(client) == clientIP).FirstOrDefault();
+        }
+
+        public Task<string> LocalServerCommunication(string message)
+        {
+            JsonObject jObject;
+            TcpClient client;
+            try
+            {
+                jObject = JsonSerializer.Deserialize<JsonObject>(message);
+                client = GetClient(jObject["ClientIP"].ToString());
+            }
+            catch (Exception)
+            {
+                throw new Exception("JSON request is in incorrect format");
+            }
+            client.Client.Send(Encoding.ASCII.GetBytes(message));
         }
     }
 }
