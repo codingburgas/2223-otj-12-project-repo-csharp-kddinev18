@@ -103,9 +103,15 @@ namespace BridgeAPI.BLL
                     });
                 }
             }
+            catch (ArgumentNullException ex)
+            {
+                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\""+ ex.Message +"\"}";
+                client.Client.Send(Encoding.ASCII.GetBytes(response));
+                DisconnectClient(client);
+            }
             catch (Exception ex)
             {
-                string response = $"{_error}|{ex.Message}";
+                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\"" + ex.Message + "\"}";
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
             }
             finally
@@ -126,6 +132,7 @@ namespace BridgeAPI.BLL
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
+            _clientsIP.Remove(GetClientIP(client));
             client = null;
         }
     }
