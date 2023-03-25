@@ -9,7 +9,7 @@ namespace BridgeAPI.DAL.Models
         public User() { }
         public User(IRequestDataTransferObject user)
         {
-            UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
+            UserRequestDataTransferObject dataTrasferObject = user as UserRequestDataTransferObject;
             if (dataTrasferObject.Id.HasValue)
             {
                 Id = dataTrasferObject.Id.Value;

@@ -101,7 +101,7 @@ namespace BridgeAPI.BLL
                 if (_clientsIP[GetClientIP(client)] == false)
                 {
                     JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-                    await _authentication.LogInAsync(new UserRequestDataTrasferObject()
+                    await _authentication.LogInAsync(new UserRequestDataTransferObject()
                     {
                         UserName = jObject["UserName"].ToString(),
                         Password = jObject["Password"].ToString()

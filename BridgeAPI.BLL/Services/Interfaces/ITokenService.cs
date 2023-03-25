@@ -10,5 +10,7 @@ namespace BridgeAPI.BLL.Interfaces
     public interface ITokenService
     {
         public bool GenerateToken(IResponseDataTransferObject user);
+        public bool UpdateToken(IResponseDataTransferObject user);
+        public bool RenewToken(IResponseDataTransferObject user);
     }
 }

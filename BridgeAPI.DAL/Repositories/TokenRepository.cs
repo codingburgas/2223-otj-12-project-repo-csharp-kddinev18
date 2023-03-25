@@ -7,40 +7,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace BridgeAPI.DAL.Repositories
 {
     public class TokenRepository : ITokenRepository
     {
-        private static List<Token> tokens = new List<Token>();
+        private static List<Token> _tokens = new List<Token>();
 
-        public Task<bool> AddToken(IRequestDataTransferObject user)
+        public Token AddToken(IResponseDataTransferObject user)
         {
-            UserRequestDataTrasferObject userObject = user as UserRequestDataTrasferObject;
-            tokens.Add(new Token()
+            UserResponseDataTransferObject userObject = user as UserResponseDataTransferObject;
+            Token token = new Token()
             {
-                Id = Guid.NewGuid(),
+                TokenId = Guid.NewGuid(),
+                GlobalServerId = userObject.GlobalServerId,
+                LocalServerId = userObject.LocalServerId,
                 UserName = userObject.UserName,
+                Role = userObject.Role,
                 Email = userObject.Email,
-                //Role = "Test"
-            });
-            throw new NotImplementedException();
-
+                ExpireDate = DateTime.Now.AddHours(1),
+                RenewDate = DateTime.Now.AddHours(1).AddMinutes(30)
+            };
+            _tokens.Add(token);
+            return token;
         }
 
-        public Task<bool> DeleteExpiredToken()
+        public async Task<bool> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId)
         {
-            throw new NotImplementedException();
+            UserResponseDataTransferObject userObject = user as UserResponseDataTransferObject;
+            Token token = await Task.Run(()=> _tokens.Where(token => token.TokenId == tokenId).FirstOrDefault());
+
+            token.GlobalServerId = userObject.GlobalServerId;
+            token.LocalServerId = userObject.LocalServerId;
+            token.UserName = userObject.UserName;
+            token.Role = userObject.Role;
+            token.Email = userObject.Email;
+            token.ExpireDate = DateTime.Now.AddHours(1);
+            token.RenewDate = DateTime.Now.AddHours(1).AddMinutes(30);
+
+            return true;
         }
 
-        public Task<IResponseDataTransferObject> GetToken(IRequestDataTransferObject user)
+        public async Task<bool> DeleteExpiredTokenAsync()
         {
-            throw new NotImplementedException();
+            await Task.Run(() => _tokens.RemoveAll(token => token.RenewDate < DateTime.Now));
+            return true;
         }
 
-        public Task<bool> RenewToken(IRequestDataTransferObject user)
+        public async Task<Token> GetTokenAsync(Guid tokenId)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() => _tokens.Where(token => token.TokenId == tokenId).FirstOrDefault());
         }
     }
 }

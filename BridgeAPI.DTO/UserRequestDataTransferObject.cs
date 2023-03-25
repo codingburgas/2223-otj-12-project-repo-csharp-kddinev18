@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace BridgeAPI.DTO
 {
-    public class UserRequestDataTrasferObject : IRequestDataTransferObject
+    public class UserRequestDataTransferObject : IRequestDataTransferObject
     {
         public Guid? Id { get; set; }
         public string UserName { get; set; }

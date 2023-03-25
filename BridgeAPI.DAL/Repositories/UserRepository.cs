@@ -46,7 +46,7 @@ namespace BridgeAPI.DAL.Repositories
 
         public async Task<IResponseDataTransferObject> GetUserAsync(IRequestDataTransferObject user)
         {
-            UserRequestDataTrasferObject dataTrasferObject = user as UserRequestDataTrasferObject;
+            UserRequestDataTransferObject dataTrasferObject = user as UserRequestDataTransferObject;
             User users = await _context.Users.Where(users => users.UserName == dataTrasferObject.UserName)
                 .Where(users => users.Password == dataTrasferObject.Password).FirstOrDefaultAsync();
             if (users == null)

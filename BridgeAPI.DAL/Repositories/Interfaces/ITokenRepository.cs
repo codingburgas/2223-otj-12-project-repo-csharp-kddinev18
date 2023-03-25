@@ -1,4 +1,5 @@
-﻿using BridgeAPI.DTO.Interfaces;
+﻿using BridgeAPI.DAL.Models;
+using BridgeAPI.DTO.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace BridgeAPI.DAL.Repositories.Interfaces
 {
     public interface ITokenRepository
     {
-        public Task<IResponseDataTransferObject> GetToken(IRequestDataTransferObject user);
-        public Task<bool> AddToken(IRequestDataTransferObject user);
-        public Task<bool> RenewToken(IRequestDataTransferObject user);
-        public Task<bool> DeleteExpiredToken();
+        public Task<Token> GetTokenAsync(Guid tokenId);
+        public Token AddToken(IResponseDataTransferObject user);
+        public Task<bool> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId);
+        public Task<bool> DeleteExpiredTokenAsync();
     }
 }

@@ -21,7 +21,7 @@ namespace BridgeAPI.BLL
 
         private string Hash(IRequestDataTransferObject requestObject)
         {
-            UserRequestDataTrasferObject user = requestObject as UserRequestDataTrasferObject;
+            UserRequestDataTransferObject user = requestObject as UserRequestDataTransferObject;
             user.Salt = GetSalt(user.UserName);
             string data = user.Password + user.Salt;
             user.Password = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(data))).ToUpper().Replace("-", "");
