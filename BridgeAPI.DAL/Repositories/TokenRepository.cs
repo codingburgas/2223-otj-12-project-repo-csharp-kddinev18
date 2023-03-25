@@ -33,7 +33,7 @@ namespace BridgeAPI.DAL.Repositories
             return token;
         }
 
-        public async Task<bool> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId)
+        public async Task<Token> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId)
         {
             UserResponseDataTransferObject userObject = user as UserResponseDataTransferObject;
             Token token = await Task.Run(()=> _tokens.Where(token => token.TokenId == tokenId).FirstOrDefault());
@@ -46,7 +46,7 @@ namespace BridgeAPI.DAL.Repositories
             token.ExpireDate = DateTime.Now.AddHours(1);
             token.RenewDate = DateTime.Now.AddHours(1).AddMinutes(30);
 
-            return true;
+            return token;
         }
 
         public async Task<bool> DeleteExpiredTokenAsync()

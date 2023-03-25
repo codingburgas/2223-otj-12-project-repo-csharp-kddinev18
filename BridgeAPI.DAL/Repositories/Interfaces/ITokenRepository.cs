@@ -12,7 +12,7 @@ namespace BridgeAPI.DAL.Repositories.Interfaces
     {
         public Task<Token> GetTokenAsync(Guid tokenId);
         public Token AddToken(IResponseDataTransferObject user);
-        public Task<bool> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId);
+        public Task<Token> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId);
         public Task<bool> DeleteExpiredTokenAsync();
     }
 }

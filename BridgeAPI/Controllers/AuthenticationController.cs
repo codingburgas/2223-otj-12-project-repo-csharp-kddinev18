@@ -27,7 +27,7 @@ namespace BridgeAPI.Controllers
                     UserName = jObject["UserName"].ToString(),
                     Password = jObject["Password"].ToString()
                 });
-
+            _tokenService.GenerateToken
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using BridgeAPI.DTO.Interfaces;
+﻿using BridgeAPI.DAL.Models;
+using BridgeAPI.DTO.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,7 @@ namespace BridgeAPI.BLL.Interfaces
 {
     public interface ITokenService
     {
-        public bool GenerateToken(IResponseDataTransferObject user);
-        public bool UpdateToken(IResponseDataTransferObject user);
-        public bool RenewToken(IResponseDataTransferObject user);
+        public Token GenerateToken(IResponseDataTransferObject user);
+        public Token UpdateToken(IResponseDataTransferObject user, Guid tokenId);
     }
 }

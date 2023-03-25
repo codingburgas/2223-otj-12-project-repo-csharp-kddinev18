@@ -1,5 +1,6 @@
 ﻿using BridgeAPI.BLL.Interfaces;
 using BridgeAPI.DAL.Models;
+using BridgeAPI.DAL.Repositories.Interfaces;
 using BridgeAPI.DTO.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,19 @@ namespace BridgeAPI.BLL
 {
     public class TokenService : ITokenService
     {
-        public bool GenerateToken(IResponseDataTransferObject user)
+        private ITokenRepository _tokenRepository;
+        public TokenService(ITokenRepository tokenRepository)
         {
-
-            throw new NotImplementedException();
+            _tokenRepository = tokenRepository;
+        }
+        public Token GenerateToken(IResponseDataTransferObject user)
+        {
+            return _tokenRepository.AddToken(user);
         }
 
-        public bool RenewToken(IResponseDataTransferObject user)
+        public async Task<Token> UpdateToken(IResponseDataTransferObject user)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateToken(IResponseDataTransferObject user)
-        {
-            throw new NotImplementedException();
+            return await _tokenRepository.UpdateTokenAsync()
         }
     }
 }
