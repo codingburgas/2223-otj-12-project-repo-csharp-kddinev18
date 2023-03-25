@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BridgeAPI.BLL
@@ -17,14 +18,14 @@ namespace BridgeAPI.BLL
         {
             _tokenRepository = tokenRepository;
         }
-        public Token GenerateToken(IResponseDataTransferObject user, string publicKey)
+        public string GenerateToken(IResponseDataTransferObject user)
         {
-            Token token = _tokenRepository.AddToken(user);
+            return JsonSerializer.Serialize(_tokenRepository.AddToken(user));
         }
 
-        public async Task<Token> UpdateToken(IResponseDataTransferObject user, Guid tokenId)
+        public async Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId)
         {
-            return await _tokenRepository.UpdateTokenAsync(user, tokenId);
+            return JsonSerializer.Serialize(await _tokenRepository.UpdateTokenAsync(user, tokenId));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BridgeAPI.BLL.Interfaces;
+using BridgeAPI.BLL.Services.Interfaces;
 using BridgeAPI.DTO;
 using BridgeAPI.DTO.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace BridgeAPI.Controllers
     {
         private IAuthenticationService _authenticationService;
         private ITokenService _tokenService;
-        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService)
+        private IEncryptionService _encryptionService;
+        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService, IEncryptionService encryptionService)
         {
             _authenticationService = authenticationService;
             _tokenService = tokenService;
+            _encryptionService = encryptionService;
         }
 
         [HttpPost]
@@ -27,7 +30,10 @@ namespace BridgeAPI.Controllers
                     UserName = jObject["UserName"].ToString(),
                     Password = jObject["Password"].ToString()
                 });
-            _tokenService.GenerateToken
+            _tokenService.GenerateToken(user);
+            Tuple<byte[], byte[]> KeyIv = _encryptionService.GetKeyAndIVFromPublicKey(jObject["PublicKey"].ToString());
+
+            return await _encryptionService.Encrypt(request, KeyIv);
         }
 
         [HttpPost]
@@ -37,9 +43,14 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register()
+        public async Task<bool> Register(string request)
         {
-            return View();
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+            return await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
+                {
+                    UserName = jObject["UserName"].ToString(),
+                    Password = jObject["Password"].ToString()
+                });
         }
     }
 }

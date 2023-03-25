@@ -34,7 +34,7 @@ namespace BridgeAPI.BLL.Services
 
             return new UserResponseDataTransferObject()
             {
-                Id = new Guid(jObject["Id"].ToString()),
+                LocalServerId = new Guid(jObject["Id"].ToString()),
                 UserName = jObject["UserName"].ToString(),
                 Email = jObject["Email"].ToString()
             };
