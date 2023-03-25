@@ -1,4 +1,5 @@
 ﻿using BridgeAPI.BLL.Services.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -11,40 +12,52 @@ namespace BridgeAPI.BLL.Services
 {
     public class EncryptionService : IEncryptionService
     {
-        public Task<string> Decrypt(string encriptedText)
+        public async Task<string> Decrypt(string encriptedText, Tuple<byte[], byte[]> KeyIv)
         {
-            throw new NotImplementedException();
+            byte[] cipherTextBytes = Convert.FromBase64String(encriptedText);
+            string plaintext = string.Empty;
+
+            using (var aesAlg = new AesCryptoServiceProvider())
+            {
+                aesAlg.Key = KeyIv.Item1;
+                aesAlg.IV = KeyIv.Item2;
+
+                var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                using (var msDecrypt = new MemoryStream(cipherTextBytes))
+                {
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (var srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plaintext = await srDecrypt.ReadToEndAsync();
+                        }
+                    }
+                }
+            }
+
+            return plaintext;
         }
 
-        public Task<string> Encrypt(string text, Tuple<byte[], byte[]> KeyIv)
+        public async Task<string> Encrypt(string text, Tuple<byte[], byte[]> KeyIv)
         {
             byte[] encrypted;
             using (var aesAlg = new AesCryptoServiceProvider())
             {
                 aesAlg.Key = KeyIv.Item1;
                 aesAlg.IV = KeyIv.Item2;
-
                 var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create a memory stream to write the encrypted data to
                 using (var msEncrypt = new MemoryStream())
                 {
-                    // Create a crypto stream that transforms data as it is written to and read from the memory stream
                     using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        // Convert the plain text string to a byte array
-                        byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-
-                        // Write the plain text byte array to the crypto stream
-                        csEncrypt.Write(plainTextBytes, 0, plainTextBytes.Length);
+                        byte[] plainTextBytes = Encoding.UTF8.GetBytes(text);
+                        await csEncrypt.WriteAsync(plainTextBytes, 0, plainTextBytes.Length);
                     }
-
-                    // Get the encrypted data from the memory stream
                     encrypted = msEncrypt.ToArray();
                 }
             }
 
-            // Convert the encrypted byte array to a base64-encoded string and return it
             return Convert.ToBase64String(encrypted);
         }
 

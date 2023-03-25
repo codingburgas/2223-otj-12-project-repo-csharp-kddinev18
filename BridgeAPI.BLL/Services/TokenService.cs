@@ -17,14 +17,14 @@ namespace BridgeAPI.BLL
         {
             _tokenRepository = tokenRepository;
         }
-        public Token GenerateToken(IResponseDataTransferObject user)
+        public Token GenerateToken(IResponseDataTransferObject user, string publicKey)
         {
-            return _tokenRepository.AddToken(user);
+            Token token = _tokenRepository.AddToken(user);
         }
 
-        public async Task<Token> UpdateToken(IResponseDataTransferObject user)
+        public async Task<Token> UpdateToken(IResponseDataTransferObject user, Guid tokenId)
         {
-            return await _tokenRepository.UpdateTokenAsync()
+            return await _tokenRepository.UpdateTokenAsync(user, tokenId);
         }
     }
 }
