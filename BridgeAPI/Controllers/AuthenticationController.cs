@@ -8,49 +8,73 @@ using System.Text.Json.Nodes;
 
 namespace BridgeAPI.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+
     public class AuthenticationController : Controller
     {
         private IAuthenticationService _authenticationService;
         private ITokenService _tokenService;
-        private IEncryptionService _encryptionService;
-        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService, IEncryptionService encryptionService)
+        private IResponseFormatterService _responseFormatterService;
+        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService, IResponseFormatterService responseFormatterService)
         {
             _authenticationService = authenticationService;
             _tokenService = tokenService;
-            _encryptionService = encryptionService;
+            _responseFormatterService = responseFormatterService;
         }
 
-        [HttpPost]
-        public async Task<string> Login(string request)
+        [HttpGet("LogIn")]
+        public async Task<string> LogIn(string request)
         {
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-            IResponseDataTransferObject user =
-                await _authenticationService.LogInAsync(new UserRequestDataTransferObject()
-                {
-                    UserName = jObject["UserName"].ToString(),
-                    Password = jObject["Password"].ToString()
-                });
-            _tokenService.GenerateToken(user);
-            Tuple<byte[], byte[]> KeyIv = _encryptionService.GetKeyAndIVFromPublicKey(jObject["PublicKey"].ToString());
+            try
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                IResponseDataTransferObject user =
+                    await _authenticationService.LogInAsync(new UserRequestDataTransferObject()
+                    {
+                        UserName = jObject["UserName"].ToString(),
+                        Password = jObject["Password"].ToString()
+                    });
+                _tokenService.GenerateToken(user);
 
-            return await _encryptionService.Encrypt(request, KeyIv);
+                return _responseFormatterService.FormatResponse(200, user)
+            }
+            catch (Exception ex)
+            {
+                return "{\"Error\":\"ujas\"}";
+            }
         }
 
-        [HttpPost]
+        [HttpGet("LocalServerLogIn")]
         public IActionResult LocalServerLogin(string request)
         {
             return View();
         }
 
-        [HttpPost]
-        public async Task<bool> Register(string request)
+        [HttpPost("Register")]
+        public async Task<string> Register(string request)
         {
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-            return await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
+            try
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                if(await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
                 {
                     UserName = jObject["UserName"].ToString(),
+                    Email = jObject["Password"].ToString(),
                     Password = jObject["Password"].ToString()
-                });
+                }))
+                {
+                    return "{\"Succes\":\"ne ujas\"}";
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                return "{\"Error\":\"ujas\"}";
+            }
         }
     }
 }

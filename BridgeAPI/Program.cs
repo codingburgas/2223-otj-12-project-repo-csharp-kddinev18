@@ -1,15 +1,30 @@
+using BridgeAPI.BLL;
+using BridgeAPI.BLL.Interfaces;
+using BridgeAPI.BLL.Services;
+using BridgeAPI.BLL.Services.Interfaces;
+using BridgeAPI.Controllers;
+using BridgeAPI.DAL.Data;
+using BridgeAPI.DAL.Repositories;
+using BridgeAPI.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddScoped<IBridgeAPIDbContext, BridgeAPIDbContext>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

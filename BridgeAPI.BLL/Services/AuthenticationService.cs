@@ -28,6 +28,14 @@ namespace BridgeAPI.BLL
             return user.Password;
         }
 
+        private string Hash(IRequestDataTransferObject requestObject, string salt)
+        {
+            UserRequestDataTransferObject user = requestObject as UserRequestDataTransferObject;
+            string data = user.Password + salt;
+            user.Password = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(data))).ToUpper().Replace("-", "");
+            return user.Password;
+        }
+
         private static string GetSalt(string userName)
         {
             StringBuilder salt = new StringBuilder();
@@ -45,7 +53,7 @@ namespace BridgeAPI.BLL
         {
             try
             {
-                Hash(requestObject);
+                Hash(requestObject, await _repository.GetUserSalt(requestObject));
                 return await _repository.GetUserAsync(requestObject);
             }
             catch (ArgumentNullException ex)

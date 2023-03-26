@@ -55,7 +55,7 @@ namespace BridgeAPI.DAL.Repositories
             }
             return new UserResponseDataTransferObject()
             {
-                Id = users.Id,
+                GlobalServerId = users.Id,
                 UserName = users.UserName,
                 Email = users.Email
             };
@@ -70,10 +70,20 @@ namespace BridgeAPI.DAL.Repositories
             }
             return new UserResponseDataTransferObject()
             {
-                Id = user.Id,
+                GlobalServerId = user.Id,
                 UserName = user.UserName,
                 Email = user.Email
             };
+        }
+
+        public async Task<string> GetUserSalt(IRequestDataTransferObject user)
+        {
+            UserRequestDataTransferObject dataTrasferObject = user as UserRequestDataTransferObject;
+            User userObject = await _context.Users
+                .Where(user => user.UserName == dataTrasferObject.UserName)
+                .FirstOrDefaultAsync();
+            if(userObject == null) { throw new ArgumentNullException("Cannot find the user"); }
+            return userObject.Salt;
         }
 
         public async Task<bool> UpdateUserAsync(Guid userId)
