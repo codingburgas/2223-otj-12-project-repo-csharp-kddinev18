@@ -35,13 +35,23 @@ namespace BridgeAPI.Controllers
                         UserName = jObject["UserName"].ToString(),
                         Password = jObject["Password"].ToString()
                     });
-                _tokenService.GenerateToken(user);
-
-                return _responseFormatterService.FormatResponse(200, user)
+                return _responseFormatterService.FormatResponse(200, _tokenService.GenerateToken(user), null, null);
+            }
+            catch (ArgumentException ex)
+            {
+                return _responseFormatterService.FormatResponse(400, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
             }
             catch (Exception ex)
             {
-                return "{\"Error\":\"ujas\"}";
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
             }
         }
 
@@ -57,23 +67,22 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                if(await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
+                await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
                 {
                     UserName = jObject["UserName"].ToString(),
                     Email = jObject["Password"].ToString(),
                     Password = jObject["Password"].ToString()
-                }))
-                {
-                    return "{\"Succes\":\"ne ujas\"}";
-                }
-                else
-                {
-                    throw new Exception();
-                }
+                });
+                return _responseFormatterService.FormatResponse(200, null, null, null);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                return "{\"Error\":\"ujas\"}";
+                return _responseFormatterService.FormatResponse(400, ex.Message, ex.Message, null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, 
+                    "Check if the JSON is formated correctly and that the data corresponds to the rquerments", null);
             }
         }
     }

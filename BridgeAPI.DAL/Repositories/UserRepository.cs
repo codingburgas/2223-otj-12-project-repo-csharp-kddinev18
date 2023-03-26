@@ -51,7 +51,7 @@ namespace BridgeAPI.DAL.Repositories
                 .Where(users => users.Password == dataTrasferObject.Password).FirstOrDefaultAsync();
             if (users == null)
             {
-                throw new ArgumentException("Cannot find the user you have requested");
+                throw new ArgumentException("Wrong credentials");
             }
             return new UserResponseDataTransferObject()
             {

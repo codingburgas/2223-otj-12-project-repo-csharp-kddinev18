@@ -38,6 +38,9 @@ namespace BridgeAPI.BLL
 
         private static string GetSalt(string userName)
         {
+            if (userName.Length <= 6)
+                throw new ArgumentException("Wrong credentials");
+
             StringBuilder salt = new StringBuilder();
             Random random = new Random();
             salt.Append(userName.Substring(0, 6));
@@ -56,7 +59,7 @@ namespace BridgeAPI.BLL
                 Hash(requestObject, await _repository.GetUserSalt(requestObject));
                 return await _repository.GetUserAsync(requestObject);
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentException ex)
             {
                 throw ex;
             }
@@ -72,6 +75,10 @@ namespace BridgeAPI.BLL
             {
                 Hash(requestObject);
                 return await _repository.AddUserAsync(requestObject);
+            }
+            catch (ArgumentException ex)
+            {
+                throw ex;
             }
             catch (Exception)
             {
