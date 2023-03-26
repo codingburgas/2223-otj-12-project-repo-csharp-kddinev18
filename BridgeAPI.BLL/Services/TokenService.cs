@@ -18,9 +18,19 @@ namespace BridgeAPI.BLL
         {
             _repository = tokenRepository;
         }
-        public string GenerateToken(IResponseDataTransferObject user)
+        public async Task<string> GenerateToken(IResponseDataTransferObject user)
         {
-            return JsonSerializer.Serialize(_repository.AddToken(user));
+            return JsonSerializer.Serialize(await _repository.AddToken(user));
+        }
+
+        public async Task<Token> GenerateTokenType(IResponseDataTransferObject user)
+        {
+            return await _repository.AddToken(user);
+        }
+
+        public async Task<Token> GetToken(Guid tokenId)
+        {
+            return await _repository.GetTokenByIdAsync(tokenId);
         }
 
         public async Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId)

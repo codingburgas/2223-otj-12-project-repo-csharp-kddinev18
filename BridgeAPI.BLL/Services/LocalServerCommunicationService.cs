@@ -29,22 +29,23 @@ namespace BridgeAPI.BLL.Services
 
         public async Task<IResponseDataTransferObject> LogInAsync(string message)
         {
-            string response = await Task.Run(()=>_server.LocalServerCommunication(message));
+            string response = await _server.LocalServerCommunication(message);
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-
-            return new UserResponseDataTransferObject()
+            if (jObject["Status"].ToString() == "200")
             {
-                LocalServerId = new Guid(jObject["Id"].ToString()),
-                UserName = jObject["UserName"].ToString(),
-                Email = jObject["Email"].ToString()
-            };
+                return new UserResponseDataTransferObject()
+                {
+                    LocalServerId = new Guid(jObject["Id"].ToString()),
+                };
+            }
+            throw new Exception();
         }
 
         public async Task<bool> PostDeviceDataAsync(string message)
         {
             string response = await Task.Run(() => _server.LocalServerCommunication(message));
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            if (jObject["Status"].ToString() == "Success")
+            if (jObject["Status"].ToString() == "200")
             {
                 return true;
             }

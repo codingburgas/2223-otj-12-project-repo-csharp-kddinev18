@@ -11,32 +11,41 @@ using BridgeAPI.DAL.Repositories.Interfaces;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using BridgeAPI.DTO;
+using BridgeAPI.BLL.Services.Interfaces;
+using BridgeAPI.DAL.Models;
+using BridgeAPI.DTO.Interfaces;
 
 namespace BridgeAPI.BLL
 {
     public class Server : IServer
     {
         private IAuthenticationService _authentication;
+        private ITokenService _tokenService;
+        private IResponseFormatterService _responseFormatterService;
 
         private TcpListener _tcpListener;
-        private List<TcpClient> _clients;
+        private Dictionary<TcpClient, Token> _clients;
         private Dictionary<string, bool> _clientsIP;
         private Dictionary<Guid, string> _responseBuffer;
         private byte[] _data;
         private int _port;
-        public Server(IAuthenticationService authentication)
+        public Server(IAuthenticationService authentication, IResponseFormatterService responseFormatterService, ITokenService tokenService)
         {
+            _tokenService = tokenService;
+            _authentication = authentication;
+            _responseFormatterService = responseFormatterService;
+
             _port = 5401;
             _data = new byte[16777216];
             _clientsIP = new Dictionary<string, bool>();
-            _clients = new List<TcpClient>();
-            _authentication = authentication;
+            _clients = new Dictionary<TcpClient, Token>();
             _responseBuffer = new Dictionary<Guid, string>();
         }
-        public void ServerSetUp()
+        public void ServerSetUp(int port = 5401)
         {
             try
             {
+                _port = port;
                 _tcpListener = new TcpListener(IPAddress.Any, _port);
                 _tcpListener.Start();
                 _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
@@ -52,9 +61,9 @@ namespace BridgeAPI.BLL
         {
             if (_tcpListener != null)
                 _tcpListener.Stop();
-            foreach (TcpClient client in _clients)
+            foreach (KeyValuePair<TcpClient, Token> client in _clients)
             {
-                DisconnectClient(client);
+                DisconnectClient(client.Key);
             }
             _tcpListener = null;
         }
@@ -75,7 +84,7 @@ namespace BridgeAPI.BLL
             {
                 Console.WriteLine(ex.Message);
             }
-            _clients.Add(client);
+            _clients.Add(client, null);
             _clientsIP.Add(GetClientIP(client), false);
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
@@ -101,22 +110,24 @@ namespace BridgeAPI.BLL
                 if (_clientsIP[GetClientIP(client)] == false)
                 {
                     JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-                    await _authentication.LogInAsync(new UserRequestDataTransferObject()
+                    IResponseDataTransferObject user = await _authentication.LogInAsync(new UserRequestDataTransferObject()
                     {
                         UserName = jObject["UserName"].ToString(),
                         Password = jObject["Password"].ToString()
                     });
+                    _clients[client] = await _tokenService.GenerateTokenType(user);
                 }
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentException ex)
             {
-                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\"" + ex.Message + "\"}";
+                string response = _responseFormatterService.FormatResponse(400,ex.Message,ex.Message, null);
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
                 DisconnectClient(client);
             }
             catch (Exception ex)
             {
-                string response = "{\"Status\" : \"Failed\", \"ErrorMessage\":\"" + ex.Message + "\"}";
+                string response = _responseFormatterService.FormatResponse(400, "General Error", ex.Message, null);
+
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
             }
             finally
@@ -143,17 +154,22 @@ namespace BridgeAPI.BLL
 
         public TcpClient GetClient(string clientIP)
         {
-            return _clients.Where(client => GetClientIP(client) == clientIP).FirstOrDefault();
+            return _clients.Where(client => GetClientIP(client.Key) == clientIP).FirstOrDefault().Key;
         }
 
-        public string LocalServerCommunication(string message)
+        public TcpClient GetClient(Guid tokenId)
+        {
+            return _clients.Where(client => client.Value.TokenId == tokenId).FirstOrDefault().Key;
+        }
+
+        public async Task<string> LocalServerCommunication(string message)
         {
             JsonObject jObject;
             TcpClient client;
             try
             {
                 jObject = JsonSerializer.Deserialize<JsonObject>(message);
-                client = GetClient(jObject["ClientIP"].ToString());
+                client = GetClient(new Guid(jObject["TokenId"].ToString()));
             }
             catch (Exception)
             {
@@ -171,7 +187,7 @@ namespace BridgeAPI.BLL
                 {
                     throw new Exception("Request timeout");
                 }
-                Thread.Sleep(500);
+                await Task.Delay(500);
                 iterations++;
             }
 

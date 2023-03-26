@@ -9,9 +9,10 @@ namespace BridgeAPI.BLL.Interfaces
 {
     public interface IServer
     {
-        public void ServerSetUp();
+        public void ServerSetUp(int port = 5401);
         public void ServerShutDown();
         public TcpClient GetClient(string clientIP);
-        public string LocalServerCommunication(string message);
+        public TcpClient GetClient(Guid tokenId);
+        public Task<string> LocalServerCommunication(string message);
     }
 }

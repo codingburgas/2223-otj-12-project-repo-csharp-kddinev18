@@ -1,5 +1,6 @@
 ﻿using BridgeAPI.BLL.Interfaces;
 using BridgeAPI.BLL.Services.Interfaces;
+using BridgeAPI.DAL.Models;
 using BridgeAPI.DTO;
 using BridgeAPI.DTO.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace BridgeAPI.Controllers
         private IAuthenticationService _authenticationService;
         private ITokenService _tokenService;
         private IResponseFormatterService _responseFormatterService;
-        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService, IResponseFormatterService responseFormatterService)
+        private ILocalServerCommunicationService _localServerCommunicationService;
+        public AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService, IResponseFormatterService responseFormatterService, ILocalServerCommunicationService localServerCommunicationService)
         {
             _authenticationService = authenticationService;
             _tokenService = tokenService;
             _responseFormatterService = responseFormatterService;
+            _localServerCommunicationService = localServerCommunicationService;
         }
 
         [HttpGet("LogIn")]
@@ -35,7 +38,7 @@ namespace BridgeAPI.Controllers
                         UserName = jObject["UserName"].ToString(),
                         Password = jObject["Password"].ToString()
                     });
-                return _responseFormatterService.FormatResponse(200, _tokenService.GenerateToken(user), null, null);
+                return _responseFormatterService.FormatResponse(200, await _tokenService.GenerateToken(user), null, null);
             }
             catch (ArgumentException ex)
             {
@@ -56,9 +59,47 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("LocalServerLogIn")]
-        public IActionResult LocalServerLogin(string request)
+        public async Task<string> LocalServerLogin(string request)
         {
-            return View();
+            try
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token token = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
+                token = await _tokenService.GetToken(token.TokenId);
+                if(token is null)
+                {
+                    throw new UnauthorizedAccessException("Not authenticated");
+                }
+                if(token.ExpireDate < DateTime.Now)
+                {
+                    throw new UnauthorizedAccessException("Token is expired");
+                }
+                return _responseFormatterService.FormatResponse(200, 
+                    await _tokenService.GenerateToken(await _localServerCommunicationService.LogInAsync(
+                    "{\"Operation\":\"Authentication\", \"Args\":" + jObject["Args"] + "}"
+                )), null, null);
+                
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (ArgumentException ex)
+            {
+                return _responseFormatterService.FormatResponse(400, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
         }
 
         [HttpPost("Register")]

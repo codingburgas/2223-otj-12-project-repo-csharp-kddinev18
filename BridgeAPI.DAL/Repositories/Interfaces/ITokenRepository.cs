@@ -10,8 +10,8 @@ namespace BridgeAPI.DAL.Repositories.Interfaces
 {
     public interface ITokenRepository
     {
-        public Task<Token> GetTokenAsync(Guid tokenId);
-        public Token AddToken(IResponseDataTransferObject user);
+        public Task<Token> GetTokenByIdAsync(Guid tokenId);
+        public Task<Token> AddToken(IResponseDataTransferObject user);
         public Task<Token> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId);
         public Task<bool> DeleteExpiredTokenAsync();
     }

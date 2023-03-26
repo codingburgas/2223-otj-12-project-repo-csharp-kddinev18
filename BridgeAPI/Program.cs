@@ -2,11 +2,9 @@ using BridgeAPI.BLL;
 using BridgeAPI.BLL.Interfaces;
 using BridgeAPI.BLL.Services;
 using BridgeAPI.BLL.Services.Interfaces;
-using BridgeAPI.Controllers;
 using BridgeAPI.DAL.Data;
 using BridgeAPI.DAL.Repositories;
 using BridgeAPI.DAL.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +17,7 @@ builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IResponseFormatterService, ResponseFormatterService>();
 
+builder.Services.AddSingleton<IServer, Server>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -38,4 +37,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+server.ServerSetUp();
+
 app.Run();
+

@@ -10,7 +10,9 @@ namespace BridgeAPI.BLL.Interfaces
 {
     public interface ITokenService
     {
-        public string GenerateToken(IResponseDataTransferObject user);
+        public Task<string> GenerateToken(IResponseDataTransferObject user);
+        public Task<Token> GenerateTokenType(IResponseDataTransferObject user);
+        public Task<Token> GetToken(Guid tokenId);
         public Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId);
     }
 }

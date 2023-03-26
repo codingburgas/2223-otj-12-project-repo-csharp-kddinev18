@@ -15,20 +15,28 @@ namespace BridgeAPI.DAL.Repositories
     {
         private static List<Token> _tokens = new List<Token>();
 
-        public Token AddToken(IResponseDataTransferObject user)
+        public async Task<Token> AddToken(IResponseDataTransferObject user)
         {
             UserResponseDataTransferObject userObject = user as UserResponseDataTransferObject;
-            Token token = new Token()
+            Token token = await Task.Run(() => _tokens.Where(token => token.GlobalServerId == userObject.GlobalServerId).FirstOrDefault());
+            if(token is null)
             {
-                TokenId = Guid.NewGuid(),
-                GlobalServerId = userObject.GlobalServerId,
-                LocalServerId = userObject.LocalServerId,
-                UserName = userObject.UserName,
-                Role = userObject.Role,
-                Email = userObject.Email,
-                ExpireDate = DateTime.Now.AddHours(1),
-                RenewDate = DateTime.Now.AddHours(1).AddMinutes(30)
-            };
+                token = new Token()
+                {
+                    TokenId = Guid.NewGuid(),
+                    GlobalServerId = userObject.GlobalServerId,
+                    LocalServerId = userObject.LocalServerId,
+                    UserName = userObject.UserName,
+                    Role = userObject.Role,
+                    Email = userObject.Email,
+                    ExpireDate = DateTime.Now.AddHours(1),
+                    RenewDate = DateTime.Now.AddHours(1).AddMinutes(30)
+                };
+            }
+            else
+            {
+                await UpdateTokenAsync(userObject, token.TokenId);
+            }
             _tokens.Add(token);
             return token;
         }
@@ -38,11 +46,17 @@ namespace BridgeAPI.DAL.Repositories
             UserResponseDataTransferObject userObject = user as UserResponseDataTransferObject;
             Token token = await Task.Run(()=> _tokens.Where(token => token.TokenId == tokenId).FirstOrDefault());
 
-            token.GlobalServerId = userObject.GlobalServerId;
-            token.LocalServerId = userObject.LocalServerId;
-            token.UserName = userObject.UserName;
-            token.Role = userObject.Role;
-            token.Email = userObject.Email;
+            if(userObject.GlobalServerId != Guid.Empty)
+                token.GlobalServerId = userObject.GlobalServerId;
+            if(userObject.LocalServerId != Guid.Empty)
+                token.LocalServerId = userObject.LocalServerId;
+            if(!string.IsNullOrEmpty(userObject.UserName))
+                token.UserName = userObject.UserName;
+            if(!string.IsNullOrEmpty(userObject.Role))
+                token.Role = userObject.Role;
+            if(!string.IsNullOrEmpty(userObject.Email))
+                token.Email = userObject.Email;
+
             token.ExpireDate = DateTime.Now.AddHours(1);
             token.RenewDate = DateTime.Now.AddHours(1).AddMinutes(30);
 
@@ -55,7 +69,7 @@ namespace BridgeAPI.DAL.Repositories
             return true;
         }
 
-        public async Task<Token> GetTokenAsync(Guid tokenId)
+        public async Task<Token> GetTokenByIdAsync(Guid tokenId)
         {
             return await Task.Run(() => _tokens.Where(token => token.TokenId == tokenId).FirstOrDefault());
         }
