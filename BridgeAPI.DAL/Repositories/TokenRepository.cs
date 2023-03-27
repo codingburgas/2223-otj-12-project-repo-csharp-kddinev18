@@ -24,6 +24,7 @@ namespace BridgeAPI.DAL.Repositories
                 token = new Token()
                 {
                     TokenId = Guid.NewGuid(),
+                    SecretKey = GenerateSecretKey(),
                     GlobalServerId = userObject.GlobalServerId,
                     LocalServerId = userObject.LocalServerId,
                     UserName = userObject.UserName,
@@ -39,6 +40,18 @@ namespace BridgeAPI.DAL.Repositories
             }
             _tokens.Add(token);
             return token;
+        }
+
+        private string GenerateSecretKey()
+        {
+            Random r = new Random();
+            int itterations = 126 + r.Next(126);
+            string container = "";
+            for (int i = 0; i < itterations; i++)
+            {
+                container += (char)r.Next(127);
+            }
+            return container;
         }
 
         public async Task<Token> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId)

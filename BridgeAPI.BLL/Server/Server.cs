@@ -102,17 +102,23 @@ namespace BridgeAPI.BLL
                 }
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
                 await AuthenticateClient(client, data);
+                GetResponse(data);
             }
             catch (ArgumentException ex)
             {
-                string response = GetService<IResponseFormatterService>().FormatResponse(400,ex.Message,ex.Message, null);
+                using IServiceScope scope = _serviceProvider.CreateScope();
+                IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
+
+                string response = responseFormatterService.FormatResponse(400,ex.Message,ex.Message, null);
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
                 DisconnectClient(client);
             }
             catch (Exception ex)
             {
-                string response = GetService<IResponseFormatterService>().FormatResponse(400, "General Error", ex.Message, null);
-
+                using IServiceScope scope = _serviceProvider.CreateScope();
+                IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
+                
+                string response = responseFormatterService.FormatResponse(400, "General Error", ex.Message, null);
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
             }
             finally
@@ -120,6 +126,20 @@ namespace BridgeAPI.BLL
                 FlushBuffer();
             }
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        private void GetResponse(string data)
+        {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+            Guid responseId = new Guid(jObject["ResponseId"].ToString();
+            if (_responseBuffer.ContainsKey(responseId))
+            {
+                _responseBuffer[responseId] = jObject["Response"].ToString();
+            }
+            else
+            {
+                throw new ArgumentException("Wrong response");
+            }
         }
 
         private async Task AuthenticateClient(TcpClient client, string data)
@@ -200,17 +220,6 @@ namespace BridgeAPI.BLL
             _responseBuffer.Remove(guid);
 
             return response;
-        }
-
-        public T GetService<T>() where T : class
-        {
-            using var scope = _serviceProvider.CreateScope();
-            T service = scope.ServiceProvider.GetRequiredService<T>();
-            if (service == null)
-            {
-                throw new ArgumentException($"The service of type '{typeof(T)}' is not registered in the service provider.");
-            }
-            return service;
         }
     }
 }

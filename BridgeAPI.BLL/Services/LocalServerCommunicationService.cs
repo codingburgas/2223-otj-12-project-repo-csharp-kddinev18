@@ -22,9 +22,15 @@ namespace BridgeAPI.BLL.Services
             _server = server;
         }
 
-        public async Task<string> GetDeviceDataAsync(string message)
+        public async Task<JsonObject> GetDeviceDataAsync(string message)
         {
-            return await Task.Run(() => _server.LocalServerCommunication(message));
+            string response = await _server.LocalServerCommunication(message);
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
+            if (jObject["Status"].ToString() == "200")
+            {
+                return jObject;
+            }
+            throw new Exception();
         }
 
         public async Task<IResponseDataTransferObject> LogInAsync(string message)

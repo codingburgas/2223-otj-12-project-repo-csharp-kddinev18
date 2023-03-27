@@ -9,6 +9,7 @@ namespace BridgeAPI.DAL.Models
     public class Token
     {
         public Guid TokenId { get; set; }
+        public string SecretKey { get; set; }
         public Guid GlobalServerId { get; set; }
         public Guid LocalServerId { get; set; }
         public string UserName { get; set; }
