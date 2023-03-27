@@ -14,30 +14,25 @@ using BridgeAPI.DTO;
 using BridgeAPI.BLL.Services.Interfaces;
 using BridgeAPI.DAL.Models;
 using BridgeAPI.DTO.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BridgeAPI.BLL
 {
     public class Server : IServer
     {
-        private IAuthenticationService _authentication;
-        private ITokenService _tokenService;
-        private IResponseFormatterService _responseFormatterService;
+        private IServiceProvider _serviceProvider;
 
         private TcpListener _tcpListener;
         private Dictionary<TcpClient, Token> _clients;
-        private Dictionary<string, bool> _clientsIP;
         private Dictionary<Guid, string> _responseBuffer;
         private byte[] _data;
         private int _port;
-        public Server(IAuthenticationService authentication, IResponseFormatterService responseFormatterService, ITokenService tokenService)
+        public Server(IServiceProvider serviceProvider)
         {
-            _tokenService = tokenService;
-            _authentication = authentication;
-            _responseFormatterService = responseFormatterService;
+            _serviceProvider = serviceProvider;
 
             _port = 5401;
             _data = new byte[16777216];
-            _clientsIP = new Dictionary<string, bool>();
             _clients = new Dictionary<TcpClient, Token>();
             _responseBuffer = new Dictionary<Guid, string>();
         }
@@ -85,7 +80,6 @@ namespace BridgeAPI.BLL
                 Console.WriteLine(ex.Message);
             }
             _clients.Add(client, null);
-            _clientsIP.Add(GetClientIP(client), false);
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptClients), null);
             if (_tcpListener is not null)
@@ -107,26 +101,17 @@ namespace BridgeAPI.BLL
                     return;
                 }
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
-                if (_clientsIP[GetClientIP(client)] == false)
-                {
-                    JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-                    IResponseDataTransferObject user = await _authentication.LogInAsync(new UserRequestDataTransferObject()
-                    {
-                        UserName = jObject["UserName"].ToString(),
-                        Password = jObject["Password"].ToString()
-                    });
-                    _clients[client] = await _tokenService.GenerateTokenType(user);
-                }
+                await AuthenticateClient(client, data);
             }
             catch (ArgumentException ex)
             {
-                string response = _responseFormatterService.FormatResponse(400,ex.Message,ex.Message, null);
+                string response = GetService<IResponseFormatterService>().FormatResponse(400,ex.Message,ex.Message, null);
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
                 DisconnectClient(client);
             }
             catch (Exception ex)
             {
-                string response = _responseFormatterService.FormatResponse(400, "General Error", ex.Message, null);
+                string response = GetService<IResponseFormatterService>().FormatResponse(400, "General Error", ex.Message, null);
 
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
             }
@@ -135,6 +120,27 @@ namespace BridgeAPI.BLL
                 FlushBuffer();
             }
             client.Client.BeginReceive(_data, 0, _data.Length, SocketFlags.None, new AsyncCallback(ReciveClientInput), client);
+        }
+
+        private async Task AuthenticateClient(TcpClient client, string data)
+        {
+            if (_clients[client] == null)
+            {
+                using IServiceScope scope = _serviceProvider.CreateScope();
+                IAuthenticationService authenticationService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
+                ITokenService tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
+                IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
+
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+                IResponseDataTransferObject user = await authenticationService.LogInAsync(new UserRequestDataTransferObject()
+                {
+                    UserName = jObject["UserName"].ToString(),
+                    Password = jObject["Password"].ToString()
+                });
+                Token token = _clients[client] = await tokenService.GenerateTokenType(user);
+                string response = responseFormatterService.FormatResponse(200, JsonSerializer.Serialize(token), null, null);
+                client.Client.Send(Encoding.ASCII.GetBytes(response));
+            }
         }
 
         public void FlushBuffer()
@@ -148,7 +154,6 @@ namespace BridgeAPI.BLL
             client.Client.Shutdown(SocketShutdown.Both);
             client.Client.Close();
             _clients.Remove(client);
-            _clientsIP.Remove(GetClientIP(client));
             client = null;
         }
 
@@ -195,6 +200,17 @@ namespace BridgeAPI.BLL
             _responseBuffer.Remove(guid);
 
             return response;
+        }
+
+        public T GetService<T>() where T : class
+        {
+            using var scope = _serviceProvider.CreateScope();
+            T service = scope.ServiceProvider.GetRequiredService<T>();
+            if (service == null)
+            {
+                throw new ArgumentException($"The service of type '{typeof(T)}' is not registered in the service provider.");
+            }
+            return service;
         }
     }
 }
