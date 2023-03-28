@@ -21,6 +21,14 @@ namespace LocalServer.BLL.Server.BLL
     {
         private static byte[] _data = new byte[16777216];
         private static TcpClient _tcpClient;
+        private static Dictionary<string, Func<string, string>> _operations = new Dictionary<string, Func<string, string>>()
+        {
+            { "Authenticate", Authenticate },
+            { "GetRowsCount", GetRowsCount },
+            { "GetDevices", GetDevices },
+            { "GetDataFromDevice", GetDataFromDevice },
+            { "SendDataToDevice", SendDataToDevice },
+        };
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
 
         // Connect to the server
@@ -68,90 +76,70 @@ namespace LocalServer.BLL.Server.BLL
 
             string data = FormatData();
             // Format tha data
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Contains('|') ? data.Split('|')[1] : data);
-            if (jObject.ContainsKey("Error"))
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+            if (int.Parse(jObject["StatusCode"].ToString()) / 100 != 2)
                 throw new Exception(jObject["Error"].ToString());
 
             return jObject;
-        }
-
-        enum OperationTypes
-        {
-            GetDevices = 1,
-            GetData = 2,
-            SendData = 3,
-            GetCount = 4,
-            Authenticate = 5,
         }
 
         public static async Task AwaitServerCall()
         {
             string responseBufferNumber = String.Empty;
             NetworkStream stream = null;
-            try
+            string response = string.Empty;
+            if (_tcpClient.Connected)
             {
-                if (_tcpClient.Connected)
+                stream = _tcpClient.GetStream();
+
+                while (_tcpClient.Connected)
                 {
-                    stream = _tcpClient.GetStream();
-
-                    while (_tcpClient.Connected)
+                    byte[] buffer = new byte[_tcpClient.ReceiveBufferSize];
+                    int read = await stream.ReadAsync(buffer, 0, buffer.Length);
+                    if (read > 0)
                     {
-                        byte[] buffer = new byte[_tcpClient.ReceiveBufferSize];
-                        int read = await stream.ReadAsync(buffer, 0, buffer.Length);
-                        if (read > 0)
+                        try
                         {
-                            try
-                            {
-                                _data = buffer.SubArray(0, read);
-                                string data = FormatData();
-                                responseBufferNumber = data.Split('|')[0];
-                                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data.Split('|')[1]);
-                                JsonObject arguments = null;
-                                OperationTypes operation = (OperationTypes)Enum.Parse(typeof(OperationTypes), jObject["OperationType"].ToString(), true);
+                            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>
+                                (Encoding.ASCII.GetString(buffer).Replace("\0", string.Empty));
 
-                                switch (operation)
-                                {
-                                    case OperationTypes.GetDevices:
-                                        arguments = jObject["Arguments"] as JsonObject;
-                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|{GetDevices(int.Parse(arguments["UserId"].ToString()))}"));
-                                        break;
-                                    case OperationTypes.GetData:
-                                        arguments = jObject["Arguments"] as JsonObject;
-                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" +
-                                            $"{GetData(arguments["DeviceName"].ToString(), int.Parse(arguments["PagingSize"].ToString()), int.Parse(arguments["SkipAmount"].ToString()))}"));
-                                        break;
-                                    case OperationTypes.SendData:
-                                        arguments = jObject["Arguments"] as JsonObject;
-                                        SendData(arguments["DeviceName"].ToString(), arguments["Data"].ToString());
-                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + "[{\"Message\":\"Data Sent\"}]"));
-                                        break;
-                                    case OperationTypes.GetCount:
-                                        arguments = jObject["Arguments"] as JsonObject;
-                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + GetCount(arguments["DeviceName"].ToString())));
-                                        break;
-                                    case OperationTypes.Authenticate:
-                                        arguments = jObject["Arguments"] as JsonObject;
-                                        stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|" + Authenticate(arguments["UserName"].ToString(), arguments["Password"].ToString())));
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                stream.Write(Encoding.ASCII.GetBytes($"{responseBufferNumber}|"+"[{\"Error\":\"" + ex.Message + "\"}]"));
-                            }
+                            response = FormatResponse(
+                                200,
+                                _operations[jObject["OperationType"].ToString()].Invoke(jObject["Arguments"].ToString()),
+                                null,
+                                null
+                            );
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                        finally
+                        {
+                            stream.Write(Encoding.ASCII.GetBytes(response));
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
         }
 
-        private static string GetDevices(int userId)
+        public static string FormatResponse(int statusCode, string response, string errorMessage, Dictionary<string, string> additionalInformation)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                StatusCode = statusCode,
+                Response = response,
+                errorMessage = errorMessage ?? null,
+                AdditionalInformation = additionalInformation
+            },
+            new JsonSerializerOptions
+            {
+                IgnoreNullValues = true
+            });
+        }
+
+        private static string GetDevices(string parameters)
         {
             List<string> deviceNames = new List<string>();
 
@@ -181,7 +169,7 @@ namespace LocalServer.BLL.Server.BLL
             return JsonSerializer.Serialize(serializableData);
         }
 
-        private static string GetData(string deviceName, int pagingSize, int skipAmount)
+        private static string GetDataFromDevice(string parameters)
         {
             DataTable table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
                 .Select("", "", "", pagingSize, skipAmount);
@@ -196,14 +184,14 @@ namespace LocalServer.BLL.Server.BLL
             return Table.ConvertDataTabletoString(table);
         }
 
-        public static void SendData(string deviceName, string data)
+        public static string SendDataToDevice(string parameters)
         {
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", deviceName).Rows[0]["IPv4Address"].ToString();
             ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(data));
         }
 
-        private static string GetCount(string deviceName)
+        private static string GetRowsCount(string parameters)
         {
             List<object> count = new List<object>
             {
@@ -212,20 +200,13 @@ namespace LocalServer.BLL.Server.BLL
             return JsonSerializer.Serialize(count);
         }
 
-        private static string Authenticate(string userName, string password)
+        private static string Authenticate(string parameters)
         {
             List<object> user = new List<object>
             {
                 new { UserId = UserAuthenticationLogic.LogIn(userName, password) }
             };
             return JsonSerializer.Serialize(user);
-        }
-
-        public static T[] SubArray<T>(this T[] array, int offset, int length)
-        {
-            T[] result = new T[length];
-            Array.Copy(array, offset, result, 0, length);
-            return result;
         }
     }
 }
