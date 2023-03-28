@@ -2,7 +2,6 @@ using BridgeAPI.BLL;
 using BridgeAPI.BLL.Interfaces;
 using BridgeAPI.BLL.Services;
 using BridgeAPI.BLL.Services.Interfaces;
-using BridgeAPI.Controllers;
 using BridgeAPI.DAL.Data;
 using BridgeAPI.DAL.Repositories;
 using BridgeAPI.DAL.Repositories.Interfaces;
