@@ -12,8 +12,8 @@ namespace LocalServer.CLI
             string userName = Console.ReadLine();
             string password = Console.ReadLine();
 
-            GlobalServerComunicationLogic.SetUpConnection(userName, password);
-            Task.Run(() => GlobalServerComunicationLogic.AwaitServerCall());
+            BridgeAPIHandlingLogic.SetUpConnection(userName, password);
+            Task.Run(() => BridgeAPIHandlingLogic.AwaitServerCall());
 
             Console.ReadKey();
         }

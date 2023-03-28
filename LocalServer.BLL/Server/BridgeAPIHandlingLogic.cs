@@ -17,7 +17,7 @@ using System.Xml.Serialization;
 
 namespace LocalServer.BLL.Server.BLL
 {
-    public static class GlobalServerComunicationLogic
+    public static class BridgeAPIHandlingLogic
     {
         private static byte[] _data = new byte[16777216];
         private static TcpClient _tcpClient;
@@ -110,10 +110,17 @@ namespace LocalServer.BLL.Server.BLL
                                 null
                             );
                         }
+                        catch (JsonException)
+                        {
+                            response = FormatResponse(400, "Incorrect request", "Incorrect request", null);
+                        }
+                        catch (NullReferenceException)
+                        {
+                            response = FormatResponse(400, "Incorrect request", "Incorrect request", null);
+                        }
                         catch (Exception)
                         {
-
-                            throw;
+                            response = FormatResponse(500, "Server error", "Server error", null);
                         }
                         finally
                         {
@@ -141,10 +148,11 @@ namespace LocalServer.BLL.Server.BLL
 
         private static string GetDevices(string parameters)
         {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
             List<string> deviceNames = new List<string>();
 
             int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
-                .Select("UserId", "=", userId.ToString()).Rows[0]["RoleId"].ToString());
+                .Select("UserId", "=", jObject["UserId"].ToString()).Rows[0]["RoleId"].ToString());
 
             DataTable permissions = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
                 .Select("RoleId", "=", roleId.ToString());
@@ -171,8 +179,10 @@ namespace LocalServer.BLL.Server.BLL
 
         private static string GetDataFromDevice(string parameters)
         {
-            DataTable table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First()
-                .Select("", "", "", pagingSize, skipAmount);
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
+
+            DataTable table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First()
+                .Select("", "", "", int.Parse(jObject["PagingSize"].ToString()), int.Parse(jObject["SkipAmount"].ToString()));
 
             table.Columns.Remove("Id");
             table.Columns.Remove("DeviceId");
@@ -186,25 +196,30 @@ namespace LocalServer.BLL.Server.BLL
 
         public static string SendDataToDevice(string parameters)
         {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
+
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                .Select("Name", "=", deviceName).Rows[0]["IPv4Address"].ToString();
-            ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(data));
+                .Select("Name", "=", jObject["DeviceName"].ToString()).Rows[0]["IPv4Address"].ToString();
+            ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(jObject["Data"].ToString()));
         }
 
         private static string GetRowsCount(string parameters)
         {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
             List<object> count = new List<object>
             {
-                new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == deviceName).First().GetRowsCount() }
+                new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First().GetRowsCount() }
             };
             return JsonSerializer.Serialize(count);
         }
 
         private static string Authenticate(string parameters)
         {
+            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
+
             List<object> user = new List<object>
             {
-                new { UserId = UserAuthenticationLogic.LogIn(userName, password) }
+                new { UserId = UserAuthenticationLogic.LogIn(jObject["UserName"].ToString(), jObject["Password"].ToString()) }
             };
             return JsonSerializer.Serialize(user);
         }
