@@ -105,6 +105,7 @@ namespace LocalServer.BLL.Server.BLL
 
                             response = FormatResponse(
                                 200,
+                                new Guid(jObject["RequestId"].ToString()),
                                 _operations[jObject["OperationType"].ToString()].Invoke(jObject["Arguments"].ToString()),
                                 null,
                                 null
@@ -112,15 +113,15 @@ namespace LocalServer.BLL.Server.BLL
                         }
                         catch (JsonException)
                         {
-                            response = FormatResponse(400, "Incorrect request", "Incorrect request", null);
+                            response = FormatResponse(400, null, "Incorrect request", "Incorrect request", null);
                         }
                         catch (NullReferenceException)
                         {
-                            response = FormatResponse(400, "Incorrect request", "Incorrect request", null);
+                            response = FormatResponse(400, null, "Incorrect request", "Incorrect request", null);
                         }
                         catch (Exception)
                         {
-                            response = FormatResponse(500, "Server error", "Server error", null);
+                            response = FormatResponse(500, null, "Server error", "Server error", null);
                         }
                         finally
                         {
@@ -131,11 +132,12 @@ namespace LocalServer.BLL.Server.BLL
             }
         }
 
-        public static string FormatResponse(int statusCode, string response, string errorMessage, Dictionary<string, string> additionalInformation)
+        public static string FormatResponse(int statusCode, Guid? responseId, string response, string errorMessage, Dictionary<string, string> additionalInformation)
         {
             return JsonSerializer.Serialize(new
             {
                 StatusCode = statusCode,
+                ResponseId = responseId.HasValue ? responseId.Value : null,
                 Response = response,
                 errorMessage = errorMessage ?? null,
                 AdditionalInformation = additionalInformation
@@ -201,6 +203,7 @@ namespace LocalServer.BLL.Server.BLL
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", jObject["DeviceName"].ToString()).Rows[0]["IPv4Address"].ToString();
             ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(jObject["Data"].ToString()));
+            return "Data sent successfully";
         }
 
         private static string GetRowsCount(string parameters)

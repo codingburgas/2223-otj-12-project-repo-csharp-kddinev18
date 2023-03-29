@@ -131,7 +131,7 @@ namespace BridgeAPI.BLL
         private void GetResponse(string data)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-            Guid responseId = new Guid(jObject["ResponseId"].ToString();
+            Guid responseId = new Guid(jObject["ResponseId"].ToString());
             if (_responseBuffer.ContainsKey(responseId))
             {
                 _responseBuffer[responseId] = jObject["Response"].ToString();
@@ -187,21 +187,23 @@ namespace BridgeAPI.BLL
             return _clients.Where(client => client.Value.TokenId == tokenId).FirstOrDefault().Key;
         }
 
-        public async Task<string> LocalServerCommunication(string message)
+        public async Task<string> LocalServerCommunication(string arguments)
         {
             JsonObject jObject;
             TcpClient client;
             try
             {
-                jObject = JsonSerializer.Deserialize<JsonObject>(message);
+                jObject = JsonSerializer.Deserialize<JsonObject>(arguments);
                 client = GetClient(new Guid(jObject["TokenId"].ToString()));
+                jObject.Remove("TokenId");
             }
             catch (Exception)
             {
                 throw new Exception("JSON request is in incorrect format");
             }
             Guid guid = Guid.NewGuid();
-            client.Client.Send(Encoding.ASCII.GetBytes("{\"RequestId\": \"" + guid + "\", {" + message + "}}"));
+            client.Client.Send(Encoding.ASCII.GetBytes("{\"RequestId\": \"" + guid 
+                + "\", \"Arguments\" : {" + JsonSerializer.Serialize(jObject) + "}}"));
 
             _responseBuffer.Add(guid, string.Empty);
 
@@ -210,7 +212,7 @@ namespace BridgeAPI.BLL
             {
                 if(iterations >= 50) 
                 {
-                    throw new Exception("Request timeout");
+                    throw new TimeoutException("Request timeout");
                 }
                 await Task.Delay(500);
                 iterations++;

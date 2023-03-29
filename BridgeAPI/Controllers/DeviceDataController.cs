@@ -41,9 +41,7 @@ namespace BridgeAPI.Controllers
                 }
                 return _responseFormatterService.FormatResponse(
                     200,
-                    JsonSerializer.Serialize(
-                        _localServerCommunicationService.GetDeviceDataAsync(jObject["Request"].ToString())
-                    ),
+                    _localServerCommunicationService.GetDeviceDataAsync(jObject["Request"].ToString()),
                     null,
                     null
                 );

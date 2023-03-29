@@ -13,6 +13,6 @@ namespace BridgeAPI.BLL.Interfaces
         public void ServerShutDown();
         public TcpClient GetClient(string clientIP);
         public TcpClient GetClient(Guid tokenId);
-        public Task<string> LocalServerCommunication(string message);
+        public Task<string> LocalServerCommunication(string reuest);
     }
 }

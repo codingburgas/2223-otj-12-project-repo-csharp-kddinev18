@@ -10,8 +10,11 @@ namespace BridgeAPI.BLL.Services.Interfaces
 {
     public interface ILocalServerCommunicationService
     {
-        public Task<IResponseDataTransferObject> LogInAsync(string message);
-        public Task<JsonObject> GetDeviceDataAsync(string message);
-        public Task<bool> PostDeviceDataAsync(string message);
+        public Task<JsonObject> GetDevices(string request);
+        public Task<JsonObject> SendDataToDevice(string request);
+        public Task<JsonObject> GetRowsCount(string request);
+        public Task<JsonObject> Authenticate(string request);
+        public Task<JsonObject> GetDeviceDataAsync(string request);
+        public Task<JsonObject> PostDeviceDataAsync(string request);
     }
 }

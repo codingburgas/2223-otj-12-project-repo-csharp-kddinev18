@@ -22,40 +22,50 @@ namespace BridgeAPI.BLL.Services
             _server = server;
         }
 
-        public async Task<JsonObject> GetDeviceDataAsync(string message)
+        public async Task<JsonObject> Authenticate(Guid TokenId, string userName, string passwrod)
         {
-            string response = await _server.LocalServerCommunication(message);
+            string response = await _server.LocalServerCommunication
+            (
+                JsonSerializer.Serialize(new { 
+                    TokenId = TokenId,
+                    UserName = userName,
+                    Password = passwrod
+                })
+            );
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            if (jObject["Status"].ToString() == "200")
+            if (int.Parse(jObject["StatusCode"].ToString())/100 == 2)
             {
                 return jObject;
             }
-            throw new Exception();
+            else
+            {
+                throw new Exception("Local server error");
+            }
         }
 
-        public async Task<IResponseDataTransferObject> LogInAsync(string message)
+        public Task<JsonObject> GetDeviceDataAsync(string request)
         {
-            string response = await _server.LocalServerCommunication(message);
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            if (jObject["Status"].ToString() == "200")
-            {
-                return new UserResponseDataTransferObject()
-                {
-                    LocalServerId = new Guid(jObject["Id"].ToString()),
-                };
-            }
-            throw new Exception();
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> PostDeviceDataAsync(string message)
+        public Task<JsonObject> GetDevices(string request)
         {
-            string response = await Task.Run(() => _server.LocalServerCommunication(message));
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            if (jObject["Status"].ToString() == "200")
-            {
-                return true;
-            }
-            return false;
+            throw new NotImplementedException();
+        }
+
+        public Task<JsonObject> GetRowsCount(string request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JsonObject> PostDeviceDataAsync(string request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JsonObject> SendDataToDevice(string request)
+        {
+            throw new NotImplementedException();
         }
     }
 }
