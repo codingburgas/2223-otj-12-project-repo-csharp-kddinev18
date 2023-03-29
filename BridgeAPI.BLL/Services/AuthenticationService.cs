@@ -85,5 +85,22 @@ namespace BridgeAPI.BLL
                 throw new Exception("General error");
             }
         }
+
+        public async Task<bool> CheckAuthorisation(IRequestDataTransferObject requestObject)
+        {
+            try
+            {
+                Hash(requestObject);
+                return await _repository.AddUserAsync(requestObject);
+            }
+            catch (ArgumentException ex)
+            {
+                throw ex;
+            }
+            catch (Exception)
+            {
+                throw new Exception("General error");
+            }
+        }
     }
 }

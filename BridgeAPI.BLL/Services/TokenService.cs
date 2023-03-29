@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace BridgeAPI.BLL
@@ -36,6 +37,31 @@ namespace BridgeAPI.BLL
         public async Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId)
         {
             return JsonSerializer.Serialize(await _repository.UpdateTokenAsync(user, tokenId));
+        }
+
+        public async Task<string> UpdateLocalServer(Guid tokenId, Guid localServerId)
+        {
+            return JsonSerializer.Serialize(await _repository.UpdateLocalServer(tokenId, localServerId));
+        }
+
+        public async Task<Token> CeckAuthentication(JsonObject jObject)
+        {
+            Token userToken = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
+            Token serverToken = await GetToken(userToken.TokenId);
+            if (serverToken is null)
+            {
+                throw new UnauthorizedAccessException("Not authenticated");
+            }
+            if (serverToken.ExpireDate < DateTime.Now)
+            {
+                throw new UnauthorizedAccessException("Token is expired");
+            }
+            if (serverToken.SecretKey != userToken.SecretKey)
+            {
+                throw new UnauthorizedAccessException("Not authenticated");
+            }
+
+            return userToken;
         }
     }
 }

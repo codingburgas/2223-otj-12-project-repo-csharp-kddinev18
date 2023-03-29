@@ -9,39 +9,34 @@ namespace BridgeAPI.Controllers
 {
     public class DeviceDataController : Controller
     {
-        private IAuthenticationService _authenticationService;
         private ITokenService _tokenService;
         private IResponseFormatterService _responseFormatterService;
         private ILocalServerCommunicationService _localServerCommunicationService;
-        public DeviceDataController(IAuthenticationService authenticationService, ITokenService tokenService, IResponseFormatterService responseFormatterService, ILocalServerCommunicationService localServerCommunicationService)
+        public DeviceDataController(ITokenService tokenService, IResponseFormatterService responseFormatterService, ILocalServerCommunicationService localServerCommunicationService)
         {
-            _authenticationService = authenticationService;
             _tokenService = tokenService;
             _responseFormatterService = responseFormatterService;
             _localServerCommunicationService = localServerCommunicationService;
         }
+
+        [HttpGet("GetDeviceData")]
         public async Task<string> GetDeviceData(string request)
         {
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
-                Token serverToken = await _tokenService.GetToken(userToken.TokenId);
-                if (serverToken is null)
-                {
-                    throw new UnauthorizedAccessException("Not authenticated");
-                }
-                if (serverToken.ExpireDate < DateTime.Now)
-                {
-                    throw new UnauthorizedAccessException("Token is expired");
-                }
-                if (serverToken.SecretKey != userToken.SecretKey)
-                {
-                    throw new UnauthorizedAccessException("Not authenticated");
-                }
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
+
+                jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
                 return _responseFormatterService.FormatResponse(
                     200,
-                    _localServerCommunicationService.GetDeviceDataAsync(jObject["Request"].ToString()),
+                    JsonSerializer.Serialize(
+                    await _localServerCommunicationService.GetDeviceDataAsync(
+                        userToken.TokenId,
+                        jObject["DeviceName"].ToString(),
+                        int.Parse(jObject["PagingSize"].ToString()),
+                        int.Parse(jObject["SkipAmount"].ToString())
+                    )),
                     null,
                     null
                 );
@@ -63,5 +58,7 @@ namespace BridgeAPI.Controllers
                 return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
             }
         }
+
+
     }
 }

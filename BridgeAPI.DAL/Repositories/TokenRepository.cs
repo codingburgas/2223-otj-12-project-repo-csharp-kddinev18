@@ -76,6 +76,14 @@ namespace BridgeAPI.DAL.Repositories
             return token;
         }
 
+        public async Task<Token> UpdateLocalServer(Guid tokenId, Guid localServerId)
+        {
+            Token token = await GetTokenByIdAsync(tokenId);
+            token.LocalServerId = localServerId;
+
+            return token;
+        }
+
         public async Task<bool> DeleteExpiredTokenAsync()
         {
             await Task.Run(() => _tokens.RemoveAll(token => token.RenewDate < DateTime.Now));

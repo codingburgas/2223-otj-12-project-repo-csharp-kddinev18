@@ -64,24 +64,26 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
-                Token serverToken = await _tokenService.GetToken(userToken.TokenId);
-                if (serverToken is null)
-                {
-                    throw new UnauthorizedAccessException("Not authenticated");
-                }
-                if (serverToken.ExpireDate < DateTime.Now)
-                {
-                    throw new UnauthorizedAccessException("Token is expired");
-                }
-                if(serverToken.SecretKey != userToken.SecretKey)
-                {
-                    throw new UnauthorizedAccessException("Not authenticated");
-                }
-                return _responseFormatterService.FormatResponse(200,
-                    await _tokenService.GenerateToken(await _localServerCommunicationService.LogInAsync(
-                    "{\"Operation\":\"Authentication\", \"Args\":" + jObject["Args"] + "}"
-                )), null, null);
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
+
+                jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
+                JsonObject localServerId = await _localServerCommunicationService.GetDeviceDataAsync
+                (
+                    userToken.TokenId,
+                    jObject["DeviceName"].ToString(),
+                    int.Parse(jObject["PagingSize"].ToString()),
+                    int.Parse(jObject["SkipAmount"].ToString())
+                );
+                return _responseFormatterService.FormatResponse(
+                    200,
+                    JsonSerializer.Serialize(
+                    _tokenService.UpdateLocalServer(
+                        userToken.TokenId,
+                        new Guid(localServerId["LocalServerId"].ToString())
+                    )),
+                    null,
+                    null
+                );
 
             }
             catch (UnauthorizedAccessException ex)

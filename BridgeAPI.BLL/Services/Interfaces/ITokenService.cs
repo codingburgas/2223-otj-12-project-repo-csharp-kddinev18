@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace BridgeAPI.BLL.Interfaces
@@ -12,7 +13,9 @@ namespace BridgeAPI.BLL.Interfaces
     {
         public Task<string> GenerateToken(IResponseDataTransferObject user);
         public Task<Token> GenerateTokenType(IResponseDataTransferObject user);
+        public Task<Token> CeckAuthentication(JsonObject jObject);
         public Task<Token> GetToken(Guid tokenId);
+        public Task<string> UpdateLocalServer(Guid tokenId, Guid localServerId);
         public Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId);
     }
 }

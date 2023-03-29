@@ -137,7 +137,7 @@ namespace LocalServer.BLL.Server.BLL
             return JsonSerializer.Serialize(new
             {
                 StatusCode = statusCode,
-                ResponseId = responseId.HasValue ? responseId.Value : null,
+                ResponseId = responseId ?? null,
                 Response = response,
                 errorMessage = errorMessage ?? null,
                 AdditionalInformation = additionalInformation
