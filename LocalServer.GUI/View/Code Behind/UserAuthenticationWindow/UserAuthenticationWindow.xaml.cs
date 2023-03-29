@@ -1,4 +1,5 @@
 ﻿using LocalServer.BLL.Server.BLL;
+using LocalServer.GUI.View.Code_Behind.UserAuthenticationWindow.Pages;
 using LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages;
 using LocalServerGUI.View.Code_Behind.MainWindow;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages;
@@ -26,6 +27,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
     {
         public LogInPage LogInPage { get; set; }
         public RegistrationPage RegistrationPage { get; set; }
+        public BridgeAPILoginPage BridgeAPILoginPage { get; set; }
 
         public ServerLogic Server { get; set; }
         public UsersAuthenticationWindow()
@@ -41,6 +43,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow
 
                 LogInPage = new LogInPage(this);
                 RegistrationPage = new RegistrationPage(this);
+                BridgeAPILoginPage = new BridgeAPILoginPage(this);
 
                 ShowPage(LogInPage);
             }

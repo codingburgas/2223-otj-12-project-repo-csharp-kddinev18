@@ -1,4 +1,5 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
+using LocalServer.BLL.Server.BLL;
 using LocalServer.GUI.Models;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
 using System;
@@ -16,15 +17,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
+namespace LocalServer.GUI.View.Code_Behind.UserAuthenticationWindow.Pages
 {
     /// <summary>
-    /// Interaction logic for LogInPage.xaml
+    /// Interaction logic for BridgeAPILoginPage.xaml
     /// </summary>
-    public partial class LogInPage : Page
+    public partial class BridgeAPILoginPage : Page
     {
         private UsersAuthenticationWindow _userAuthenticationWindow;
-        public LogInPage(UsersAuthenticationWindow userAuthenticationWindow)
+        public BridgeAPILoginPage(UsersAuthenticationWindow userAuthenticationWindow)
         {
             _userAuthenticationWindow = userAuthenticationWindow;
             InitializeComponent();
@@ -34,14 +35,13 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         private void OpenRegistrationFormButton_Click(object sender, RoutedEventArgs e)
         {
             // Shows RegistrationPage
-            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.RegistrationPage);
+            // show url
         }
-        private void LogInButton_Click(object sender, RoutedEventArgs e)
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            // Log in and sets CurrentUserId to the logged user id
-            CurrentUserInformation.UserId = UserAuthenticationLogic.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
-            CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
-            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
+            BridgeAPIHandlingLogic.SetUpConnection(UserName.TextBox.Text, PasswordTextBox.Password);
+            Task.Run(() => BridgeAPIHandlingLogic.AwaitServerCall());
+            _userAuthenticationWindow.ShowMainWindow();
         }
     }
 }

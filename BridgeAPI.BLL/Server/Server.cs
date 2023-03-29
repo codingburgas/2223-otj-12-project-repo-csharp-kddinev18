@@ -101,8 +101,8 @@ namespace BridgeAPI.BLL
                     return;
                 }
                 string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
-                await AuthenticateClient(client, data);
-                GetResponse(data);
+                if(!await AuthenticateClient(client, data))
+                    GetResponse(data);
             }
             catch (ArgumentException ex)
             {
@@ -142,7 +142,7 @@ namespace BridgeAPI.BLL
             }
         }
 
-        private async Task AuthenticateClient(TcpClient client, string data)
+        private async Task<bool> AuthenticateClient(TcpClient client, string data)
         {
             if (_clients[client] == null)
             {
@@ -160,7 +160,10 @@ namespace BridgeAPI.BLL
                 Token token = _clients[client] = await tokenService.GenerateTokenType(user);
                 string response = responseFormatterService.FormatResponse(200, JsonSerializer.Serialize(token), null, null);
                 client.Client.Send(Encoding.ASCII.GetBytes(response));
+
+                return true;
             }
+            return false;
         }
 
         public void FlushBuffer()
