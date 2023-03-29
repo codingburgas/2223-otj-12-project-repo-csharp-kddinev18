@@ -16,8 +16,8 @@ builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IEncryptionService, EncryptionService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IResponseFormatterService, ResponseFormatterService>();
-
-//builder.Services.AddTransient<IServer, Server>();
+builder.Services.AddSingleton<IServer, Server>();
+builder.Services.AddTransient<ILocalServerCommunicationService, LocalServerCommunicationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

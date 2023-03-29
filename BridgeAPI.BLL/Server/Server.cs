@@ -23,8 +23,8 @@ namespace BridgeAPI.BLL
         private IServiceProvider _serviceProvider;
 
         private TcpListener _tcpListener;
-        private Dictionary<TcpClient, Token> _clients;
-        private Dictionary<Guid, string> _responseBuffer;
+        private static Dictionary<TcpClient, Token> _clients;
+        private static Dictionary<Guid, string> _responseBuffer;
         private byte[] _data;
         private int _port;
         public Server(IServiceProvider serviceProvider)
@@ -134,7 +134,7 @@ namespace BridgeAPI.BLL
             Guid responseId = new Guid(jObject["ResponseId"].ToString());
             if (_responseBuffer.ContainsKey(responseId))
             {
-                _responseBuffer[responseId] = jObject["Response"].ToString();
+                _responseBuffer[responseId] = JsonSerializer.Serialize(jObject);
             }
             else
             {
@@ -185,12 +185,12 @@ namespace BridgeAPI.BLL
             return _clients.Where(client => GetClientIP(client.Key) == clientIP).FirstOrDefault().Key;
         }
 
-        public TcpClient GetClient(Guid tokenId)
+        public static TcpClient GetClient(Guid tokenId)
         {
             return _clients.Where(client => client.Value.TokenId == tokenId).FirstOrDefault().Key;
         }
 
-        public async Task<string> LocalServerCommunication(string arguments)
+        public static async Task<string> LocalServerCommunication(string arguments)
         {
             JsonObject jObject;
             TcpClient client;
@@ -205,8 +205,8 @@ namespace BridgeAPI.BLL
                 throw new Exception("JSON request is in incorrect format");
             }
             Guid guid = Guid.NewGuid();
-            client.Client.Send(Encoding.ASCII.GetBytes("{\"RequestId\": \"" + guid 
-                + "\", \"Arguments\" : {" + JsonSerializer.Serialize(jObject) + "}}"));
+            jObject.Add("RequestId", guid);
+            client.Client.Send(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(jObject)));
 
             _responseBuffer.Add(guid, string.Empty);
 

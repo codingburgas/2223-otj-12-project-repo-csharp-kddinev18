@@ -219,12 +219,7 @@ namespace LocalServer.BLL.Server.BLL
         private static string Authenticate(string parameters)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
-
-            List<object> user = new List<object>
-            {
-                new { UserId = UserAuthenticationLogic.LogIn(jObject["UserName"].ToString(), jObject["Password"].ToString()) }
-            };
-            return JsonSerializer.Serialize(user);
+            return JsonSerializer.Serialize(new { UserId = UserAuthenticationLogic.LogIn(jObject["UserName"].ToString(), jObject["Password"].ToString()) });
         }
     }
 }

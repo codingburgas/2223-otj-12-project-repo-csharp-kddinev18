@@ -67,19 +67,18 @@ namespace BridgeAPI.Controllers
                 Token userToken = await _tokenService.CeckAuthentication(jObject);
 
                 jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
-                JsonObject localServerId = await _localServerCommunicationService.GetDeviceDataAsync
+                JsonObject localServerId = await _localServerCommunicationService.AuthenticateAsync
                 (
                     userToken.TokenId,
-                    jObject["DeviceName"].ToString(),
-                    int.Parse(jObject["PagingSize"].ToString()),
-                    int.Parse(jObject["SkipAmount"].ToString())
+                    jObject["UserName"].ToString(),
+                    jObject["Password"].ToString()
                 );
                 return _responseFormatterService.FormatResponse(
                     200,
                     JsonSerializer.Serialize(
                     _tokenService.UpdateLocalServer(
                         userToken.TokenId,
-                        new Guid(localServerId["LocalServerId"].ToString())
+                        new Guid(localServerId["UserId"].ToString())
                     )),
                     null,
                     null

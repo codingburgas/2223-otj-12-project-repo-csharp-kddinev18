@@ -16,23 +16,19 @@ namespace BridgeAPI.BLL.Services
 {
     public class LocalServerCommunicationService : ILocalServerCommunicationService
     {
-        private IServer _server;
-
-        public LocalServerCommunicationService(IServer server)
-        {
-            _server = server;
-        }
-
         public async Task<JsonObject> AuthenticateAsync(Guid tokenId, string userName, string passwrod)
         {
-            string response = await _server.LocalServerCommunication
+            string response = await Server.LocalServerCommunication
             (
                 JsonSerializer.Serialize(new
                 {
                     TokenId = tokenId,
                     OperationType = "Authenticate",
-                    UserName = userName,
-                    Password = passwrod
+                    Arguments = new
+                    {
+                        UserName = userName,
+                        Password = passwrod
+                    }
                 })
             );
             return ValidateResponse(response);
@@ -40,15 +36,18 @@ namespace BridgeAPI.BLL.Services
 
         public async Task<JsonObject> GetDeviceDataAsync(Guid tokenId, string deviceName, int pagingSize, int skipAmount)
         {
-            string response = await _server.LocalServerCommunication
+            string response = await Server.LocalServerCommunication
             (
                 JsonSerializer.Serialize(new
                 {
                     TokenId = tokenId,
                     OperationType = "GetDeviceData",
-                    DeviceName = deviceName,
-                    PagingSize = pagingSize,
-                    SkipAmount = skipAmount
+                    Arguments = new
+                    {
+                        DeviceName = deviceName,
+                        PagingSize = pagingSize,
+                        SkipAmount = skipAmount
+                    }
                 })
             );
             return ValidateResponse(response);
@@ -56,13 +55,16 @@ namespace BridgeAPI.BLL.Services
 
         public async Task<JsonObject> GetDevicesAsync(Guid tokenId, Guid userId)
         {
-            string response = await _server.LocalServerCommunication
+            string response = await Server.LocalServerCommunication
             (
                 JsonSerializer.Serialize(new
                 {
                     TokenId = tokenId,
                     OperationType = "GetDevices",
-                    UserId = userId,
+                    Arguments = new
+                    {
+                        UserId = userId,
+                    }
                 })
             );
             return ValidateResponse(response);
@@ -70,13 +72,16 @@ namespace BridgeAPI.BLL.Services
 
         public async Task<JsonObject> GetRowsCountAsync(Guid tokenId, string deviceName)
         {
-            string response = await _server.LocalServerCommunication
+            string response = await Server.LocalServerCommunication
             (
                 JsonSerializer.Serialize(new
                 {
                     TokenId = tokenId,
                     OperationType = "GetRowsCount",
-                    DeviceName = deviceName,
+                    Arguments = new
+                    {
+                        DeviceName = deviceName,
+                    }
                 })
             );
             return ValidateResponse(response);
@@ -84,14 +89,17 @@ namespace BridgeAPI.BLL.Services
 
         public async Task<JsonObject> SendDataToDeviceAsync(Guid tokenId, string deviceName, string data)
         {
-            string response = await _server.LocalServerCommunication
+            string response = await Server.LocalServerCommunication
             (
                 JsonSerializer.Serialize(new
                 {
                     TokenId = tokenId,
                     OperationType = "SendDataToDevice",
-                    DeviceName = deviceName,
-                    Data = data
+                    Arguments = new
+                    {
+                        DeviceName = deviceName,
+                        Data = data,
+                    }
                 })
             );
             return ValidateResponse(response);
@@ -103,7 +111,7 @@ namespace BridgeAPI.BLL.Services
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
             if (int.Parse(jObject["StatusCode"].ToString()) / 100 == 2)
             {
-                return jObject;
+                return JsonSerializer.Deserialize<JsonObject>(jObject["Response"].ToString());
             }
             else
             {
