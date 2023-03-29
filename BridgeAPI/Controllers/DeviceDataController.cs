@@ -135,7 +135,7 @@ namespace BridgeAPI.Controllers
             }
         }
 
-        [HttpGet("SendDataToDevice")]
+        [HttpPost("SendDataToDevice")]
         public async Task<string> SendDataToDevice(string request)
         {
             try

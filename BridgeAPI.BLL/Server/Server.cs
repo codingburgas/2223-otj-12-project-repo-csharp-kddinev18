@@ -100,7 +100,7 @@ namespace BridgeAPI.BLL
                     DisconnectClient(client);
                     return;
                 }
-                string data = Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
+                string data = Encoding.UTF8.GetString(_data).Replace("\0", string.Empty);
                 if(!await AuthenticateClient(client, data))
                     GetResponse(data);
             }
@@ -110,7 +110,7 @@ namespace BridgeAPI.BLL
                 IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
 
                 string response = responseFormatterService.FormatResponse(400,ex.Message,ex.Message, null);
-                client.Client.Send(Encoding.ASCII.GetBytes(response));
+                client.Client.Send(Encoding.UTF8.GetBytes(response));
                 DisconnectClient(client);
             }
             catch (Exception ex)
@@ -119,7 +119,7 @@ namespace BridgeAPI.BLL
                 IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
                 
                 string response = responseFormatterService.FormatResponse(400, "General Error", ex.Message, null);
-                client.Client.Send(Encoding.ASCII.GetBytes(response));
+                client.Client.Send(Encoding.UTF8.GetBytes(response));
             }
             finally
             {
@@ -159,7 +159,7 @@ namespace BridgeAPI.BLL
                 });
                 Token token = _clients[client] = await tokenService.GenerateTokenType(user);
                 string response = responseFormatterService.FormatResponse(200, JsonSerializer.Serialize(token), null, null);
-                client.Client.Send(Encoding.ASCII.GetBytes(response));
+                client.Client.Send(Encoding.UTF8.GetBytes(response));
 
                 return true;
             }
@@ -206,7 +206,7 @@ namespace BridgeAPI.BLL
             }
             Guid guid = Guid.NewGuid();
             jObject.Add("RequestId", guid);
-            client.Client.Send(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(jObject)));
+            client.Client.Send(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(jObject)));
 
             _responseBuffer.Add(guid, string.Empty);
 

@@ -54,7 +54,7 @@ namespace LocalServer.BLL.Server.BLL
         // Convert the bytes into a string
         public static string FormatData()
         {
-            return Encoding.ASCII.GetString(_data).Replace("\0", string.Empty);
+            return Encoding.UTF8.GetString(_data).Replace("\0", string.Empty);
         }
 
         // Clear the data buffer
@@ -101,7 +101,7 @@ namespace LocalServer.BLL.Server.BLL
                         try
                         {
                             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>
-                                (Encoding.ASCII.GetString(buffer).Replace("\0", string.Empty));
+                                (Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty));
 
                             response = FormatResponse(
                                 200,
@@ -125,7 +125,7 @@ namespace LocalServer.BLL.Server.BLL
                         }
                         finally
                         {
-                            stream.Write(Encoding.ASCII.GetBytes(response));
+                            stream.Write(Encoding.UTF8.GetBytes(response));
                         }
                     }
                 }
@@ -202,18 +202,14 @@ namespace LocalServer.BLL.Server.BLL
 
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", jObject["DeviceName"].ToString()).Rows[0]["IPv4Address"].ToString();
-            ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.ASCII.GetBytes(jObject["Data"].ToString()));
+            ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.UTF8.GetBytes(jObject["Data"].ToString()));
             return "Data sent successfully";
         }
 
         private static string GetRowsCount(string parameters)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
-            List<object> count = new List<object>
-            {
-                new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First().GetRowsCount() }
-            };
-            return JsonSerializer.Serialize(count);
+            return JsonSerializer.Serialize(new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First().GetRowsCount() });
         }
 
         private static string Authenticate(string parameters)
