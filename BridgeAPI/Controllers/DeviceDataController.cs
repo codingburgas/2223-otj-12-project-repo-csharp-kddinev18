@@ -96,5 +96,43 @@ namespace BridgeAPI.Controllers
                 return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
             }
         }
+
+        [HttpGet("GetRowsCount")]
+        public async Task<string> GetRowsCount(string request)
+        {
+            try
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
+
+                jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
+                return _responseFormatterService.FormatResponse(
+                    200,
+                    JsonSerializer.Serialize(
+                    await _localServerCommunicationService.GetRowsCountAsync(
+                        userToken.TokenId,
+                        jObject["DeviceName"].ToString()
+                    )),
+                    null,
+                    null
+                );
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
+        }
     }
 }
