@@ -59,6 +59,42 @@ namespace BridgeAPI.Controllers
             }
         }
 
+        [HttpGet("GetDevices")]
+        public async Task<string> GetDevices(string request)
+        {
+            try
+            {
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
 
+                jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
+                return _responseFormatterService.FormatResponse(
+                    200,
+                    JsonSerializer.Serialize(
+                    await _localServerCommunicationService.GetDevicesAsync(
+                        userToken.TokenId,
+                        new Guid(jObject["UserId"].ToString())
+                    )),
+                    null,
+                    null
+                );
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
+        }
     }
 }
