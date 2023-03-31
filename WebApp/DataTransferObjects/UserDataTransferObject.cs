@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using WebApp.ValidationAttributes;
 
 namespace WebApp.DataTransferObjects
 {
@@ -15,6 +16,7 @@ namespace WebApp.DataTransferObjects
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Email is required.")]
         [MinLength(6, ErrorMessage = "The Email must be at least 6 characters")]
+        [Email]
         public string Email { get; set; }
 
 
@@ -22,6 +24,7 @@ namespace WebApp.DataTransferObjects
         [Required(ErrorMessage = "Password is required.")]
         [MinLength(6, ErrorMessage = "The Password must be at least 6 characters")]
         [MaxLength(32, ErrorMessage = "The Password must be under 32 characters")]
+        [Password]
         public string Password { get; set; }
     }
 }
