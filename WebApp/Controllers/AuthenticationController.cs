@@ -14,7 +14,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult LogIn(UserDataTransferObject user)
         {
-            return View();
+            if(!ModelState.IsValid)
+            {
+                return LogIn();
+            }
+
+            return LogIn();
         }
 
         [HttpGet]
