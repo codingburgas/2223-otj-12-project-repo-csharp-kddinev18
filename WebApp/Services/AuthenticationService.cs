@@ -26,6 +26,19 @@ namespace WebApp.Services
             );
         }
 
-
+        public async Task<string> RegisterAsync(string userName, string email, string password)
+        {
+            return await _communicationService.SendRequestAsync(
+                "Authentication/Register",
+                JsonSerializer.Serialize(
+                    new {
+                        UserName = userName,
+                        Email = email,
+                        Password = password
+                    }
+                ),
+                HttpMethod.Get
+            );
+        }
     }
 }
