@@ -2,7 +2,7 @@
 {
     public interface IAuthenticationService
     {
-        public string LogIn(string userName, string password);
-        public string Register(string userName, string email, string password);
+        public Task<string> LogInAsync(string userName, string password);
+        public Task<string> RegisterAsync(string userName, string email, string password);
     }
 }
