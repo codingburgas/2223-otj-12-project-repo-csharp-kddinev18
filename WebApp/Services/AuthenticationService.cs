@@ -40,5 +40,24 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
         }
+
+        public async Task<string> LogInLocalServerAsync(string token, string userName, string password)
+        {
+            return await _communicationService.SendRequestAsync(
+                "Authentication/Register",
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        Token = token,
+                        Arguments = new
+                        {
+                            UserName = userName,
+                            Password = password
+                        }
+                    }
+                ),
+                HttpMethod.Get
+            );
+        }
     }
 }
