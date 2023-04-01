@@ -14,6 +14,7 @@ namespace WebApp.Services
             _communicationService = communicationService;
         }
 
+<<<<<<< HEAD
         public async Task<DeviceDataDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
         {
             string response = await _communicationService.SendRequestAsync(
@@ -41,6 +42,9 @@ namespace WebApp.Services
         }
 
         public async Task<DevicesDataTransferObject> GetDevicesAsync(string token)
+=======
+        public async Task<DevicesDataTransferObject> GetDevices(string token)
+>>>>>>> 63e0e0ccc07df846e2798ad5641a2ec1a281a942
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDevices",
@@ -59,7 +63,11 @@ namespace WebApp.Services
             };
         }
 
+<<<<<<< HEAD
         public async Task<int> GetDeviceRowsAsync(string token, string deviceName)
+=======
+        public async Task<int> GetDeviceRows(string token, string deviceName)
+>>>>>>> 63e0e0ccc07df846e2798ad5641a2ec1a281a942
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDeviceData",
@@ -74,6 +82,7 @@ namespace WebApp.Services
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
             return int.Parse(jObject["Count"].ToString());
         }
+<<<<<<< HEAD
 
         public async Task SendDataToDeviceAsync(string token, string deviceName, string data)
         {
@@ -89,5 +98,7 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
         }
+=======
+>>>>>>> 63e0e0ccc07df846e2798ad5641a2ec1a281a942
     }
 }
