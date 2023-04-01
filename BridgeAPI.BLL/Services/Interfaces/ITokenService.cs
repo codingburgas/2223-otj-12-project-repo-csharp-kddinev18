@@ -13,7 +13,7 @@ namespace BridgeAPI.BLL.Interfaces
     {
         public Task<string> GenerateToken(IResponseDataTransferObject user);
         public Task<Token> GenerateTokenType(IResponseDataTransferObject user);
-        public Task<Token> CeckAuthentication(JsonObject jObject);
+        public Task<Token> CeckAuthentication(JsonObject jObject, bool localServerAuthentication = false);
         public Task<Token> GetToken(Guid tokenId);
         public Task<string> UpdateLocalServer(Guid tokenId, Guid localServerId);
         public Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId);

@@ -171,10 +171,10 @@ namespace LocalServer.BLL.Server.BLL
                         deviceNames.Add(device.Rows[0]["Name"].ToString());
                 }
             }
-            List<object> serializableData = new List<object>();
+            List<string> serializableData = new List<string>();
             foreach (string name in deviceNames)
             {
-                serializableData.Add(new { Name = name });
+                serializableData.Add(name);
             }
 
             return JsonSerializer.Serialize(new { Devices = serializableData });

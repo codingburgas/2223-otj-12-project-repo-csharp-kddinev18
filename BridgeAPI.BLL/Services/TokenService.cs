@@ -44,7 +44,7 @@ namespace BridgeAPI.BLL
             return JsonSerializer.Serialize(await _repository.UpdateLocalServer(tokenId, localServerId));
         }
 
-        public async Task<Token> CeckAuthentication(JsonObject jObject)
+        public async Task<Token> CeckAuthentication(JsonObject jObject, bool localServerAuthentication = false)
         {
             Token userToken = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
             Token serverToken = await GetToken(userToken.TokenId);
@@ -60,7 +60,13 @@ namespace BridgeAPI.BLL
             {
                 throw new UnauthorizedAccessException("Not authenticated");
             }
-
+            if(localServerAuthentication)
+            {
+                if(userToken.LocalServerId == Guid.Empty)
+                {
+                    throw new UnauthorizedAccessException("Not authenticated");
+                }
+            }
             return userToken;
         }
     }
