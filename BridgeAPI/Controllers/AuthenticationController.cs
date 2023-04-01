@@ -75,11 +75,10 @@ namespace BridgeAPI.Controllers
                 );
                 return _responseFormatterService.FormatResponse(
                     200,
-                    JsonSerializer.Serialize(
-                    _tokenService.UpdateLocalServer(
+                    await _tokenService.UpdateLocalServer(
                         userToken.TokenId,
                         new Guid(localServerId["UserId"].ToString())
-                    )),
+                    ),
                     null,
                     null
                 );

@@ -35,10 +35,11 @@ namespace WebApp.Controllers
 
                 return View();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ModelState.AddModelError("", ex.Message);
+                return LogIn();
 
-                throw;
             }
         }
 

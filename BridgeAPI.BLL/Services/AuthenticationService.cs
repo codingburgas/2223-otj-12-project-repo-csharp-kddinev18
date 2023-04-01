@@ -59,6 +59,10 @@ namespace BridgeAPI.BLL
                 Hash(requestObject, await _repository.GetUserSalt(requestObject));
                 return await _repository.GetUserAsync(requestObject);
             }
+            catch (ArgumentNullException)
+            {
+                throw new ArgumentException("Wrong credentials");
+            }
             catch (ArgumentException ex)
             {
                 throw ex;

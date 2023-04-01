@@ -23,10 +23,10 @@ namespace LocalServer.BLL.DataManipulation.BLL
                 permissions.Add(new PermissionInformation()
                 {
                     RoleName = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
-                    .Select("Id", "=", data["Id"].ToString()).Rows[0]["Name"].ToString(),
+                    .Select("Id", "=", data["RoleId"].ToString()).Rows[0]["Name"].ToString(),
 
                     DeviceName = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                    .Select("Id", "=", data["Id"].ToString()).Rows[0]["Name"].ToString(),
+                    .Select("Id", "=", data["DeviceId"].ToString()).Rows[0]["Name"].ToString(),
 
                     CanCreate = bool.Parse(data["CanCreate"].ToString()),
                     CanRead = bool.Parse(data["CanRead"].ToString()),

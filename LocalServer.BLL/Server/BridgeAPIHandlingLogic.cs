@@ -26,7 +26,7 @@ namespace LocalServer.BLL.Server.BLL
             { "Authenticate", Authenticate },
             { "GetRowsCount", GetRowsCount },
             { "GetDevices", GetDevices },
-            { "GetDataFromDevice", GetDataFromDevice },
+            { "GetDeviceData", GetDeviceData },
             { "SendDataToDevice", SendDataToDevice },
         };
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
@@ -87,6 +87,7 @@ namespace LocalServer.BLL.Server.BLL
         {
             string responseBufferNumber = String.Empty;
             NetworkStream stream = null;
+            JsonObject jObject = null;
             string response = string.Empty;
             if (_tcpClient.Connected)
             {
@@ -100,7 +101,7 @@ namespace LocalServer.BLL.Server.BLL
                     {
                         try
                         {
-                            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>
+                            jObject = JsonSerializer.Deserialize<JsonObject>
                                 (Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty));
 
                             response = FormatResponse(
@@ -121,7 +122,7 @@ namespace LocalServer.BLL.Server.BLL
                         }
                         catch (Exception)
                         {
-                            response = FormatResponse(500, null, "Server error", "Server error", null);
+                            response = FormatResponse(500, new Guid(jObject["RequestId"].ToString()), "Server error", "Server error", null);
                         }
                         finally
                         {
@@ -176,10 +177,10 @@ namespace LocalServer.BLL.Server.BLL
                 serializableData.Add(new { Name = name });
             }
 
-            return JsonSerializer.Serialize(serializableData);
+            return JsonSerializer.Serialize(new { Devices = serializableData });
         }
 
-        private static string GetDataFromDevice(string parameters)
+        private static string GetDeviceData(string parameters)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
 
@@ -193,7 +194,13 @@ namespace LocalServer.BLL.Server.BLL
             table.DefaultView.Sort = "Created desc";
             table = table.DefaultView.ToTable();
 
-            return Table.ConvertDataTabletoString(table);
+            List<string> infrastructure = new List<string>();
+            foreach (DataColumn column in table.Columns)
+            {
+                infrastructure.Add(column.ColumnName);
+            }
+
+            return JsonSerializer.Serialize(new { Infrastructure = infrastructure, Data = Table.ConvertDataTabletoObject(table) });
         }
 
         public static string SendDataToDevice(string parameters)

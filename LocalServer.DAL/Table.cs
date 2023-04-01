@@ -339,6 +339,21 @@ namespace LocalServer.DAL
             }
             return JsonSerializer.Serialize(rows);
         }
+        public static List<Dictionary<string, object>> ConvertDataTabletoObject(DataTable table)
+        {
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+            foreach (DataRow dr in table.Rows)
+            {
+                row = new Dictionary<string, object>();
+                foreach (DataColumn col in table.Columns)
+                {
+                    row.Add(col.ColumnName, dr[col]);
+                }
+                rows.Add(row);
+            }
+            return rows;
+        }
         public static string GetTableInfrastructure(DataTable table)
         {
             List<string> columns = new List<string>();
