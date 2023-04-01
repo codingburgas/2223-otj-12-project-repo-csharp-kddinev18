@@ -14,7 +14,7 @@ namespace WebApp.Services
             _communicationService = communicationService;
         }
 
-        public async Task<DeviceDataDataTransferObject> GetDeviceAsync(string token, string deviceName, int pagingSize, int skipAmount)
+        public async Task<DeviceDataDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDeviceData",
@@ -75,7 +75,7 @@ namespace WebApp.Services
             return int.Parse(jObject["Count"].ToString());
         }
 
-        public async Task SendDataToDevice(string token, string deviceName, string data)
+        public async Task SendDataToDeviceAsync(string token, string deviceName, string data)
         {
             await _communicationService.SendRequestAsync(
                 "DeviceData/SendDataToDevice",
