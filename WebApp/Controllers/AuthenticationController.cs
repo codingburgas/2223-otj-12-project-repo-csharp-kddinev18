@@ -42,26 +42,35 @@ namespace WebApp.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return LogIn();
-
             }
         }
 
         [HttpGet]
-        public string Register()
+        public IActionResult Register()
         {
-            string protectedData = HttpContext.Session.GetString("userToken");
-            return protectedData + "\n\n\n\n" + _protector.Unprotect(protectedData);
+            return View();
         }
 
         [HttpPost]
-        public IActionResult Register(UserRegisterDataTransferObject user)
+        public async Task<IActionResult> Register(UserRegisterDataTransferObject user)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                //return Register();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return Register();
+                }
 
-            return View();
+                string token = await _authenticationService.RegisterAsync(user.UserName, user.Email, user.Password);
+                HttpContext.Session.SetString("userToken", _protector.Protect(token));
+
+                return LogIn();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return LogIn();
+            }
         }
 
 
@@ -72,14 +81,25 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogInLocalServer(UserDataTransferObject user)
+        public async Task<IActionResult> LogInLocalServer(UserDataTransferObject user)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return LogInLocalServer();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return LogIn();
+                }
+                string token = HttpContext.Session.GetString("userToken");
+                string newToken = await _authenticationService.LogInLocalServerAsync(token, user.UserName, user.Password);
+                HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return LogIn();
+            }
         }
     }
 }

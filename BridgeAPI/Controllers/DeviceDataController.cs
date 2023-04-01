@@ -25,7 +25,7 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
                 jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
                 return _responseFormatterService.FormatResponse(
@@ -65,15 +65,14 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
-                jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
                 return _responseFormatterService.FormatResponse(
                     200,
                     JsonSerializer.Serialize(
                     await _localServerCommunicationService.GetDevicesAsync(
                         userToken.TokenId,
-                        new Guid(jObject["UserId"].ToString())
+                        userToken.LocalServerId
                     )),
                     null,
                     null
@@ -103,7 +102,7 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
                 jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
                 return _responseFormatterService.FormatResponse(
@@ -141,7 +140,7 @@ namespace BridgeAPI.Controllers
             try
             {
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
-                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
                 jObject = JsonSerializer.Deserialize<JsonObject>(jObject["Arguments"].ToString());
                 return _responseFormatterService.FormatResponse(
