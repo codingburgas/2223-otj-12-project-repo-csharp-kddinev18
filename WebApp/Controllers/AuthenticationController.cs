@@ -19,7 +19,7 @@ namespace WebApp.Controllers
                 return LogIn();
             }
 
-            return LogIn();
+            return View();
         }
 
         [HttpGet]
@@ -31,6 +31,11 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult Register(UserDataTransferObject user)
         {
+            if (!ModelState.IsValid)
+            {
+                return Register();
+            }
+
             return View();
         }
 
@@ -44,6 +49,11 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult LogInLocalServer(UserDataTransferObject user)
         {
+            if (!ModelState.IsValid)
+            {
+                return LogInLocalServer();
+            }
+
             return View();
         }
     }

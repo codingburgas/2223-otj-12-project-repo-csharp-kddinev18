@@ -1,16 +1,16 @@
 ﻿@model WebApp.DataTransferObjects.UserDataTransferObject
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "LogInLocalServer";
 }
 
-<h1>Register</h1>
+<h1>LogInLocalServer</h1>
 
 <h4>UserDataTransferObject</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Register">
+        <form asp-action="LogInLocalServer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
@@ -18,17 +18,12 @@
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Register" class="btn btn-primary" />
+                <input type="submit" value="Log In" class="btn btn-primary" />
             </div>
         </form>
     </div>
