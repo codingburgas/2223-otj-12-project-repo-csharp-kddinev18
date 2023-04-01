@@ -12,14 +12,6 @@ namespace WebApp.DataTransferObjects
         [MaxLength(32, ErrorMessage = "The UserName must be under 32 characters")]
         public string UserName { get; set; }
 
-
-        [Display(Name = "Email")]
-        [Required(ErrorMessage = "Email is required.")]
-        [MinLength(6, ErrorMessage = "The Email must be at least 6 characters")]
-        [Email]
-        public string Email { get; set; }
-
-
         [Display(Name = "Password")]
         [Required(ErrorMessage = "Password is required.")]
         [MinLength(6, ErrorMessage = "The Password must be at least 6 characters")]

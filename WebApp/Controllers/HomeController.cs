@@ -15,6 +15,8 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("LastActivityTime", DateTime.Now.ToString());
+
             return View();
         }
 

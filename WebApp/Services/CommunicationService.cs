@@ -17,31 +17,20 @@ namespace WebApp.Services
 
                 HttpRequestMessage httpRequest = new HttpRequestMessage(method, endpoint);
                 HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(await httpResponse.Content.ReadAsStringAsync());
 
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    return await httpResponse.Content.ReadAsStringAsync();
+                    return jObject["message"].ToString();
                 }
-                else if (httpResponse.StatusCode == HttpStatusCode.BadRequest)
+                else 
                 {
-                    string errorMessage = await httpResponse.Content.ReadAsStringAsync();
-                    throw new ArgumentException(errorMessage);
+                    throw new Exception(jObject["error"].ToString());
                 }
-                else if (httpResponse.StatusCode == HttpStatusCode.InternalServerError)
-                {
-                    string errorMessage = await httpResponse.Content.ReadAsStringAsync();
-                    throw new Exception(errorMessage);
-                }
-                throw new Exception();
-
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
-            catch (Exception)
-            {
-                throw new Exception("General error");
             }
         }
     }

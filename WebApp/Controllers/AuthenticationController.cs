@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using WebApp.DataTransferObjects;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : BaseController
     {
         private IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService)
+
+        public AuthenticationController(IAuthenticationService authenticationService, IOptions<SessionOptions> sessionOptions) : base(sessionOptions)
         {
             _authenticationService = authenticationService;
         }
@@ -47,7 +49,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(UserDataTransferObject user)
+        public IActionResult Register(UserRegisterDataTransferObject user)
         {
             if (!ModelState.IsValid)
             {
