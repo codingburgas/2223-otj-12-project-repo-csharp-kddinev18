@@ -2,6 +2,7 @@ using WebApp.Services.Interfaces;
 using WebApp.Services;
 using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddTransient<ICommunicationService, CommunicationService>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddDataProtection().SetApplicationName("IoTHomeSeruciryModernisationAndHealthMonioring"); ;
 
 builder.Services.AddSession(options =>
 {

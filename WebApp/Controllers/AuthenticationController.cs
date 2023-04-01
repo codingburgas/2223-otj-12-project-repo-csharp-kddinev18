@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.DataTransferObjects;
 using WebApp.Services.Interfaces;
@@ -8,10 +9,12 @@ namespace WebApp.Controllers
     public class AuthenticationController : BaseController
     {
         private IAuthenticationService _authenticationService;
+        private IDataProtector _protector;
 
-        public AuthenticationController(IAuthenticationService authenticationService, IOptions<SessionOptions> sessionOptions) : base(sessionOptions)
+        public AuthenticationController(IAuthenticationService authenticationService, IDataProtectionProvider dataProtectionProvider, IOptions<SessionOptions> sessionOptions) : base(sessionOptions)
         {
             _authenticationService = authenticationService;
+            _protector = dataProtectionProvider.CreateProtector("TokenEncryption");
         }
 
         [HttpGet]
@@ -31,7 +34,7 @@ namespace WebApp.Controllers
                 }
 
                 string token = await _authenticationService.LogInAsync(user.UserName, user.Password);
-                HttpContext.Session.SetString("userToken", token);
+                HttpContext.Session.SetString("userToken", _protector.Protect(token));
 
                 return View();
             }
@@ -44,9 +47,10 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public string Register()
         {
-            return View();
+            string protectedData = HttpContext.Session.GetString("userToken");
+            return protectedData + "\n\n\n\n" + _protector.Unprotect(protectedData);
         }
 
         [HttpPost]
@@ -54,7 +58,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Register();
+                //return Register();
             }
 
             return View();
