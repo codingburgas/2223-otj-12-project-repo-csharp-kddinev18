@@ -1,10 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.DataTransferObjects;
+using WebApp.Services.Interfaces;
 
 namespace WebApp.Controllers
 {
     public class AuthenticationController : Controller
     {
+        private IAuthenticationService _authenticationService;
+        public AuthenticationController(IAuthenticationService authenticationService)
+        {
+            _authenticationService = authenticationService;
+        }
+
         [HttpGet]
         public IActionResult LogIn()
         {
@@ -12,14 +19,25 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn(UserDataTransferObject user)
+        public async Task<IActionResult> LogIn(UserDataTransferObject user)
         {
-            if(!ModelState.IsValid)
+            try
             {
-                return LogIn();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return LogIn();
+                }
 
-            return View();
+                string token = await _authenticationService.LogInAsync(user.UserName, user.Password);
+                HttpContext.Session.SetString("userToken", token);
+
+                return View();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [HttpGet]

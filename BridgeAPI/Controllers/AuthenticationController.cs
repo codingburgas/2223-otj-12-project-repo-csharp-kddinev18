@@ -27,7 +27,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("LogIn")]
-        public async Task<string> LogIn(string request)
+        public async Task<IActionResult> LogIn(string request)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("LocalServerLogIn")]
-        public async Task<string> LocalServerLogin(string request)
+        public async Task<IActionResult> LocalServerLogin(string request)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<string> Register(string request)
+        public async Task<IActionResult> Register(string request)
         {
             try
             {

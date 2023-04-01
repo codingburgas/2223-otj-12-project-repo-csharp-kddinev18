@@ -1,16 +1,25 @@
 ﻿using BridgeAPI.BLL.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BridgeAPI.BLL.Services
 {
     public class ResponseFormatterService : IResponseFormatterService
     {
-        public string FormatResponse(int statusCode, string response, string errorMessage, Dictionary<string, string> additionalInformation)
+        public IActionResult FormatResponse(int statusCode, string response, string errorMessage, Dictionary<string, string> additionalInformation)
+        {
+            var responseObject = new
+            {
+                status = statusCode,
+                message = response,
+                error = errorMessage,
+                additional_info = additionalInformation
+            };
+
+            return new JsonResult(responseObject) { StatusCode = statusCode };
+        }
+
+        public string FormatResponseToString(int statusCode, string response, string errorMessage, Dictionary<string, string> additionalInformation)
         {
             return JsonSerializer.Serialize(new
             {

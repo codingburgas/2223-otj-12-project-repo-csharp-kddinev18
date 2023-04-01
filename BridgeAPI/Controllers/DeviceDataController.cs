@@ -20,7 +20,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetDeviceData")]
-        public async Task<string> GetDeviceData(string request)
+        public async Task<IActionResult> GetDeviceData(string request)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetDevices")]
-        public async Task<string> GetDevices(string request)
+        public async Task<IActionResult> GetDevices(string request)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetRowsCount")]
-        public async Task<string> GetRowsCount(string request)
+        public async Task<IActionResult> GetRowsCount(string request)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost("SendDataToDevice")]
-        public async Task<string> SendDataToDevice(string request)
+        public async Task<IActionResult> SendDataToDevice(string request)
         {
             try
             {

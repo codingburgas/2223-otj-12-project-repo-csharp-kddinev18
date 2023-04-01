@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BridgeAPI.DAL\BridgeAPI.DAL.csproj" />
     <ProjectReference Include="..\BridgeAPI.DTO\BridgeAPI.DTO.csproj" />
   </ItemGroup>

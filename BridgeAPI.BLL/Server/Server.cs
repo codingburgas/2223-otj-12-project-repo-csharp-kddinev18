@@ -109,7 +109,7 @@ namespace BridgeAPI.BLL
                 using IServiceScope scope = _serviceProvider.CreateScope();
                 IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
 
-                string response = responseFormatterService.FormatResponse(400,ex.Message,ex.Message, null);
+                string response = responseFormatterService.FormatResponseToString(400,ex.Message,ex.Message, null);
                 client.Client.Send(Encoding.UTF8.GetBytes(response));
                 DisconnectClient(client);
             }
@@ -118,7 +118,7 @@ namespace BridgeAPI.BLL
                 using IServiceScope scope = _serviceProvider.CreateScope();
                 IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
                 
-                string response = responseFormatterService.FormatResponse(400, "General Error", ex.Message, null);
+                string response = responseFormatterService.FormatResponseToString(400, "General Error", ex.Message, null);
                 client.Client.Send(Encoding.UTF8.GetBytes(response));
             }
             finally
@@ -158,7 +158,7 @@ namespace BridgeAPI.BLL
                     Password = jObject["Password"].ToString()
                 });
                 Token token = _clients[client] = await tokenService.GenerateTokenType(user);
-                string response = responseFormatterService.FormatResponse(200, JsonSerializer.Serialize(token), null, null);
+                string response = responseFormatterService.FormatResponseToString(200, JsonSerializer.Serialize(token), null, null);
                 client.Client.Send(Encoding.UTF8.GetBytes(response));
 
                 return true;
