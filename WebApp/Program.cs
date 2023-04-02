@@ -8,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+
 builder.Services.AddTransient<ICommunicationService, CommunicationService>();
+builder.Services.AddTransient<IDevicesService, DevicesService>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddDistributedMemoryCache();

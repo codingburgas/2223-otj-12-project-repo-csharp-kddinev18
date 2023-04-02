@@ -6,7 +6,6 @@ namespace WebApp.ValidationAttributes
     public class EmailAttribute : ValidationAttribute
     {
         private readonly Regex _regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value != null)

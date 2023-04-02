@@ -36,7 +36,7 @@ namespace WebApp.Controllers
                 string token = await _authenticationService.LogInAsync(user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(token));
 
-                return View();
+                return RedirectToAction("LogInLocalServer");
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace WebApp.Controllers
                 string token = await _authenticationService.RegisterAsync(user.UserName, user.Email, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(token));
 
-                return LogIn();
+                return RedirectToAction("LogIn");
             }
             catch (Exception ex)
             {
@@ -87,13 +87,13 @@ namespace WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return LogIn();
+                    return LogInLocalServer();
                 }
-                string token = HttpContext.Session.GetString("userToken");
+                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LogInLocalServerAsync(token, user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
 
-                return View();
+                return RedirectToAction("Index", "Devices");
             }
             catch (Exception ex)
             {

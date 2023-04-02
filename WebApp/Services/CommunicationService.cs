@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebApp.Services.Interfaces;
@@ -7,17 +8,48 @@ namespace WebApp.Services
 {
     public class CommunicationService : ICommunicationService
     {
+        private IHttpClientFactory _httpClientFactory;
+        public CommunicationService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         public async Task<string> SendRequestAsync(string endPoint, string parameters, HttpMethod method)
         {
             try
             {
-                HttpClient httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri("https://localhost:7246/");
-                string endpoint = endPoint + "?request=" + parameters;
+                HttpClient client = _httpClientFactory.CreateClient();
+                client.BaseAddress = new Uri("https://localhost:7246/");
 
-                HttpRequestMessage httpRequest = new HttpRequestMessage(method, endpoint);
+                HttpContent httpContent = new StringContent(parameters, Encoding.UTF8, "application/json");
+
+                HttpRequestMessage httpRequest = new HttpRequestMessage(method, endPoint);
+                httpRequest.Content = httpContent;
+
+                HttpResponseMessage httpResponse = await client.SendAsync(httpRequest);
+
+                string content = await httpResponse.Content.ReadAsStringAsync();
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(content);
+
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    return jObject["message"].ToString();
+                }
+                else
+                {
+                    throw new Exception(jObject["error"].ToString());
+                }
+                /*HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri("https://localhost:7246/");
+
+                HttpContent httpContent = new StringContent(parameters, Encoding.UTF8);
+
+                HttpRequestMessage httpRequest = new HttpRequestMessage(method, endPoint);
+                httpRequest.Content = httpContent;
+
                 HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
-                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(await httpResponse.Content.ReadAsStringAsync());
+                string a = await httpResponse.Content.ReadAsStringAsync();
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(a);
 
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -26,7 +58,7 @@ namespace WebApp.Services
                 else 
                 {
                     throw new Exception(jObject["error"].ToString());
-                }
+                }*/
             }
             catch (Exception ex)
             {

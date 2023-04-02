@@ -2,11 +2,14 @@
 using BridgeAPI.BLL.Services.Interfaces;
 using BridgeAPI.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace BridgeAPI.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class DeviceDataController : Controller
     {
         private ITokenService _tokenService;
@@ -20,10 +23,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetDeviceData")]
-        public async Task<IActionResult> GetDeviceData(string request)
+        public async Task<IActionResult> GetDeviceData()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
@@ -60,10 +68,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetDevices")]
-        public async Task<IActionResult> GetDevices(string request)
+        public async Task<IActionResult> GetDevices()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
@@ -97,10 +110,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("GetRowsCount")]
-        public async Task<IActionResult> GetRowsCount(string request)
+        public async Task<IActionResult> GetRowsCount()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 
@@ -135,10 +153,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost("SendDataToDevice")]
-        public async Task<IActionResult> SendDataToDevice(string request)
+        public async Task<IActionResult> SendDataToDevice()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject, true);
 

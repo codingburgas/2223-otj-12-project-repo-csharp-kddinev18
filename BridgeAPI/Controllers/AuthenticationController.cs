@@ -4,6 +4,7 @@ using BridgeAPI.DAL.Models;
 using BridgeAPI.DTO;
 using BridgeAPI.DTO.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -27,10 +28,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("LogIn")]
-        public async Task<IActionResult> LogIn(string request)
+        public async Task<IActionResult> LogIn()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 IResponseDataTransferObject user =
                     await _authenticationService.LogInAsync(new UserRequestDataTransferObject()
@@ -59,10 +65,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpGet("LocalServerLogIn")]
-        public async Task<IActionResult> LocalServerLogin(string request)
+        public async Task<IActionResult> LocalServerLogin()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject);
 
@@ -107,10 +118,15 @@ namespace BridgeAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(string request)
+        public async Task<IActionResult> Register()
         {
             try
             {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 await _authenticationService.RegisterAsync(new UserRequestDataTransferObject()
                 {

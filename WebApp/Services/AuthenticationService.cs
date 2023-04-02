@@ -44,7 +44,7 @@ namespace WebApp.Services
         public async Task<string> LogInLocalServerAsync(string token, string userName, string password)
         {
             return await _communicationService.SendRequestAsync(
-                "Authentication/LogInLocalServer",
+                "Authentication/LocalServerLogIn",
                 JsonSerializer.Serialize(
                     new
                     {

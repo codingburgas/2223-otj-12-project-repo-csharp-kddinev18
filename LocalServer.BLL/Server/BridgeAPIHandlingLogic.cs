@@ -154,8 +154,8 @@ namespace LocalServer.BLL.Server.BLL
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
             List<string> deviceNames = new List<string>();
 
-            int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
-                .Select("UserId", "=", jObject["UserId"].ToString()).Rows[0]["RoleId"].ToString());
+            Guid roleId = new Guid(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Users").First()
+                .Select("Id", "=", jObject["UserId"].ToString()).Rows[0]["RoleId"].ToString());
 
             DataTable permissions = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
                 .Select("RoleId", "=", roleId.ToString());
@@ -165,7 +165,7 @@ namespace LocalServer.BLL.Server.BLL
                 {
                     int deviceId = int.Parse(permissions.Rows[i]["DeviceId"].ToString());
                     DataTable device = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
-                        .Select("DeviceId", "=", deviceId.ToString());
+                        .Select("Id", "=", deviceId.ToString());
 
                     if (bool.Parse(device.Rows[0]["IsAprooved"].ToString()))
                         deviceNames.Add(device.Rows[0]["Name"].ToString());
