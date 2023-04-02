@@ -7,7 +7,7 @@ namespace WebApp.Services.Interfaces
     {
         public Task<DeviceDataDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount);
         public Task<DevicesDataTransferObject> GetDevicesAsync(string token);
-        public Task<int> GetDeviceRowsAsync(string token, string deviceName);
+        public Task<int> GetDeviceRowsCountAsync(string token, string deviceName);
         public Task SendDataToDeviceAsync(string token, string deviceName, string data);
     }
 }

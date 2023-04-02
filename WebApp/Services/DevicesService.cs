@@ -22,7 +22,7 @@ namespace WebApp.Services
                     new
                     {
                         Token = token,
-                        Arguemnts = new 
+                        Arguments = new 
                         { 
                             DeviceName = deviceName,
                             PagingSize = pagingSize,
@@ -59,14 +59,14 @@ namespace WebApp.Services
             };
         }
 
-        public async Task<int> GetDeviceRowsAsync(string token, string deviceName)
+        public async Task<int> GetDeviceRowsCountAsync(string token, string deviceName)
         {
             string response = await _communicationService.SendRequestAsync(
-                "DeviceData/GetDeviceData",
+                "DeviceData/GetRowsCount",
                 JsonSerializer.Serialize(
                     new { 
-                        Token = token, 
-                        Arguemnts = new { DeviceName = deviceName } 
+                        Token = token,
+                        Arguments = new { DeviceName = deviceName } 
                     }
                 ),
                 HttpMethod.Get
@@ -83,7 +83,7 @@ namespace WebApp.Services
                     new
                     {
                         Token = token,
-                        Arguemnts = new { DeviceName = deviceName, Data = data }
+                        Arguments = new { DeviceName = deviceName, Data = data }
                     }
                 ),
                 HttpMethod.Get

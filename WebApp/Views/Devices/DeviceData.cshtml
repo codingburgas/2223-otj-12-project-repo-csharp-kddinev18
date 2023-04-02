@@ -1,0 +1,83 @@
+﻿@using System.Text.Json.Nodes;
+@model WebApp.DataTransferObjects.DeviceDataDataTransferObject
+@{
+    ViewData["Title"] = "Device";
+}
+@{
+    int pageNumber = int.Parse(TempData["PageNumber"].ToString());
+    int totalPages = int.Parse(TempData["TotalPages"].ToString());
+    int previousPage = pageNumber - 1;
+    int nextPage = pageNumber + 1;
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                @foreach (string infrastructure in Model.Infrastructure)
+                {
+                    <th>@infrastructure</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (JsonObject dataItem in Model.Data)
+            {
+                <tr>
+                    @foreach (string infrastructure in Model.Infrastructure)
+                    {
+                        <td>@dataItem[infrastructure].ToString()</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @if (pageNumber > 1)
+            {
+                <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="@previousPage"><</a></li>
+            }
+
+            @if (pageNumber > 3)
+            {
+                <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="1">1</a></li>
+                @if (pageNumber > 4)
+                {
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                }
+            }
+
+            @for (int i = Math.Max(1, pageNumber - 2); i <= Math.Min(totalPages, pageNumber + 2); i++)
+            {
+                if (i == pageNumber)
+                {
+                    <li class="page-item active"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="@i">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="@i">@i</a></li>
+                }
+            }
+
+            @if (pageNumber < totalPages - 2)
+            {
+                @if (pageNumber < totalPages - 3)
+                {
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                }
+                <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="@totalPages">@totalPages</a></li>
+            }
+
+            @if (pageNumber < totalPages)
+            {
+                <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-pageNumber="@nextPage">></a></li>
+            }
+        </ul>
+    </nav>
+}
