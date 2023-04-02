@@ -39,26 +39,6 @@ namespace WebApp.Services
                 {
                     throw new Exception(jObject["error"].ToString());
                 }
-                /*HttpClient httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri("https://localhost:7246/");
-
-                HttpContent httpContent = new StringContent(parameters, Encoding.UTF8);
-
-                HttpRequestMessage httpRequest = new HttpRequestMessage(method, endPoint);
-                httpRequest.Content = httpContent;
-
-                HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
-                string a = await httpResponse.Content.ReadAsStringAsync();
-                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(a);
-
-                if (httpResponse.IsSuccessStatusCode)
-                {
-                    return jObject["message"].ToString();
-                }
-                else 
-                {
-                    throw new Exception(jObject["error"].ToString());
-                }*/
             }
             catch (Exception ex)
             {

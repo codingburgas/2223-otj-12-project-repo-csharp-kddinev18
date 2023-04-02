@@ -163,7 +163,7 @@ namespace LocalServer.BLL.Server.BLL
             {
                 if (bool.Parse(permissions.Rows[i]["CanRead"].ToString()))
                 {
-                    int deviceId = int.Parse(permissions.Rows[i]["DeviceId"].ToString());
+                    Guid deviceId = new Guid(permissions.Rows[i]["DeviceId"].ToString());
                     DataTable device = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                         .Select("Id", "=", deviceId.ToString());
 
