@@ -1,0 +1,25 @@
+\hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}{}\doxysection{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+IEncryption\+Service Интерфейс Препратка}
+\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}\index{BridgeAPI.BLL.Services.Interfaces.IEncryptionService@{BridgeAPI.BLL.Services.Interfaces.IEncryptionService}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Services.\+Interfaces.\+IEncryption\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a8c1dc52ba146b8865d67258ed9e3455e}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a8c1dc52ba146b8865d67258ed9e3455e}} 
+Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ {\bfseries Get\+Key\+And\+IVFrom\+Public\+Key} (string public\+Key)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_ab9da0e215e4d0fcfe17aa21f1981f5c1}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_ab9da0e215e4d0fcfe17aa21f1981f5c1}} 
+Task$<$ string $>$ {\bfseries Encrypt} (string text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a0645e5804dd4ae43abc84a3db059ea5f}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a0645e5804dd4ae43abc84a3db059ea5f}} 
+Task$<$ string $>$ {\bfseries Decrypt} (string encripted\+Text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\end{DoxyCompactItemize}
+
+
+Документация за интерфейс генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Services/\+Interfaces/IEncryption\+Service.\+cs\end{DoxyCompactItemize}

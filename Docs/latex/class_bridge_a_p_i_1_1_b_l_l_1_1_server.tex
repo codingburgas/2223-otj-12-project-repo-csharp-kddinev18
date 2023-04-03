@@ -1,0 +1,93 @@
+\hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server}{}\doxysection{Bridge\+API.\+BLL.\+Server Клас Препратка}
+\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server}\index{BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Server\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_b_l_l_1_1_server}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a086fb191fcaf5d7ba60e1054b1a6c321}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a086fb191fcaf5d7ba60e1054b1a6c321}} 
+{\bfseries Server} (IService\+Provider service\+Provider)
+\item 
+void \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a476754b1c25260e52fd54aea3b718d93}{Server\+Set\+Up}} (int port=5401)
+\item 
+void \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a755fff04ee8980ee74f621af2a7f4604}{Server\+Shut\+Down}} ()
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_acbc34000b43813403ef2e2fdbbcfe3cd}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_acbc34000b43813403ef2e2fdbbcfe3cd}} 
+string {\bfseries Get\+Client\+IP} (Tcp\+Client client)
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a8cb3dbaca482f2513cf574f11178aaa5}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a8cb3dbaca482f2513cf574f11178aaa5}} 
+void {\bfseries Accept\+Clients} (IAsync\+Result async\+Result)
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a7fbf63d75e9d37ff7bf5d225a9c11e73}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a7fbf63d75e9d37ff7bf5d225a9c11e73}} 
+async void {\bfseries Recive\+Client\+Input} (IAsync\+Result async\+Result)
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_acfabfc5418a58d0265e5e3f801fd7dfd}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_acfabfc5418a58d0265e5e3f801fd7dfd}} 
+void {\bfseries Flush\+Buffer} ()
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_ae82b90be6230803a71023975953d2252}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_ae82b90be6230803a71023975953d2252}} 
+void {\bfseries Disconnect\+Client} (Tcp\+Client client)
+\item 
+Tcp\+Client \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a96e101fdb1b5994a97e7d7ebeb443d5c}{Get\+Client}} (string client\+IP)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_ade0f3963d8627e6ba2ebcbeeb4327df4}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_ade0f3963d8627e6ba2ebcbeeb4327df4}} 
+void {\bfseries Server\+Set\+Up} (int port=5401)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_ab08a92997077f8a03ca54ed9afc28778}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_ab08a92997077f8a03ca54ed9afc28778}} 
+void {\bfseries Server\+Shut\+Down} ()
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_a9d7096d5e8eb4e9910fe00dd1997a28f}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server_a9d7096d5e8eb4e9910fe00dd1997a28f}} 
+Tcp\+Client {\bfseries Get\+Client} (string client\+IP)
+\end{DoxyCompactItemize}
+\doxysubsection*{Статични общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a4f7c48e66aab689a6716869939b50dda}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a4f7c48e66aab689a6716869939b50dda}} 
+static Tcp\+Client {\bfseries Get\+Client} (Guid token\+Id)
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_aa203734139068b8ec8c0dbd0536557f7}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_aa203734139068b8ec8c0dbd0536557f7}} 
+static async Task$<$ string $>$ {\bfseries Local\+Server\+Communication} (string arguments)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a96e101fdb1b5994a97e7d7ebeb443d5c}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a96e101fdb1b5994a97e7d7ebeb443d5c}} 
+\index{BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}!GetClient@{GetClient}}
+\index{GetClient@{GetClient}!BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}}
+\doxysubsubsection{\texorpdfstring{GetClient()}{GetClient()}}
+{\footnotesize\ttfamily Tcp\+Client Bridge\+API.\+BLL.\+Server.\+Get\+Client (\begin{DoxyParamCaption}\item[{string}]{client\+IP }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server}{Bridge\+API.\+BLL.\+Interfaces.\+IServer}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a476754b1c25260e52fd54aea3b718d93}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a476754b1c25260e52fd54aea3b718d93}} 
+\index{BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}!ServerSetUp@{ServerSetUp}}
+\index{ServerSetUp@{ServerSetUp}!BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}}
+\doxysubsubsection{\texorpdfstring{ServerSetUp()}{ServerSetUp()}}
+{\footnotesize\ttfamily void Bridge\+API.\+BLL.\+Server.\+Server\+Set\+Up (\begin{DoxyParamCaption}\item[{int}]{port = {\ttfamily 5401} }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server}{Bridge\+API.\+BLL.\+Interfaces.\+IServer}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a755fff04ee8980ee74f621af2a7f4604}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_server_a755fff04ee8980ee74f621af2a7f4604}} 
+\index{BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}!ServerShutDown@{ServerShutDown}}
+\index{ServerShutDown@{ServerShutDown}!BridgeAPI.BLL.Server@{BridgeAPI.BLL.Server}}
+\doxysubsubsection{\texorpdfstring{ServerShutDown()}{ServerShutDown()}}
+{\footnotesize\ttfamily void Bridge\+API.\+BLL.\+Server.\+Server\+Shut\+Down (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_server}{Bridge\+API.\+BLL.\+Interfaces.\+IServer}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Server/Server.\+cs\end{DoxyCompactItemize}

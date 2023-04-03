@@ -1,0 +1,114 @@
+\hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository}{}\doxysection{Bridge\+API.\+DAL.\+Repositories.\+User\+Repository Клас Препратка}
+\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository}\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+Диаграма на наследяване за Bridge\+API.\+DAL.\+Repositories.\+User\+Repository\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_ae0e3de11cea4b644078353a526941943}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_ae0e3de11cea4b644078353a526941943}} 
+{\bfseries User\+Repository} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_data_1_1_i_bridge_a_p_i_db_context}{IBridge\+APIDb\+Context}} context)
+\item 
+async Task$<$ bool $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_ad0074ad525bc3abba3b3dbec11febc14}{Add\+User\+Async}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+async Task$<$ bool $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a1e5fb8051a92fd024b38a04c1f69886d}{Delete\+User\+Async}} (Guid user\+Id)
+\item 
+async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5d0d0c60fb119dc0512bca004c534358}{Get\+User\+Async}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a4704d5655c948ad0f80ff33f6436f07f}{Get\+User\+By\+Id\+Async}} (Guid user\+Id)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5061e9c0076e65b96cbf927d7ca984fd}{Get\+User\+Salt}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+async Task$<$ bool $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a6b475be324f8dcc40ca844ffb46f5df0}{Update\+User\+Async}} (Guid user\+Id)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a944176e8c76ccd6178dcdffb716c50eb}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a944176e8c76ccd6178dcdffb716c50eb}} 
+Task$<$ bool $>$ {\bfseries Add\+User\+Async} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a812a81a3a230f097dfa408532fcc307e}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a812a81a3a230f097dfa408532fcc307e}} 
+Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ {\bfseries Get\+User\+By\+Id\+Async} (Guid user\+Id)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_af58d1a5551539d8cf6ada539eb6216f2}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_af58d1a5551539d8cf6ada539eb6216f2}} 
+Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ {\bfseries Get\+User\+Async} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a0538a0ec307ab5de19449f9218a0dd1d}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_a0538a0ec307ab5de19449f9218a0dd1d}} 
+Task$<$ string $>$ {\bfseries Get\+User\+Salt} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_af6e167047050709469fd4257a0965ce9}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_af6e167047050709469fd4257a0965ce9}} 
+Task$<$ bool $>$ {\bfseries Update\+User\+Async} (Guid user\+Id)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_acaa924ccb4d0954c04b01a56512fab4d}\label{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository_acaa924ccb4d0954c04b01a56512fab4d}} 
+Task$<$ bool $>$ {\bfseries Delete\+User\+Async} (Guid user\+Id)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_ad0074ad525bc3abba3b3dbec11febc14}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_ad0074ad525bc3abba3b3dbec11febc14}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!AddUserAsync@{AddUserAsync}}
+\index{AddUserAsync@{AddUserAsync}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{AddUserAsync()}{AddUserAsync()}}
+{\footnotesize\ttfamily async Task$<$ bool $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Add\+User\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}}}]{user }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a1e5fb8051a92fd024b38a04c1f69886d}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a1e5fb8051a92fd024b38a04c1f69886d}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!DeleteUserAsync@{DeleteUserAsync}}
+\index{DeleteUserAsync@{DeleteUserAsync}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{DeleteUserAsync()}{DeleteUserAsync()}}
+{\footnotesize\ttfamily async Task$<$ bool $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Delete\+User\+Async (\begin{DoxyParamCaption}\item[{Guid}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5d0d0c60fb119dc0512bca004c534358}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5d0d0c60fb119dc0512bca004c534358}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!GetUserAsync@{GetUserAsync}}
+\index{GetUserAsync@{GetUserAsync}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{GetUserAsync()}{GetUserAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Get\+User\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}}}]{user }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a4704d5655c948ad0f80ff33f6436f07f}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a4704d5655c948ad0f80ff33f6436f07f}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!GetUserByIdAsync@{GetUserByIdAsync}}
+\index{GetUserByIdAsync@{GetUserByIdAsync}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{GetUserByIdAsync()}{GetUserByIdAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Get\+User\+By\+Id\+Async (\begin{DoxyParamCaption}\item[{Guid}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5061e9c0076e65b96cbf927d7ca984fd}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a5061e9c0076e65b96cbf927d7ca984fd}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!GetUserSalt@{GetUserSalt}}
+\index{GetUserSalt@{GetUserSalt}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{GetUserSalt()}{GetUserSalt()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Get\+User\+Salt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}}}]{user }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a6b475be324f8dcc40ca844ffb46f5df0}\label{class_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_user_repository_a6b475be324f8dcc40ca844ffb46f5df0}} 
+\index{BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}!UpdateUserAsync@{UpdateUserAsync}}
+\index{UpdateUserAsync@{UpdateUserAsync}!BridgeAPI.DAL.Repositories.UserRepository@{BridgeAPI.DAL.Repositories.UserRepository}}
+\doxysubsubsection{\texorpdfstring{UpdateUserAsync()}{UpdateUserAsync()}}
+{\footnotesize\ttfamily async Task$<$ bool $>$ Bridge\+API.\+DAL.\+Repositories.\+User\+Repository.\+Update\+User\+Async (\begin{DoxyParamCaption}\item[{Guid}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{Bridge\+API.\+DAL.\+Repositories.\+Interfaces.\+IUser\+Repository}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+DAL/\+Repositories/User\+Repository.\+cs\end{DoxyCompactItemize}

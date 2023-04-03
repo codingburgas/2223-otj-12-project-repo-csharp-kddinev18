@@ -1,0 +1,46 @@
+\hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller}{}\doxysection{Web\+App.\+Controllers.\+Authentication\+Controller Клас Препратка}
+\label{class_web_app_1_1_controllers_1_1_authentication_controller}\index{WebApp.Controllers.AuthenticationController@{WebApp.Controllers.AuthenticationController}}
+Диаграма на наследяване за Web\+App.\+Controllers.\+Authentication\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_web_app_1_1_controllers_1_1_authentication_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_a070c4bbbda1932d4d4c00062e700d52b}\label{class_web_app_1_1_controllers_1_1_authentication_controller_a070c4bbbda1932d4d4c00062e700d52b}} 
+{\bfseries Authentication\+Controller} (\mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service}{IAuthentication\+Service}} authentication\+Service, IData\+Protection\+Provider data\+Protection\+Provider, IOptions$<$ Session\+Options $>$ session\+Options)
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_a69c2768153c5e618b1cb8d71382e9f6c}\label{class_web_app_1_1_controllers_1_1_authentication_controller_a69c2768153c5e618b1cb8d71382e9f6c}} 
+IAction\+Result {\bfseries Log\+In} ()
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_ac2c71038677ba29d1ae0de0b2e10b622}\label{class_web_app_1_1_controllers_1_1_authentication_controller_ac2c71038677ba29d1ae0de0b2e10b622}} 
+async Task$<$ IAction\+Result $>$ {\bfseries Log\+In} (\mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_user_data_transfer_object}{User\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_a555c38d878ef83447399ef928b5be6e0}\label{class_web_app_1_1_controllers_1_1_authentication_controller_a555c38d878ef83447399ef928b5be6e0}} 
+IAction\+Result {\bfseries Register} ()
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_a5428550e8df792bd2992cd1a59c3bcdf}\label{class_web_app_1_1_controllers_1_1_authentication_controller_a5428550e8df792bd2992cd1a59c3bcdf}} 
+async Task$<$ IAction\+Result $>$ {\bfseries Register} (\mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_user_register_data_transfer_object}{User\+Register\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_ade0fa17819c697362038ed6a1c83091b}\label{class_web_app_1_1_controllers_1_1_authentication_controller_ade0fa17819c697362038ed6a1c83091b}} 
+IAction\+Result {\bfseries Log\+In\+Local\+Server} ()
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_authentication_controller_a1d14c4bcd1131f0deb405a5c521b600d}\label{class_web_app_1_1_controllers_1_1_authentication_controller_a1d14c4bcd1131f0deb405a5c521b600d}} 
+async Task$<$ IAction\+Result $>$ {\bfseries Log\+In\+Local\+Server} (\mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_user_data_transfer_object}{User\+Data\+Transfer\+Object}} user)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Общодостъпни членове функции наследен от \mbox{\hyperlink{class_web_app_1_1_controllers_1_1_base_controller}{Web\+App.\+Controllers.\+Base\+Controller}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_base_controller_a1db61f2e8f4fe4eaf9af98f063270261}\label{class_web_app_1_1_controllers_1_1_base_controller_a1db61f2e8f4fe4eaf9af98f063270261}} 
+{\bfseries Base\+Controller} (IOptions$<$ Session\+Options $>$ session\+Options)
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_controllers_1_1_base_controller_abd42c6d0ba675acc2886c80c87e0a3a9}\label{class_web_app_1_1_controllers_1_1_base_controller_abd42c6d0ba675acc2886c80c87e0a3a9}} 
+override async Task {\bfseries On\+Action\+Execution\+Async} (Action\+Executing\+Context context, Action\+Execution\+Delegate next)
+\end{DoxyCompactItemize}
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Web\+App/\+Controllers/Authentication\+Controller.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,96 @@
+\hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service}{}\doxysection{Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service Клас Препратка}
+\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service}\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+async Task$<$ Json\+Object $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a247e565243b070b8e6f38764b63d0af0}{Authenticate\+Async}} (Guid token\+Id, string user\+Name, string passwrod)
+\item 
+async Task$<$ Json\+Object $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a9ae5b1a46d35f7df9ec6cacbfec201ae}{Get\+Device\+Data\+Async}} (Guid token\+Id, string device\+Name, int paging\+Size, int skip\+Amount)
+\item 
+async Task$<$ Json\+Object $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a353de37d76fa1a026bebaafac83860f0}{Get\+Devices\+Async}} (Guid token\+Id, Guid user\+Id)
+\item 
+async Task$<$ Json\+Object $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a1a60169e3cc5ae5e10766d152616fcbc}{Get\+Rows\+Count\+Async}} (Guid token\+Id, string device\+Name)
+\item 
+async Task$<$ Json\+Object $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a0a4bddfb8a37f28d4f1c82c76830e5e4}{Send\+Data\+To\+Device\+Async}} (Guid token\+Id, string device\+Name, string data)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_a94cb1d1be6fae7b7fb0b94a3989846d2}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_a94cb1d1be6fae7b7fb0b94a3989846d2}} 
+Task$<$ Json\+Object $>$ {\bfseries Authenticate\+Async} (Guid token\+Id, string user\+Name, string passwrod)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_ae1a6063709a2fa2cb4fd7d6379f2861d}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_ae1a6063709a2fa2cb4fd7d6379f2861d}} 
+Task$<$ Json\+Object $>$ {\bfseries Get\+Device\+Data\+Async} (Guid token\+Id, string device\+Name, int paging\+Size, int skip\+Amount)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_a87cdd83807915fbec0ec339a48dc5be3}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_a87cdd83807915fbec0ec339a48dc5be3}} 
+Task$<$ Json\+Object $>$ {\bfseries Get\+Devices\+Async} (Guid token\+Id, Guid user\+Id)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_aa543ffa66edd5b8a04b465f4e3996652}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_aa543ffa66edd5b8a04b465f4e3996652}} 
+Task$<$ Json\+Object $>$ {\bfseries Get\+Rows\+Count\+Async} (Guid token\+Id, string device\+Name)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_ab670718b74b05d1141896ac5fd2409d3}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service_ab670718b74b05d1141896ac5fd2409d3}} 
+Task$<$ Json\+Object $>$ {\bfseries Send\+Data\+To\+Device\+Async} (Guid token\+Id, string device\+Name, string data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a247e565243b070b8e6f38764b63d0af0}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a247e565243b070b8e6f38764b63d0af0}} 
+\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}!AuthenticateAsync@{AuthenticateAsync}}
+\index{AuthenticateAsync@{AuthenticateAsync}!BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+\doxysubsubsection{\texorpdfstring{AuthenticateAsync()}{AuthenticateAsync()}}
+{\footnotesize\ttfamily async Task$<$ Json\+Object $>$ Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service.\+Authenticate\+Async (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{string}]{user\+Name,  }\item[{string}]{passwrod }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+ILocal\+Server\+Communication\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a9ae5b1a46d35f7df9ec6cacbfec201ae}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a9ae5b1a46d35f7df9ec6cacbfec201ae}} 
+\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}!GetDeviceDataAsync@{GetDeviceDataAsync}}
+\index{GetDeviceDataAsync@{GetDeviceDataAsync}!BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+\doxysubsubsection{\texorpdfstring{GetDeviceDataAsync()}{GetDeviceDataAsync()}}
+{\footnotesize\ttfamily async Task$<$ Json\+Object $>$ Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service.\+Get\+Device\+Data\+Async (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{string}]{device\+Name,  }\item[{int}]{paging\+Size,  }\item[{int}]{skip\+Amount }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+ILocal\+Server\+Communication\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a353de37d76fa1a026bebaafac83860f0}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a353de37d76fa1a026bebaafac83860f0}} 
+\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}!GetDevicesAsync@{GetDevicesAsync}}
+\index{GetDevicesAsync@{GetDevicesAsync}!BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+\doxysubsubsection{\texorpdfstring{GetDevicesAsync()}{GetDevicesAsync()}}
+{\footnotesize\ttfamily async Task$<$ Json\+Object $>$ Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service.\+Get\+Devices\+Async (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{Guid}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+ILocal\+Server\+Communication\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a1a60169e3cc5ae5e10766d152616fcbc}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a1a60169e3cc5ae5e10766d152616fcbc}} 
+\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}!GetRowsCountAsync@{GetRowsCountAsync}}
+\index{GetRowsCountAsync@{GetRowsCountAsync}!BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+\doxysubsubsection{\texorpdfstring{GetRowsCountAsync()}{GetRowsCountAsync()}}
+{\footnotesize\ttfamily async Task$<$ Json\+Object $>$ Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service.\+Get\+Rows\+Count\+Async (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{string}]{device\+Name }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+ILocal\+Server\+Communication\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a0a4bddfb8a37f28d4f1c82c76830e5e4}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service_a0a4bddfb8a37f28d4f1c82c76830e5e4}} 
+\index{BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}!SendDataToDeviceAsync@{SendDataToDeviceAsync}}
+\index{SendDataToDeviceAsync@{SendDataToDeviceAsync}!BridgeAPI.BLL.Services.LocalServerCommunicationService@{BridgeAPI.BLL.Services.LocalServerCommunicationService}}
+\doxysubsubsection{\texorpdfstring{SendDataToDeviceAsync()}{SendDataToDeviceAsync()}}
+{\footnotesize\ttfamily async Task$<$ Json\+Object $>$ Bridge\+API.\+BLL.\+Services.\+Local\+Server\+Communication\+Service.\+Send\+Data\+To\+Device\+Async (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{string}]{device\+Name,  }\item[{string}]{data }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+ILocal\+Server\+Communication\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Services/Local\+Server\+Communication\+Service.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,57 @@
+\hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service}{}\doxysection{Bridge\+API.\+BLL.\+Authentication\+Service Клас Препратка}
+\label{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service}\index{BridgeAPI.BLL.AuthenticationService@{BridgeAPI.BLL.AuthenticationService}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Authentication\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_a7d9ded112a2405b685ac1fddc949b662}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_a7d9ded112a2405b685ac1fddc949b662}} 
+{\bfseries Authentication\+Service} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_user_repository}{IUser\+Repository}} repository)
+\item 
+async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad1b3a1900f97cfcba7ed7574dee542a5}{Log\+In\+Async}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} request\+Object)
+\item 
+async Task$<$ bool $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad9108ca182cddfd4ecaadaa30d1dd973}{Register\+Async}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} request\+Object)
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_a2197134fcd414241b06239fb08f61c37}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_a2197134fcd414241b06239fb08f61c37}} 
+async Task$<$ bool $>$ {\bfseries Check\+Authorisation} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} request\+Object)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service_a527a18e7fbfaad46a97fd1e11411d8da}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service_a527a18e7fbfaad46a97fd1e11411d8da}} 
+Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ {\bfseries Log\+In\+Async} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} request\+Object)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service_a25fc6b58d709781bb331f252eb35c56c}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service_a25fc6b58d709781bb331f252eb35c56c}} 
+Task$<$ bool $>$ {\bfseries Register\+Async} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}} request\+Object)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad1b3a1900f97cfcba7ed7574dee542a5}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad1b3a1900f97cfcba7ed7574dee542a5}} 
+\index{BridgeAPI.BLL.AuthenticationService@{BridgeAPI.BLL.AuthenticationService}!LogInAsync@{LogInAsync}}
+\index{LogInAsync@{LogInAsync}!BridgeAPI.BLL.AuthenticationService@{BridgeAPI.BLL.AuthenticationService}}
+\doxysubsubsection{\texorpdfstring{LogInAsync()}{LogInAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} $>$ Bridge\+API.\+BLL.\+Authentication\+Service.\+Log\+In\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}}}]{request\+Object }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service}{Bridge\+API.\+BLL.\+Interfaces.\+IAuthentication\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad9108ca182cddfd4ecaadaa30d1dd973}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_authentication_service_ad9108ca182cddfd4ecaadaa30d1dd973}} 
+\index{BridgeAPI.BLL.AuthenticationService@{BridgeAPI.BLL.AuthenticationService}!RegisterAsync@{RegisterAsync}}
+\index{RegisterAsync@{RegisterAsync}!BridgeAPI.BLL.AuthenticationService@{BridgeAPI.BLL.AuthenticationService}}
+\doxysubsubsection{\texorpdfstring{RegisterAsync()}{RegisterAsync()}}
+{\footnotesize\ttfamily async Task$<$ bool $>$ Bridge\+API.\+BLL.\+Authentication\+Service.\+Register\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_request_data_transfer_object}{IRequest\+Data\+Transfer\+Object}}}]{request\+Object }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_authentication_service}{Bridge\+API.\+BLL.\+Interfaces.\+IAuthentication\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Services/Authentication\+Service.\+cs\end{DoxyCompactItemize}

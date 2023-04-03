@@ -1,0 +1,4 @@
+var namespace_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_add_role =
+[
+    [ "AddRoleWindow", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_add_role_1_1_add_role_window.html", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_add_role_1_1_add_role_window" ]
+];

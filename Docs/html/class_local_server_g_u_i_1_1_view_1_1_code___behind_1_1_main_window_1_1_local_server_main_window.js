@@ -1,0 +1,4 @@
+var class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_local_server_main_window =
+[
+    [ "InitializeComponent", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_local_server_main_window.html#adbd06c0dfec0b5ed9702fb77cacdfa5e", null ]
+];

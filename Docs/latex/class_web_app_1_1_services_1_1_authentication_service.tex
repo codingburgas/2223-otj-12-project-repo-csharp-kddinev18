@@ -1,0 +1,69 @@
+\hypertarget{class_web_app_1_1_services_1_1_authentication_service}{}\doxysection{Web\+App.\+Services.\+Authentication\+Service Клас Препратка}
+\label{class_web_app_1_1_services_1_1_authentication_service}\index{WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}}
+Диаграма на наследяване за Web\+App.\+Services.\+Authentication\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_web_app_1_1_services_1_1_authentication_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_authentication_service_a982b8e11c154b800aba1c36b8c309da5}\label{class_web_app_1_1_services_1_1_authentication_service_a982b8e11c154b800aba1c36b8c309da5}} 
+{\bfseries Authentication\+Service} (\mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_communication_service}{ICommunication\+Service}} communication\+Service)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_authentication_service_aa26bd5513abc19515728e84e9481b228}{Log\+In\+Async}} (string user\+Name, string password)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_authentication_service_aa264e75ff2c96e14aa8443ac1ab69863}{Register\+Async}} (string user\+Name, string email, string password)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_authentication_service_aab98671e80443ed55172c62f1fd957c6}{Log\+In\+Local\+Server\+Async}} (string token, string user\+Name, string password)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_a93ed2e482ea373ba3cc23a0242472d62}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_a93ed2e482ea373ba3cc23a0242472d62}} 
+Task$<$ string $>$ {\bfseries Log\+In\+Async} (string user\+Name, string password)
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_a0e1b41e41a9ba9e242a0000a30c7232e}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_a0e1b41e41a9ba9e242a0000a30c7232e}} 
+Task$<$ string $>$ {\bfseries Register\+Async} (string user\+Name, string email, string password)
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_aa4cacf24516e2e38dd57f07ac1b15ed8}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service_aa4cacf24516e2e38dd57f07ac1b15ed8}} 
+Task$<$ string $>$ {\bfseries Log\+In\+Local\+Server\+Async} (string token, string user\+Name, string password)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_authentication_service_aa26bd5513abc19515728e84e9481b228}\label{class_web_app_1_1_services_1_1_authentication_service_aa26bd5513abc19515728e84e9481b228}} 
+\index{WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}!LogInAsync@{LogInAsync}}
+\index{LogInAsync@{LogInAsync}!WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}}
+\doxysubsubsection{\texorpdfstring{LogInAsync()}{LogInAsync()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Web\+App.\+Services.\+Authentication\+Service.\+Log\+In\+Async (\begin{DoxyParamCaption}\item[{string}]{user\+Name,  }\item[{string}]{password }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service}{Web\+App.\+Services.\+Interfaces.\+IAuthentication\+Service}}.
+
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_authentication_service_aab98671e80443ed55172c62f1fd957c6}\label{class_web_app_1_1_services_1_1_authentication_service_aab98671e80443ed55172c62f1fd957c6}} 
+\index{WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}!LogInLocalServerAsync@{LogInLocalServerAsync}}
+\index{LogInLocalServerAsync@{LogInLocalServerAsync}!WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}}
+\doxysubsubsection{\texorpdfstring{LogInLocalServerAsync()}{LogInLocalServerAsync()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Web\+App.\+Services.\+Authentication\+Service.\+Log\+In\+Local\+Server\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{user\+Name,  }\item[{string}]{password }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service}{Web\+App.\+Services.\+Interfaces.\+IAuthentication\+Service}}.
+
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_authentication_service_aa264e75ff2c96e14aa8443ac1ab69863}\label{class_web_app_1_1_services_1_1_authentication_service_aa264e75ff2c96e14aa8443ac1ab69863}} 
+\index{WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}!RegisterAsync@{RegisterAsync}}
+\index{RegisterAsync@{RegisterAsync}!WebApp.Services.AuthenticationService@{WebApp.Services.AuthenticationService}}
+\doxysubsubsection{\texorpdfstring{RegisterAsync()}{RegisterAsync()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Web\+App.\+Services.\+Authentication\+Service.\+Register\+Async (\begin{DoxyParamCaption}\item[{string}]{user\+Name,  }\item[{string}]{email,  }\item[{string}]{password }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_authentication_service}{Web\+App.\+Services.\+Interfaces.\+IAuthentication\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Web\+App/\+Services/Authentication\+Service.\+cs\end{DoxyCompactItemize}

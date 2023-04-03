@@ -1,0 +1,84 @@
+\hypertarget{class_web_app_1_1_services_1_1_devices_service}{}\doxysection{Web\+App.\+Services.\+Devices\+Service Клас Препратка}
+\label{class_web_app_1_1_services_1_1_devices_service}\index{WebApp.Services.DevicesService@{WebApp.Services.DevicesService}}
+Диаграма на наследяване за Web\+App.\+Services.\+Devices\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_web_app_1_1_services_1_1_devices_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_devices_service_a44435b48f897768ab96598f831a74973}\label{class_web_app_1_1_services_1_1_devices_service_a44435b48f897768ab96598f831a74973}} 
+{\bfseries Devices\+Service} (\mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_communication_service}{ICommunication\+Service}} communication\+Service)
+\item 
+async Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_device_data_data_transfer_object}{Device\+Data\+Data\+Transfer\+Object}} $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_devices_service_a15caf68e925149418ea41d35fbd3ac36}{Get\+Device\+Data\+Async}} (string token, string device\+Name, int paging\+Size, int skip\+Amount)
+\item 
+async Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_devices_data_transfer_object}{Devices\+Data\+Transfer\+Object}} $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_devices_service_a7d24f4788f02c9d6b13ed0d1aa7e2020}{Get\+Devices\+Async}} (string token)
+\item 
+async Task$<$ int $>$ \mbox{\hyperlink{class_web_app_1_1_services_1_1_devices_service_a52d846ba5bc8d49668f7d9b230d557d3}{Get\+Device\+Rows\+Count\+Async}} (string token, string device\+Name)
+\item 
+async Task \mbox{\hyperlink{class_web_app_1_1_services_1_1_devices_service_aac6a5b1ed7379b09c56a918708649464}{Send\+Data\+To\+Device\+Async}} (string token, string device\+Name, string data)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a8ccbd3e7170ea342c73eacaa931b32b0}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a8ccbd3e7170ea342c73eacaa931b32b0}} 
+Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_device_data_data_transfer_object}{Device\+Data\+Data\+Transfer\+Object}} $>$ {\bfseries Get\+Device\+Data\+Async} (string token, string device\+Name, int paging\+Size, int skip\+Amount)
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a51276c40a8c5a5fc3287734078ea1698}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a51276c40a8c5a5fc3287734078ea1698}} 
+Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_devices_data_transfer_object}{Devices\+Data\+Transfer\+Object}} $>$ {\bfseries Get\+Devices\+Async} (string token)
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_ad63865e1050f541c7c853fa4fa1e3962}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_ad63865e1050f541c7c853fa4fa1e3962}} 
+Task$<$ int $>$ {\bfseries Get\+Device\+Rows\+Count\+Async} (string token, string device\+Name)
+\item 
+\mbox{\Hypertarget{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a5e69a272f8f9130b57ccd5735953bf6b}\label{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service_a5e69a272f8f9130b57ccd5735953bf6b}} 
+Task {\bfseries Send\+Data\+To\+Device\+Async} (string token, string device\+Name, string data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_devices_service_a15caf68e925149418ea41d35fbd3ac36}\label{class_web_app_1_1_services_1_1_devices_service_a15caf68e925149418ea41d35fbd3ac36}} 
+\index{WebApp.Services.DevicesService@{WebApp.Services.DevicesService}!GetDeviceDataAsync@{GetDeviceDataAsync}}
+\index{GetDeviceDataAsync@{GetDeviceDataAsync}!WebApp.Services.DevicesService@{WebApp.Services.DevicesService}}
+\doxysubsubsection{\texorpdfstring{GetDeviceDataAsync()}{GetDeviceDataAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_device_data_data_transfer_object}{Device\+Data\+Data\+Transfer\+Object}} $>$ Web\+App.\+Services.\+Devices\+Service.\+Get\+Device\+Data\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{device\+Name,  }\item[{int}]{paging\+Size,  }\item[{int}]{skip\+Amount }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service}{Web\+App.\+Services.\+Interfaces.\+IDevices\+Service}}.
+
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_devices_service_a52d846ba5bc8d49668f7d9b230d557d3}\label{class_web_app_1_1_services_1_1_devices_service_a52d846ba5bc8d49668f7d9b230d557d3}} 
+\index{WebApp.Services.DevicesService@{WebApp.Services.DevicesService}!GetDeviceRowsCountAsync@{GetDeviceRowsCountAsync}}
+\index{GetDeviceRowsCountAsync@{GetDeviceRowsCountAsync}!WebApp.Services.DevicesService@{WebApp.Services.DevicesService}}
+\doxysubsubsection{\texorpdfstring{GetDeviceRowsCountAsync()}{GetDeviceRowsCountAsync()}}
+{\footnotesize\ttfamily async Task$<$ int $>$ Web\+App.\+Services.\+Devices\+Service.\+Get\+Device\+Rows\+Count\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{device\+Name }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service}{Web\+App.\+Services.\+Interfaces.\+IDevices\+Service}}.
+
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_devices_service_a7d24f4788f02c9d6b13ed0d1aa7e2020}\label{class_web_app_1_1_services_1_1_devices_service_a7d24f4788f02c9d6b13ed0d1aa7e2020}} 
+\index{WebApp.Services.DevicesService@{WebApp.Services.DevicesService}!GetDevicesAsync@{GetDevicesAsync}}
+\index{GetDevicesAsync@{GetDevicesAsync}!WebApp.Services.DevicesService@{WebApp.Services.DevicesService}}
+\doxysubsubsection{\texorpdfstring{GetDevicesAsync()}{GetDevicesAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_web_app_1_1_data_transfer_objects_1_1_devices_data_transfer_object}{Devices\+Data\+Transfer\+Object}} $>$ Web\+App.\+Services.\+Devices\+Service.\+Get\+Devices\+Async (\begin{DoxyParamCaption}\item[{string}]{token }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service}{Web\+App.\+Services.\+Interfaces.\+IDevices\+Service}}.
+
+\mbox{\Hypertarget{class_web_app_1_1_services_1_1_devices_service_aac6a5b1ed7379b09c56a918708649464}\label{class_web_app_1_1_services_1_1_devices_service_aac6a5b1ed7379b09c56a918708649464}} 
+\index{WebApp.Services.DevicesService@{WebApp.Services.DevicesService}!SendDataToDeviceAsync@{SendDataToDeviceAsync}}
+\index{SendDataToDeviceAsync@{SendDataToDeviceAsync}!WebApp.Services.DevicesService@{WebApp.Services.DevicesService}}
+\doxysubsubsection{\texorpdfstring{SendDataToDeviceAsync()}{SendDataToDeviceAsync()}}
+{\footnotesize\ttfamily async Task Web\+App.\+Services.\+Devices\+Service.\+Send\+Data\+To\+Device\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{device\+Name,  }\item[{string}]{data }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_web_app_1_1_services_1_1_interfaces_1_1_i_devices_service}{Web\+App.\+Services.\+Interfaces.\+IDevices\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Web\+App/\+Services/Devices\+Service.\+cs\end{DoxyCompactItemize}

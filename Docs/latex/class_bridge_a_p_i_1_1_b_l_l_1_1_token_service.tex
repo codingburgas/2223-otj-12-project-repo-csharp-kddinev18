@@ -1,0 +1,114 @@
+\hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service}{}\doxysection{Bridge\+API.\+BLL.\+Token\+Service Клас Препратка}
+\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service}\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Token\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_a05f6a1ac505919a66cad4306aa554c3a}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_a05f6a1ac505919a66cad4306aa554c3a}} 
+{\bfseries Token\+Service} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_a_l_1_1_repositories_1_1_interfaces_1_1_i_token_repository}{IToken\+Repository}} token\+Repository)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aced9b7399e6494bbf522820a79ee3e18}{Generate\+Token}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user)
+\item 
+async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aa0b5897cec9c3f325e009e0db5e41ca2}{Generate\+Token\+Type}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user)
+\item 
+async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ab68781f699d60e084b3e06a021148e26}{Get\+Token}} (Guid token\+Id)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ac77a684d661546bd694a964c63717adf}{Update\+Token}} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user, Guid token\+Id)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aff2214423c5497352641ec15e88a1cd5}{Update\+Local\+Server}} (Guid token\+Id, Guid local\+Server\+Id)
+\item 
+async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_abd07c5e18e9537bd0f06e501ee737203}{Ceck\+Authentication}} (Json\+Object j\+Object, bool local\+Server\+Authentication=false)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a6339a4f3cbb8601c8c8dc32b89eab4f9}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a6339a4f3cbb8601c8c8dc32b89eab4f9}} 
+Task$<$ string $>$ {\bfseries Generate\+Token} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a129d127a0461bb198df2f6177ff13742}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a129d127a0461bb198df2f6177ff13742}} 
+Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ {\bfseries Generate\+Token\+Type} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a33c4b1e6aafeb0fdef787c38e8971a5a}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a33c4b1e6aafeb0fdef787c38e8971a5a}} 
+Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ {\bfseries Ceck\+Authentication} (Json\+Object j\+Object, bool local\+Server\+Authentication=false)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a7c1cddec2d552e11d851c585ffb0bc12}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_a7c1cddec2d552e11d851c585ffb0bc12}} 
+Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ {\bfseries Get\+Token} (Guid token\+Id)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_ad190bea65737a9122a1f6ff0c139a055}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_ad190bea65737a9122a1f6ff0c139a055}} 
+Task$<$ string $>$ {\bfseries Update\+Local\+Server} (Guid token\+Id, Guid local\+Server\+Id)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_ab88f81112a4a616af10ee246a4836e9a}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service_ab88f81112a4a616af10ee246a4836e9a}} 
+Task$<$ string $>$ {\bfseries Update\+Token} (\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}} user, Guid token\+Id)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_abd07c5e18e9537bd0f06e501ee737203}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_abd07c5e18e9537bd0f06e501ee737203}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!CeckAuthentication@{CeckAuthentication}}
+\index{CeckAuthentication@{CeckAuthentication}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{CeckAuthentication()}{CeckAuthentication()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Ceck\+Authentication (\begin{DoxyParamCaption}\item[{Json\+Object}]{j\+Object,  }\item[{bool}]{local\+Server\+Authentication = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aced9b7399e6494bbf522820a79ee3e18}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aced9b7399e6494bbf522820a79ee3e18}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!GenerateToken@{GenerateToken}}
+\index{GenerateToken@{GenerateToken}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{GenerateToken()}{GenerateToken()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Generate\+Token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}}}]{user }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aa0b5897cec9c3f325e009e0db5e41ca2}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aa0b5897cec9c3f325e009e0db5e41ca2}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!GenerateTokenType@{GenerateTokenType}}
+\index{GenerateTokenType@{GenerateTokenType}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{GenerateTokenType()}{GenerateTokenType()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Generate\+Token\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}}}]{user }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ab68781f699d60e084b3e06a021148e26}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ab68781f699d60e084b3e06a021148e26}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!GetToken@{GetToken}}
+\index{GetToken@{GetToken}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{GetToken()}{GetToken()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_d_a_l_1_1_models_1_1_token}{Token}} $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Get\+Token (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aff2214423c5497352641ec15e88a1cd5}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_aff2214423c5497352641ec15e88a1cd5}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!UpdateLocalServer@{UpdateLocalServer}}
+\index{UpdateLocalServer@{UpdateLocalServer}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{UpdateLocalServer()}{UpdateLocalServer()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Update\+Local\+Server (\begin{DoxyParamCaption}\item[{Guid}]{token\+Id,  }\item[{Guid}]{local\+Server\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ac77a684d661546bd694a964c63717adf}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_token_service_ac77a684d661546bd694a964c63717adf}} 
+\index{BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}!UpdateToken@{UpdateToken}}
+\index{UpdateToken@{UpdateToken}!BridgeAPI.BLL.TokenService@{BridgeAPI.BLL.TokenService}}
+\doxysubsubsection{\texorpdfstring{UpdateToken()}{UpdateToken()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+BLL.\+Token\+Service.\+Update\+Token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_bridge_a_p_i_1_1_d_t_o_1_1_interfaces_1_1_i_response_data_transfer_object}{IResponse\+Data\+Transfer\+Object}}}]{user,  }\item[{Guid}]{token\+Id }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_interfaces_1_1_i_token_service}{Bridge\+API.\+BLL.\+Interfaces.\+IToken\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Services/Token\+Service.\+cs\end{DoxyCompactItemize}

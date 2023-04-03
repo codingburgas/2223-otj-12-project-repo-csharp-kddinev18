@@ -1,0 +1,4 @@
+var class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_user_controls_1_1_text_box_control =
+[
+    [ "InitializeComponent", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_user_controls_1_1_text_box_control.html#ae1ad9369c7ec67ee93f34579b5ca4b5f", null ]
+];

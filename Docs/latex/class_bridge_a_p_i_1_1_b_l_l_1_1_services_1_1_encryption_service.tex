@@ -1,0 +1,66 @@
+\hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service}{}\doxysection{Bridge\+API.\+BLL.\+Services.\+Encryption\+Service Клас Препратка}
+\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service}\index{BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}}
+Диаграма на наследяване за Bridge\+API.\+BLL.\+Services.\+Encryption\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Общодостъпни членове функции}
+\begin{DoxyCompactItemize}
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_adf266ab124e649f0f4fc218b7276d0c3}{Decrypt}} (string encripted\+Text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_a7ec0465e69c05f2814b482a365c731a1}{Encrypt}} (string text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\item 
+Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_afcaa4f5c76b31c28243d72404ecbc94b}{Get\+Key\+And\+IVFrom\+Public\+Key}} (string public\+Key)
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a8c1dc52ba146b8865d67258ed9e3455e}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a8c1dc52ba146b8865d67258ed9e3455e}} 
+Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ {\bfseries Get\+Key\+And\+IVFrom\+Public\+Key} (string public\+Key)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_ab9da0e215e4d0fcfe17aa21f1981f5c1}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_ab9da0e215e4d0fcfe17aa21f1981f5c1}} 
+Task$<$ string $>$ {\bfseries Encrypt} (string text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\item 
+\mbox{\Hypertarget{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a0645e5804dd4ae43abc84a3db059ea5f}\label{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service_a0645e5804dd4ae43abc84a3db059ea5f}} 
+Task$<$ string $>$ {\bfseries Decrypt} (string encripted\+Text, Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Key\+Iv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Членове Функции(методи) Документация}
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_adf266ab124e649f0f4fc218b7276d0c3}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_adf266ab124e649f0f4fc218b7276d0c3}} 
+\index{BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}!Decrypt@{Decrypt}}
+\index{Decrypt@{Decrypt}!BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}}
+\doxysubsubsection{\texorpdfstring{Decrypt()}{Decrypt()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+BLL.\+Services.\+Encryption\+Service.\+Decrypt (\begin{DoxyParamCaption}\item[{string}]{encripted\+Text,  }\item[{Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$}]{Key\+Iv }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+IEncryption\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_a7ec0465e69c05f2814b482a365c731a1}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_a7ec0465e69c05f2814b482a365c731a1}} 
+\index{BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}!Encrypt@{Encrypt}}
+\index{Encrypt@{Encrypt}!BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}}
+\doxysubsubsection{\texorpdfstring{Encrypt()}{Encrypt()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Bridge\+API.\+BLL.\+Services.\+Encryption\+Service.\+Encrypt (\begin{DoxyParamCaption}\item[{string}]{text,  }\item[{Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$}]{Key\+Iv }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+IEncryption\+Service}}.
+
+\mbox{\Hypertarget{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_afcaa4f5c76b31c28243d72404ecbc94b}\label{class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_encryption_service_afcaa4f5c76b31c28243d72404ecbc94b}} 
+\index{BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}!GetKeyAndIVFromPublicKey@{GetKeyAndIVFromPublicKey}}
+\index{GetKeyAndIVFromPublicKey@{GetKeyAndIVFromPublicKey}!BridgeAPI.BLL.Services.EncryptionService@{BridgeAPI.BLL.Services.EncryptionService}}
+\doxysubsubsection{\texorpdfstring{GetKeyAndIVFromPublicKey()}{GetKeyAndIVFromPublicKey()}}
+{\footnotesize\ttfamily Tuple$<$ byte\mbox{[}$\,$\mbox{]}, byte\mbox{[}$\,$\mbox{]}$>$ Bridge\+API.\+BLL.\+Services.\+Encryption\+Service.\+Get\+Key\+And\+IVFrom\+Public\+Key (\begin{DoxyParamCaption}\item[{string}]{public\+Key }\end{DoxyParamCaption})}
+
+
+
+Заменя \mbox{\hyperlink{interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_encryption_service}{Bridge\+API.\+BLL.\+Services.\+Interfaces.\+IEncryption\+Service}}.
+
+
+
+Документация за клас генериран от следният файл\+:\begin{DoxyCompactItemize}
+\item 
+2223-\/otj-\/12-\/project-\/repo-\/csharp-\/kddinev18/\+Bridge\+API.\+BLL/\+Services/Encryption\+Service.\+cs\end{DoxyCompactItemize}

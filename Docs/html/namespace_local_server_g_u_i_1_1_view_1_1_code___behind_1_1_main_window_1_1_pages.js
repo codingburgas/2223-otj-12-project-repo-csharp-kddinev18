@@ -1,0 +1,7 @@
+var namespace_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages =
+[
+    [ "DevicesPage", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_devices_page.html", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_devices_page" ],
+    [ "PermissionsPage", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_permissions_page.html", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_permissions_page" ],
+    [ "RolesPage", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_roles_page.html", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_roles_page" ],
+    [ "UsersPage", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_users_page.html", "class_local_server_g_u_i_1_1_view_1_1_code___behind_1_1_main_window_1_1_pages_1_1_users_page" ]
+];

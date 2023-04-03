@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="bg">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.6"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Smart Home: BridgeAPI.BLL.Services.LocalServerCommunicationService Клас Препратка</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Smart Home
+   </div>
+   <div id="projectbrief">IoT Home Security, Modernisation and Health monitoring</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Генериран от Doxygen 1.9.6 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Търсене');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Зареждане...</div>
+<div class="SRStatus" id="Searching">Търсене...</div>
+<div class="SRStatus" id="NoMatches">Не намерено</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Общодостъпни членове функции</a> &#124;
+<a href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service-members.html">Списък на всички членове</a>  </div>
+  <div class="headertitle"><div class="title">BridgeAPI.BLL.Services.LocalServerCommunicationService Клас Препратка</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Диаграма на наследяване за BridgeAPI.BLL.Services.LocalServerCommunicationService:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.png" usemap="#BridgeAPI.BLL.Services.LocalServerCommunicationService_map" alt=""/>
+  <map id="BridgeAPI.BLL.Services.LocalServerCommunicationService_map" name="BridgeAPI.BLL.Services.LocalServerCommunicationService_map">
+<area href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html" alt="BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService" shape="rect" coords="0,0,415,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Общодостъпни членове функции</h2></td></tr>
+<tr class="memitem:a247e565243b070b8e6f38764b63d0af0"><td class="memItemLeft" align="right" valign="top">async Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html#a247e565243b070b8e6f38764b63d0af0">AuthenticateAsync</a> (Guid tokenId, string userName, string passwrod)</td></tr>
+<tr class="separator:a247e565243b070b8e6f38764b63d0af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ae5b1a46d35f7df9ec6cacbfec201ae"><td class="memItemLeft" align="right" valign="top">async Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html#a9ae5b1a46d35f7df9ec6cacbfec201ae">GetDeviceDataAsync</a> (Guid tokenId, string deviceName, int pagingSize, int skipAmount)</td></tr>
+<tr class="separator:a9ae5b1a46d35f7df9ec6cacbfec201ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a353de37d76fa1a026bebaafac83860f0"><td class="memItemLeft" align="right" valign="top">async Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html#a353de37d76fa1a026bebaafac83860f0">GetDevicesAsync</a> (Guid tokenId, Guid userId)</td></tr>
+<tr class="separator:a353de37d76fa1a026bebaafac83860f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a60169e3cc5ae5e10766d152616fcbc"><td class="memItemLeft" align="right" valign="top">async Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html#a1a60169e3cc5ae5e10766d152616fcbc">GetRowsCountAsync</a> (Guid tokenId, string deviceName)</td></tr>
+<tr class="separator:a1a60169e3cc5ae5e10766d152616fcbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a4bddfb8a37f28d4f1c82c76830e5e4"><td class="memItemLeft" align="right" valign="top">async Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html#a0a4bddfb8a37f28d4f1c82c76830e5e4">SendDataToDeviceAsync</a> (Guid tokenId, string deviceName, string data)</td></tr>
+<tr class="separator:a0a4bddfb8a37f28d4f1c82c76830e5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94cb1d1be6fae7b7fb0b94a3989846d2"><td class="memItemLeft" align="right" valign="top"><a id="a94cb1d1be6fae7b7fb0b94a3989846d2" name="a94cb1d1be6fae7b7fb0b94a3989846d2"></a>
+Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AuthenticateAsync</b> (Guid tokenId, string userName, string passwrod)</td></tr>
+<tr class="separator:a94cb1d1be6fae7b7fb0b94a3989846d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1a6063709a2fa2cb4fd7d6379f2861d"><td class="memItemLeft" align="right" valign="top"><a id="ae1a6063709a2fa2cb4fd7d6379f2861d" name="ae1a6063709a2fa2cb4fd7d6379f2861d"></a>
+Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetDeviceDataAsync</b> (Guid tokenId, string deviceName, int pagingSize, int skipAmount)</td></tr>
+<tr class="separator:ae1a6063709a2fa2cb4fd7d6379f2861d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87cdd83807915fbec0ec339a48dc5be3"><td class="memItemLeft" align="right" valign="top"><a id="a87cdd83807915fbec0ec339a48dc5be3" name="a87cdd83807915fbec0ec339a48dc5be3"></a>
+Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetDevicesAsync</b> (Guid tokenId, Guid userId)</td></tr>
+<tr class="separator:a87cdd83807915fbec0ec339a48dc5be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa543ffa66edd5b8a04b465f4e3996652"><td class="memItemLeft" align="right" valign="top"><a id="aa543ffa66edd5b8a04b465f4e3996652" name="aa543ffa66edd5b8a04b465f4e3996652"></a>
+Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetRowsCountAsync</b> (Guid tokenId, string deviceName)</td></tr>
+<tr class="separator:aa543ffa66edd5b8a04b465f4e3996652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab670718b74b05d1141896ac5fd2409d3"><td class="memItemLeft" align="right" valign="top"><a id="ab670718b74b05d1141896ac5fd2409d3" name="ab670718b74b05d1141896ac5fd2409d3"></a>
+Task&lt; JsonObject &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>SendDataToDeviceAsync</b> (Guid tokenId, string deviceName, string data)</td></tr>
+<tr class="separator:ab670718b74b05d1141896ac5fd2409d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Членове Функции(методи) Документация</h2>
+<a id="a247e565243b070b8e6f38764b63d0af0" name="a247e565243b070b8e6f38764b63d0af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a247e565243b070b8e6f38764b63d0af0">&#9670;&#160;</a></span>AuthenticateAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; JsonObject &gt; BridgeAPI.BLL.Services.LocalServerCommunicationService.AuthenticateAsync </td>
+          <td>(</td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>tokenId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>userName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>passwrod</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Заменя <a class="el" href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html">BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService</a>.</p>
+
+</div>
+</div>
+<a id="a9ae5b1a46d35f7df9ec6cacbfec201ae" name="a9ae5b1a46d35f7df9ec6cacbfec201ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ae5b1a46d35f7df9ec6cacbfec201ae">&#9670;&#160;</a></span>GetDeviceDataAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; JsonObject &gt; BridgeAPI.BLL.Services.LocalServerCommunicationService.GetDeviceDataAsync </td>
+          <td>(</td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>tokenId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>deviceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pagingSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>skipAmount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Заменя <a class="el" href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html">BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService</a>.</p>
+
+</div>
+</div>
+<a id="a353de37d76fa1a026bebaafac83860f0" name="a353de37d76fa1a026bebaafac83860f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a353de37d76fa1a026bebaafac83860f0">&#9670;&#160;</a></span>GetDevicesAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; JsonObject &gt; BridgeAPI.BLL.Services.LocalServerCommunicationService.GetDevicesAsync </td>
+          <td>(</td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>tokenId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>userId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Заменя <a class="el" href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html">BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService</a>.</p>
+
+</div>
+</div>
+<a id="a1a60169e3cc5ae5e10766d152616fcbc" name="a1a60169e3cc5ae5e10766d152616fcbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a60169e3cc5ae5e10766d152616fcbc">&#9670;&#160;</a></span>GetRowsCountAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; JsonObject &gt; BridgeAPI.BLL.Services.LocalServerCommunicationService.GetRowsCountAsync </td>
+          <td>(</td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>tokenId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>deviceName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Заменя <a class="el" href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html">BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService</a>.</p>
+
+</div>
+</div>
+<a id="a0a4bddfb8a37f28d4f1c82c76830e5e4" name="a0a4bddfb8a37f28d4f1c82c76830e5e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a4bddfb8a37f28d4f1c82c76830e5e4">&#9670;&#160;</a></span>SendDataToDeviceAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; JsonObject &gt; BridgeAPI.BLL.Services.LocalServerCommunicationService.SendDataToDeviceAsync </td>
+          <td>(</td>
+          <td class="paramtype">Guid&#160;</td>
+          <td class="paramname"><em>tokenId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>deviceName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Заменя <a class="el" href="interface_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_interfaces_1_1_i_local_server_communication_service.html">BridgeAPI.BLL.Services.Interfaces.ILocalServerCommunicationService</a>.</p>
+
+</div>
+</div>
+<hr/>Документация за клас генериран от следният файл:<ul>
+<li>2223-otj-12-project-repo-csharp-kddinev18/BridgeAPI.BLL/Services/LocalServerCommunicationService.cs</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_bridge_a_p_i.html">BridgeAPI</a></li><li class="navelem"><a class="el" href="namespace_bridge_a_p_i_1_1_b_l_l.html">BLL</a></li><li class="navelem"><a class="el" href="namespace_bridge_a_p_i_1_1_b_l_l_1_1_services.html">Services</a></li><li class="navelem"><a class="el" href="class_bridge_a_p_i_1_1_b_l_l_1_1_services_1_1_local_server_communication_service.html">LocalServerCommunicationService</a></li>
+    <li class="footer">Генериран от <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
+  </ul>
+</div>
+</body>
+</html>
