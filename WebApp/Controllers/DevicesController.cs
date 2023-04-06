@@ -34,5 +34,15 @@ namespace WebApp.Controllers
 
             return View(await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize));
         }
+
+        public async Task<IActionResult> PostDataToDevice(string deviceName, string serializedData, int pageNumber)
+        {
+            await _devicesService.SendDataToDeviceAsync(
+                _protector.Unprotect(HttpContext.Session.GetString("userToken")),
+                deviceName,
+                serializedData
+            );
+            return RedirectToAction("DeviceData", "DevicesController", new {deviceName,pageNumber});
+        }
     }
 }
