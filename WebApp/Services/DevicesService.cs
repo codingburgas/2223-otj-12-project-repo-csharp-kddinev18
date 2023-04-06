@@ -36,7 +36,8 @@ namespace WebApp.Services
             return new DeviceDataDataTransferObject()
             {
                 Infrastructure = JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Infrastructure"].ToString()),
-                Data = JsonSerializer.Deserialize<IEnumerable<JsonObject>>(jObject["Data"].ToString())
+                Data = JsonSerializer.Deserialize<IEnumerable<JsonObject>>(jObject["Data"].ToString()),
+                Name = deviceName
             };
         }
 

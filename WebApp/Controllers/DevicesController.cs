@@ -24,7 +24,7 @@ namespace WebApp.Controllers
             return View(await _devicesService.GetDevicesAsync(token));
         }
 
-        public async Task<IActionResult> DeviceData(string deviceName="Temperature", int pageNumber = 1)
+        public async Task<IActionResult> DeviceData(string deviceName, int pageNumber = 1)
         {
             string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
 
@@ -35,14 +35,17 @@ namespace WebApp.Controllers
             return View(await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize));
         }
 
-        public async Task<IActionResult> PostDataToDevice(string deviceName, string serializedData, int pageNumber)
+        [HttpPost]
+        public async Task<IActionResult> PostDataToDevice()
         {
+            string deviceName = Request.Form["DeviceName"];
+            string postData = Request.Form["PostData"];
             await _devicesService.SendDataToDeviceAsync(
                 _protector.Unprotect(HttpContext.Session.GetString("userToken")),
                 deviceName,
-                serializedData
+                postData
             );
-            return RedirectToAction("DeviceData", "DevicesController", new {deviceName,pageNumber});
+            return RedirectToAction("DeviceData", "DevicesController", new {deviceName});
         }
     }
 }

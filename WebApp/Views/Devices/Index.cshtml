@@ -6,6 +6,6 @@
 
 @foreach(string name in Model.DeviceNames)
 {
-    <p>@name</p>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-deviceName="@name">@name</a>
     <hr/>
 }

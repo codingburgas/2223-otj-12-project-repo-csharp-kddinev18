@@ -34,6 +34,12 @@
     </table>
 </div>
 
+<form asp-action="MyAction" method="post">
+    <input type="hidden" name="DeviceName" value="@Model.Name" />
+    <label for="PostData">Input:</label>
+    <input type="text" id="PostData" name="PostData" />
+    <button type="submit">Submit</button>
+</form>
 
 @if (totalPages > 1)
 {
