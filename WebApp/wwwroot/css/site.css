@@ -4,6 +4,7 @@
     --link-hover-color: #2a2af0;
     --nav-link-focus: #434175;
     --pure-white: #fff;
+    --soft-white: #eeeef5;
     --back-to-top-bg: #8080f6;
     --nav-button: #7272f5;
 }
@@ -484,4 +485,82 @@ h6 {
             font-size: 14px;
         }
 }
-  
+
+
+
+section {
+    padding: 60px 0;
+}
+
+.section-bg {
+    background-color: var(--soft-white);
+}
+
+.section-title {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+    .section-title h2 {
+        font-size: 32px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        position: relative;
+        color: var(--nav-link-focus);
+    }
+
+        .section-title h2::after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--link-color);
+            bottom: 0;
+            left: calc(50% - 25px);
+        }
+
+    .section-title p {
+        margin-bottom: 0;
+    }
+
+/*--------------------------------------------------------------
+  # About
+  --------------------------------------------------------------*/
+.about .content h2 {
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 50px;
+    margin-bottom: 20px;
+    color: var(--nav-link-focus);
+}
+
+.about .content h3 {
+    font-weight: 500;
+    line-height: 32px;
+    font-size: 24px;
+}
+
+.about .content ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .about .content ul li {
+        padding: 10px 0 0 28px;
+        position: relative;
+    }
+
+    .about .content ul i {
+        left: 0;
+        top: 7px;
+        position: absolute;
+        font-size: 20px;
+        color: var(--link-color);
+    }
+
+.about .content p:last-child {
+    margin-bottom: 0;
+}
