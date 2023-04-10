@@ -10,11 +10,32 @@
     --back-to-top-bg: #8080f6;
     --dark-blue: #0c0ca8;
     --nav-button: #7272f5;
+    --glow: rgba(214, 215, 216, 0.6);
+    --question-color: #444444;
+    --question-border: #f2f2fe;
 }
+
+/*:root {
+    --font-color: #eee;
+    --link-color: #8a8af3;
+    --link-hover-color: #a1a1f0;
+    --nav-link-focus: #b6b6f6;
+    --pure-white: #1f1f1f;
+    --soft-white: #292930;
+    --soft-gray: #515164;
+    --pure-gray: #7e7e7e;
+    --back-to-top-bg: #7272f5;
+    --dark-blue: #b8b8f9;
+    --nav-button: #4e4ee2;
+    --glow: rgba(47, 47, 47, 0.6);
+    --question-color: #eee;
+    --question-border: #444444;
+}*/
 
 body {
     font-family: "Open Sans", sans-serif;
     color: var(--font-color);
+    background-color: var(--pure-white);
 }
 
 a {
@@ -764,7 +785,7 @@ section {
     }
 
         .faq .faq-list li {
-            border-bottom: 1px solid #f2f2fe;
+            border-bottom: 1px solid var(--question-border);
             margin-bottom: 20px;
             padding-bottom: 20px;
         }
@@ -772,8 +793,8 @@ section {
         .faq .faq-list .question {
             display: block;
             position: relative;
-            font-family: var(--link-color);
-            font-size: 18px;
+            font-family: Arial;
+            font-size: 25px;
             line-height: 24px;
             font-weight: 400;
             padding-left: 25px;
@@ -825,11 +846,11 @@ section {
 # Contact
 --------------------------------------------------------------*/
 .contact .info-box {
-    color: #444444;
+    color: var(--dark-blue);
     text-align: center;
-    box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
+    box-shadow: 0 0 30px var(--glow);
     padding: 20px 0 30px 0;
-    background: #fff;
+    background: var(--soft-white);
 }
 
     .contact .info-box i {
@@ -855,7 +876,7 @@ section {
 
 .contact .email-form {
     background: var(--pure-white);
-    box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
+    box-shadow: 0 0 30px var(--glow);
     padding: 30px;
 }
 
@@ -866,19 +887,6 @@ section {
         font-weight: 400;
         font-size: 13px;
     }
-
-    .contact .email-form .error-message {
-        display: none;
-        color: var(--pure-white);
-        background: #ed3c0d;
-        text-align: left;
-        padding: 15px;
-        font-weight: 600;
-    }
-
-        .contact .email-form .error-message br + br {
-            margin-top: 25px;
-        }
 
     .contact .email-form .sent-message {
         display: none;
@@ -953,29 +961,23 @@ section {
 }
 
 
-
-
-
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
-#footer {
+.footer {
     color: var(--font-color);
     font-size: 14px;
-    background: var(--soft-white);
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 }
 
-    #footer .footer-top {
-        padding: 60px 0 30px 0;
+    .footer .footer-top {
         background: var(--pure-white);
     }
 
-        #footer .footer-top .footer-contact {
+        .footer .footer-top .footer-contact {
             margin-bottom: 30px;
         }
 
-            #footer .footer-top .footer-contact h3 {
+            .footer .footer-top .footer-contact h3 {
                 font-size: 28px;
                 margin: 0 0 10px 0;
                 padding: 0;
@@ -984,7 +986,7 @@ section {
                 color: var(--link-color);
             }
 
-            #footer .footer-top .footer-contact p {
+            .footer .footer-top .footer-contact p {
                 font-size: 14px;
                 line-height: 24px;
                 margin-bottom: 0;
@@ -992,7 +994,7 @@ section {
                 color: #777777;
             }
 
-        #footer .footer-top h4 {
+        .footer .footer-top h4 {
             font-size: 16px;
             font-weight: bold;
             color: var(--nav-link-focus);
@@ -1000,50 +1002,50 @@ section {
             padding-bottom: 12px;
         }
 
-        #footer .footer-top .footer-links {
+        .footer .footer-top .footer-links {
             margin-bottom: 30px;
         }
 
-            #footer .footer-top .footer-links ul {
+            .footer .footer-top .footer-links ul {
                 list-style: none;
                 padding: 0;
                 margin: 0;
             }
 
-                #footer .footer-top .footer-links ul i {
+                .footer .footer-top .footer-links ul i {
                     padding-right: 2px;
                     color: var(--link-color);
                     font-size: 18px;
                     line-height: 1;
                 }
 
-                #footer .footer-top .footer-links ul li {
+                .footer .footer-top .footer-links ul li {
                     padding: 10px 0;
                     display: flex;
                     align-items: center;
                 }
 
-                    #footer .footer-top .footer-links ul li:first-child {
+                    .footer .footer-top .footer-links ul li:first-child {
                         padding-top: 0;
                     }
 
-                #footer .footer-top .footer-links ul a {
+                .footer .footer-top .footer-links ul a {
                     color: #777777;
                     transition: 0.3s;
                     display: inline-block;
                     line-height: 1;
                 }
 
-                    #footer .footer-top .footer-links ul a:hover {
+                    .footer .footer-top .footer-links ul a:hover {
                         text-decoration: none;
                         color: var(--link-color);
                     }
 
-    #footer .footer-newsletter {
+    .footer .footer-newsletter {
         font-size: 15px;
     }
 
-        #footer .footer-newsletter h4 {
+        .footer .footer-newsletter h4 {
             font-size: 16px;
             font-weight: bold;
             color: var(--font-color);
@@ -1051,7 +1053,7 @@ section {
             padding-bottom: 12px;
         }
 
-        #footer .footer-newsletter form {
+        .footer .footer-newsletter form {
             margin-top: 30px;
             background: var(--pure-white);
             padding: 6px 10px;
@@ -1061,13 +1063,13 @@ section {
             border: 1px solid var(--soft-gray);
         }
 
-            #footer .footer-newsletter form input[type=email] {
+            .footer .footer-newsletter form input[type=email] {
                 border: 0;
                 padding: 4px 8px;
                 width: calc(100% - 100px);
             }
 
-            #footer .footer-newsletter form input[type=submit] {
+            .footer .footer-newsletter form input[type=submit] {
                 position: absolute;
                 top: -1px;
                 right: -1px;
@@ -1083,21 +1085,21 @@ section {
                 box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
             }
 
-                #footer .footer-newsletter form input[type=submit]:hover {
+                .footer .footer-newsletter form input[type=submit]:hover {
                     background: var(--nav-button);
                 }
 
-    #footer .credits {
+    .footer .credits {
         padding-top: 5px;
         font-size: 13px;
         color: var(--font-color);
     }
 
-        #footer .credits a {
+        .footer .credits a {
             transition: 0.3s;
         }
 
-    #footer .social-links a {
+    .footer .social-links a {
         font-size: 18px;
         display: inline-block;
         background: var(--soft-white);
@@ -1112,7 +1114,7 @@ section {
         transition: 0.3s;
     }
 
-        #footer .social-links a:hover {
+        .footer .social-links a:hover {
             background: var(--link-color);
             color: var(--pure-white);
             text-decoration: none;
