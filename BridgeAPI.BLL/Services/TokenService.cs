@@ -44,6 +44,11 @@ namespace BridgeAPI.BLL
             return JsonSerializer.Serialize(await _repository.UpdateLocalServer(tokenId, localServerId));
         }
 
+        public void DeleteToken(Guid tokenId)
+        {
+            _repository.DeleteExpiredTokenAsync(tokenId);
+        }
+
         public async Task<Token> CeckAuthentication(JsonObject jObject, bool localServerAuthentication = false)
         {
             Token userToken = JsonSerializer.Deserialize<Token>(jObject["Token"].ToString());
@@ -54,16 +59,16 @@ namespace BridgeAPI.BLL
             }
             if (serverToken.ExpireDate < DateTime.Now)
             {
-                _repository.DeleteExpiredTokenAsync(serverToken.TokenId);
+                await _repository.DeleteExpiredTokenAsync(serverToken.TokenId);
                 throw new UnauthorizedAccessException("Token is expired");
             }
             if (serverToken.SecretKey != userToken.SecretKey)
             {
                 throw new UnauthorizedAccessException("Not authenticated");
             }
-            if(localServerAuthentication)
+            if (localServerAuthentication)
             {
-                if(userToken.LocalServerId == Guid.Empty)
+                if (userToken.LocalServerId == Guid.Empty)
                 {
                     throw new UnauthorizedAccessException("Not authenticated");
                 }

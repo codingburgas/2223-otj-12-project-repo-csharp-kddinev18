@@ -146,5 +146,79 @@ namespace BridgeAPI.Controllers
                     "Check if the JSON is formated correctly and that the data corresponds to the rquerments", null);
             }
         }
+
+        [HttpPost("SignOut")]
+        public async Task<IActionResult> SignOut()
+        {
+            try
+            {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                _tokenService.DeleteToken(userToken.TokenId);
+                return _responseFormatterService.FormatResponse(200, null, null, null);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (ArgumentException ex)
+            {
+                return _responseFormatterService.FormatResponse(400, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
+        }
+
+        [HttpPost("LocalServerSignOut")]
+        public async Task<IActionResult> LocalServerSignOut()
+        {
+            try
+            {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token userToken = await _tokenService.CeckAuthentication(jObject);
+                userToken.LocalServerId = Guid.Empty;
+                return _responseFormatterService.FormatResponse(200, null, null, null);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (ArgumentException ex)
+            {
+                return _responseFormatterService.FormatResponse(400, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
+        }
     }
 }

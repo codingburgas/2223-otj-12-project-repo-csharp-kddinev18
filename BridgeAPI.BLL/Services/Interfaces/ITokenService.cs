@@ -17,5 +17,6 @@ namespace BridgeAPI.BLL.Interfaces
         public Task<Token> GetToken(Guid tokenId);
         public Task<string> UpdateLocalServer(Guid tokenId, Guid localServerId);
         public Task<string> UpdateToken(IResponseDataTransferObject user, Guid tokenId);
+        public void DeleteToken(Guid tokenId);
     }
 }
