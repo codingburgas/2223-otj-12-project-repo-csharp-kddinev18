@@ -147,7 +147,7 @@ namespace BridgeAPI.Controllers
             }
         }
 
-        [HttpPost("SignOut")]
+        [HttpGet("SignOut")]
         public async Task<IActionResult> SignOut()
         {
             try
@@ -184,7 +184,7 @@ namespace BridgeAPI.Controllers
             }
         }
 
-        [HttpPost("LocalServerSignOut")]
+        [HttpGet("LocalServerSignOut")]
         public async Task<IActionResult> LocalServerSignOut()
         {
             try
@@ -197,7 +197,13 @@ namespace BridgeAPI.Controllers
                 JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
                 Token userToken = await _tokenService.CeckAuthentication(jObject);
                 userToken.LocalServerId = Guid.Empty;
-                return _responseFormatterService.FormatResponse(200, null, null, null);
+
+                return _responseFormatterService.FormatResponse(
+                    200,
+                    JsonSerializer.Serialize(userToken),
+                    null,
+                    null
+                ); ;
             }
             catch (UnauthorizedAccessException ex)
             {

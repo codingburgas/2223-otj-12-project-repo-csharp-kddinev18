@@ -20,32 +20,54 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
-            return View(await _devicesService.GetDevicesAsync(token));
+            try
+            {
+                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
+                return View(await _devicesService.GetDevicesAsync(token));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
 
         public async Task<IActionResult> DeviceData(string deviceName, int pageNumber = 1)
         {
-            string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
+            try
+            {
+                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
 
-            TempData["CurrentDevice"] = deviceName;
-            TempData["PageNumber"] = pageNumber;
-            TempData["TotalPages"] = (int)Math.Ceiling((double)await _devicesService.GetDeviceRowsCountAsync(token, deviceName)/pagingSize);
+                TempData["CurrentDevice"] = deviceName;
+                TempData["PageNumber"] = pageNumber;
+                TempData["TotalPages"] = (int)Math.Ceiling((double)await _devicesService.GetDeviceRowsCountAsync(token, deviceName) / pagingSize);
 
-            return View(await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize));
+                return View(await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> PostDataToDevice()
         {
-            string deviceName = Request.Form["DeviceName"];
-            string postData = Request.Form["PostData"];
-            await _devicesService.SendDataToDeviceAsync(
-                _protector.Unprotect(HttpContext.Session.GetString("userToken")),
-                deviceName,
-                postData
-            );
-            return RedirectToAction("DeviceData", "DevicesController", new {deviceName});
+            try
+            {
+                string deviceName = Request.Form["DeviceName"];
+                string postData = Request.Form["PostData"];
+                await _devicesService.SendDataToDeviceAsync(
+                    _protector.Unprotect(HttpContext.Session.GetString("userToken")),
+                    deviceName,
+                    postData
+                );
+                return RedirectToAction("DeviceData", "DevicesController", new { deviceName });
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
     }
 }

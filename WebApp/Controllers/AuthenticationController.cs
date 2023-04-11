@@ -112,5 +112,51 @@ namespace WebApp.Controllers
                 return LogIn();
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SignOut()
+        {
+            try
+            {
+                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
+                await _authenticationService.SignOut(token);
+                HttpContext.Session.SetString("userToken", "");
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                {
+                    GlobalServer = false,
+                    LocalServer = false
+                });
+
+                return RedirectToAction("Index", "Devices");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return LogIn();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LocalSerevrSignOut()
+        {
+            try
+            {
+                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
+                string newToken = await _authenticationService.LocalServerSignOut(token);
+                HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                {
+                    GlobalServer = true,
+                    LocalServer = false
+                });
+
+                return RedirectToAction("Index", "Devices");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return LogIn();
+            }
+        }
     }
 }

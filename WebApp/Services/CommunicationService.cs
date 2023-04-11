@@ -33,7 +33,11 @@ namespace WebApp.Services
 
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    return jObject["message"].ToString();
+                    return jObject["message"]?.ToString();
+                }
+                else if(httpResponse.StatusCode == (HttpStatusCode)401)
+                {
+                    throw new UnauthorizedAccessException(jObject["error"].ToString());
                 }
                 else
                 {

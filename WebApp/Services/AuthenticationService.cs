@@ -59,5 +59,33 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
         }
+
+        public async Task SignOut(string token)
+        {
+            await _communicationService.SendRequestAsync(
+                "Authentication/SignOut",
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        Token = token,
+                    }
+                ),
+                HttpMethod.Get
+            );
+        }
+
+        public async Task<string> LocalServerSignOut(string token)
+        {
+            return await _communicationService.SendRequestAsync(
+                "Authentication/LocalServerSignOut",
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        Token = token,
+                    }
+                ),
+                HttpMethod.Get
+            );
+        }
     }
 }
