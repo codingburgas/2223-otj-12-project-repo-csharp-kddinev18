@@ -84,9 +84,9 @@ namespace BridgeAPI.DAL.Repositories
             return token;
         }
 
-        public async Task<bool> DeleteExpiredTokenAsync()
+        public async Task<bool> DeleteExpiredTokenAsync(Guid tokenId)
         {
-            await Task.Run(() => _tokens.RemoveAll(token => token.RenewDate < DateTime.Now));
+            await Task.Run(() => _tokens.RemoveAll(token => token.TokenId == tokenId));
             return true;
         }
 

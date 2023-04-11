@@ -54,7 +54,7 @@ namespace BridgeAPI.BLL
             }
             if (serverToken.ExpireDate < DateTime.Now)
             {
-                _repository.DeleteExpiredTokenAsync();
+                _repository.DeleteExpiredTokenAsync(serverToken.TokenId);
                 throw new UnauthorizedAccessException("Token is expired");
             }
             if (serverToken.SecretKey != userToken.SecretKey)

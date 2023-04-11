@@ -14,6 +14,6 @@ namespace BridgeAPI.DAL.Repositories.Interfaces
         public Task<Token> AddToken(IResponseDataTransferObject user);
         public Task<Token> UpdateTokenAsync(IResponseDataTransferObject user, Guid tokenId);
         public Task<Token> UpdateLocalServer(Guid tokenId, Guid localServerId);
-        public Task<bool> DeleteExpiredTokenAsync();
+        public Task<bool> DeleteExpiredTokenAsync(Guid tokenId);
     }
 }
