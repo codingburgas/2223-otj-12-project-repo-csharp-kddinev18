@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebApp.DataTransferObjects;
+using WebApp.Models;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Controllers
@@ -35,6 +36,11 @@ namespace WebApp.Controllers
 
                 string token = await _authenticationService.LogInAsync(user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(token));
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+                {
+                    GlobalServer = true,
+                    LocalServer = false
+                });
 
                 return RedirectToAction("LogInLocalServer");
             }
@@ -92,6 +98,11 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LogInLocalServerAsync(token, user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                {
+                    GlobalServer = true,
+                    LocalServer = true
+                });
 
                 return RedirectToAction("Index", "Devices");
             }

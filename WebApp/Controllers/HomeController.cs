@@ -1,9 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    public static class TempDataExtensions
+    {
+        public static void Put<T>(ITempDataDictionary tempData, string key, T value) where T : class
+        {
+            tempData[key] = JsonConvert.SerializeObject(value);
+        }
+
+        public static T Get<T>(ITempDataDictionary tempData, string key) where T : class
+        {
+            object o;
+            tempData.TryGetValue(key, out o);
+
+            tempData.Keep();
+            return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
+        }
+    }
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -16,7 +35,11 @@ namespace WebApp.Controllers
         public IActionResult Index()
         {
             HttpContext.Session.SetString("LastActivityTime", DateTime.Now.ToString());
-
+            TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+            {
+                GlobalServer = false,
+                LocalServer = false
+            });
             return View();
         }
 

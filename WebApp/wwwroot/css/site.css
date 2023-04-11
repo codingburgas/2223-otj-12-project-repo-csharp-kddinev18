@@ -32,6 +32,14 @@
     --question-border: #444444;
 }*/
 
+html, body, main {
+    height: 100%;
+}
+
+.container {
+    height: 100%;
+}
+
 body {
     font-family: "Open Sans", sans-serif;
     color: var(--font-color);
@@ -487,7 +495,7 @@ section {
 @media (min-width: 1366px) {
     .section-bg {
         background-color: var(--soft-white);
-        margin: 0 -143px;
+        margin: 0 -155px;
     }
 }
 
