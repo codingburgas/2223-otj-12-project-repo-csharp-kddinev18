@@ -14,7 +14,7 @@ namespace WebApp.Services
             _communicationService = communicationService;
         }
 
-        public async Task<DeviceDataDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
+        public async Task<DevicesDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDeviceData",
@@ -22,8 +22,8 @@ namespace WebApp.Services
                     new
                     {
                         Token = token,
-                        Arguments = new 
-                        { 
+                        Arguments = new
+                        {
                             DeviceName = deviceName,
                             PagingSize = pagingSize,
                             SkipAmount = skipAmount
@@ -33,7 +33,7 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            return new DeviceDataDataTransferObject()
+            return new DevicesDataTransferObject()
             {
                 Infrastructure = JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Infrastructure"].ToString()),
                 Data = JsonSerializer.Deserialize<IEnumerable<JsonObject>>(jObject["Data"].ToString()),
@@ -41,7 +41,7 @@ namespace WebApp.Services
             };
         }
 
-        public async Task<DevicesDataTransferObject> GetDevicesAsync(string token)
+        public async Task<IEnumerable<string>> GetDevicesAsync(string token)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDevices",
@@ -54,10 +54,7 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            return new DevicesDataTransferObject()
-            {
-                DeviceNames = JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Devices"].ToString())
-            };
+            return JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Devices"].ToString());
         }
 
         public async Task<int> GetDeviceRowsCountAsync(string token, string deviceName)
@@ -65,9 +62,10 @@ namespace WebApp.Services
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetRowsCount",
                 JsonSerializer.Serialize(
-                    new { 
+                    new
+                    {
                         Token = token,
-                        Arguments = new { DeviceName = deviceName } 
+                        Arguments = new { DeviceName = deviceName }
                     }
                 ),
                 HttpMethod.Get

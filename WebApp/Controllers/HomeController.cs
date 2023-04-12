@@ -35,11 +35,6 @@ namespace WebApp.Controllers
         public IActionResult Index()
         {
             HttpContext.Session.SetString("LastActivityTime", DateTime.Now.ToString());
-            TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
-            {
-                GlobalServer = false,
-                LocalServer = false
-            });
             return View();
         }
 

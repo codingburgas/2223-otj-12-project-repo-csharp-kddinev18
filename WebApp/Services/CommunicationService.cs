@@ -44,6 +44,10 @@ namespace WebApp.Services
                     throw new Exception(jObject["error"].ToString());
                 }
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);

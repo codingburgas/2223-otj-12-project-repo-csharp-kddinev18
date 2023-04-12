@@ -98,13 +98,17 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LogInLocalServerAsync(token, user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
                 {
                     GlobalServer = true,
                     LocalServer = true
                 });
 
                 return RedirectToAction("Index", "Devices");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -121,13 +125,13 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 await _authenticationService.SignOut(token);
                 HttpContext.Session.SetString("userToken", "");
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
                 {
                     GlobalServer = false,
                     LocalServer = false
                 });
 
-                return RedirectToAction("Index", "Devices");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
@@ -144,13 +148,13 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LocalServerSignOut(token);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new
+                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
                 {
                     GlobalServer = true,
                     LocalServer = false
                 });
 
-                return RedirectToAction("Index", "Devices");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {

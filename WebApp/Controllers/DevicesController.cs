@@ -18,30 +18,30 @@ namespace WebApp.Controllers
             _protector = dataProtectionProvider.CreateProtector("TokenEncryption");
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string deviceName = "", int pageNumber = 1)
         {
             try
             {
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
-                return View(await _devicesService.GetDevicesAsync(token));
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-        }
 
-        public async Task<IActionResult> DeviceData(string deviceName, int pageNumber = 1)
-        {
-            try
-            {
-                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
+                IEnumerable<string> devicesNames = await _devicesService.GetDevicesAsync(token);
+
+                if(devicesNames is null)
+                {
+                    //return NoDevices();
+                }
+
+                if(string.IsNullOrEmpty(deviceName))
+                    deviceName = devicesNames.First();
 
                 TempData["CurrentDevice"] = deviceName;
                 TempData["PageNumber"] = pageNumber;
                 TempData["TotalPages"] = (int)Math.Ceiling((double)await _devicesService.GetDeviceRowsCountAsync(token, deviceName) / pagingSize);
 
-                return View(await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize));
+                DevicesDataTransferObject viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize);
+                viewModel.DeviceNames = devicesNames;
+
+                return View(viewModel);
             }
             catch (UnauthorizedAccessException)
             {
