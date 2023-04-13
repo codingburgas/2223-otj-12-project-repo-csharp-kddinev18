@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/css/remixicon.css" />
 </head>
 <body>
-    <header id="header" class="fixed-top ">
+    <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center justify-content-between">
 
             <h1 class="logo"><a asp-controller="Home" asp-action="Index">IoTSecurity</a></h1>
@@ -24,7 +24,7 @@
                     <li><a class="nav-link scrollto" href="#about">About</a></li>
                     <li><a class="nav-link scrollto" href="#services">Services</a></li>
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    @try
+                    @*@try
                     {
                         @if (TempDataExtensions.Get<LoggedUserInformation>(TempData, "LoggedUserInformation").GlobalServer == true)
                         {
@@ -49,7 +49,7 @@
                     catch(Exception)
                     {
                         <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Get Started</a></li>
-                    }
+                    }*@
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav><!-- .navbar -->
@@ -57,7 +57,7 @@
         </div>
     </header><!-- End Header -->
     <div class="container">
-        <main role="main" class="d-flex align-items-center">
+        <main role="main" class="d-flex">
             @RenderBody()
         </main>
     </div>

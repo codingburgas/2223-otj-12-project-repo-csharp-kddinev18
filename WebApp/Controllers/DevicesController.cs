@@ -20,7 +20,7 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> Index(string deviceName = "", int pageNumber = 1)
         {
-            try
+            /*try
             {
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
 
@@ -46,7 +46,8 @@ namespace WebApp.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
-            }
+            }*/
+            return View(new DevicesDataTransferObject());
         }
 
         [HttpPost]

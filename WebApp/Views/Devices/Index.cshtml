@@ -4,8 +4,43 @@
     ViewData["Title"] = "Devices";
 }
 
-@foreach(string name in Model.DeviceNames)
-{
-    <a class="nav-link text-dark" asp-area="" asp-controller="Devices" asp-action="DeviceData" asp-route-deviceName="@name">@name</a>
-    <hr/>
-}
+<div class="d-flex flex-column">
+    <div>
+        <br />
+        <br />
+        <br />
+    </div>
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+        <div class="position-sticky">
+            <div class="list-group list-group-flush mx-3 mt-4">
+                <a class="list-group-item list-group-item-action py-2 ripple d-flex justify-content-center">
+                    <i class="ri-menu-line"></i><span>Main dashboard</span>
+                </a>
+                @if (Model.DeviceNames is null)
+                {
+                    <a class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="ri-error-warning-line"></i><span>No devices</span>
+                    </a>
+                }
+                else
+                {
+                    @foreach (string name in Model.DeviceNames)
+                    {
+                        <a class="list-group-item list-group-item-action py-2 ripple">
+                            <i class="ri-pie-chart-2-line"></i><span>@name</span>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+<style>
+    .container {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>

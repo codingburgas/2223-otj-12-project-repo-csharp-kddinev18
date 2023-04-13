@@ -40,6 +40,7 @@ html, body, main {
     height: 100%;
 }
 
+
 body {
     font-family: "Open Sans", sans-serif;
     color: var(--font-color);
@@ -73,6 +74,8 @@ h6 {
     z-index: 997;
     padding: 20px 0;
     background: var(--pure-white);
+    display: flex;
+    justify-content: center;
 }
 
     #header.header-scrolled,
