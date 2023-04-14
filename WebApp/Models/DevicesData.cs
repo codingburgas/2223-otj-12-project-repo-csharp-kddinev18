@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace WebApp.DataTransferObjects
+namespace WebApp.Models
 {
-    public class DevicesDataTransferObject
+    public class DevicesData
     {
         public IEnumerable<string> DeviceNames { get; set; }
-
         public string Name { get; set; }
         public IEnumerable<string> Infrastructure { get; set; }
         public IEnumerable<JsonObject> Data { get; set; }

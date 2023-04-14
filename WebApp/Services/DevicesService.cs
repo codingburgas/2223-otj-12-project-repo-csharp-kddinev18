@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using WebApp.DataTransferObjects;
+using WebApp.Models;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Services
@@ -14,7 +14,7 @@ namespace WebApp.Services
             _communicationService = communicationService;
         }
 
-        public async Task<DevicesDataTransferObject> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
+        public async Task<DevicesData> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDeviceData",
@@ -33,12 +33,17 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            return new DevicesDataTransferObject()
+            DevicesData devicesData = new DevicesData()
             {
                 Infrastructure = JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Infrastructure"].ToString()),
                 Data = JsonSerializer.Deserialize<IEnumerable<JsonObject>>(jObject["Data"].ToString()),
                 Name = deviceName
             };
+
+            foreach (JsonObject item in devicesData.Data)
+            {
+                item["Created"] = DateTime.ParseExact(item["Created"].ToString(), "yyyy-MM-dd'T'HH:mm:ss", null).ToString("HH:mm:ss");
+            }
         }
 
         public async Task<IEnumerable<string>> GetDevicesAsync(string token)

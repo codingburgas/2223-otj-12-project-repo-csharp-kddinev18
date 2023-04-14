@@ -1,6 +1,7 @@
 ﻿@using System.Text.Json.Nodes;
+@using System.Text.Json;
 @using WebApp.Controllers;
-@model WebApp.DataTransferObjects.DevicesDataTransferObject
+@model WebApp.Models.DevicesData
 
 @{
     ViewData["Title"] = "Devices";
@@ -9,8 +10,14 @@
     string currentDeviceName = TempDataExtensions.Get(TempData, "CurrentDevice");
     int pageNumber = int.Parse(TempDataExtensions.Get(TempData, "PageNumber"));
     int totalPages = int.Parse(TempDataExtensions.Get(TempData, "TotalPages"));
+
     int entriesCount = int.Parse(TempDataExtensions.Get(TempData, "EntriesCount"));
     DateTime lastEntry = DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
+
+    string chartType = TempDataExtensions.Get(TempData, "ChartType") ?? "line";
+    string xData = TempDataExtensions.Get(TempData, "XData") ?? "Created";
+    string yData = TempDataExtensions.Get(TempData, "YDara") ?? Model.Infrastructure.Skip(1).First();
+    string zData = TempDataExtensions.Get(TempData, "ZData");
 
     int previousPage = pageNumber - 1;
     int nextPage = pageNumber + 1;
@@ -296,3 +303,68 @@
         <br />
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@if (chartType == "2AxisLine")
+{
+<script>
+    const DoubleAxisCtx = document.getElementById('chart');
+    let doubleAxisLabels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData])))');
+    let doubleAxisdata = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData])))');
+    let doubleAxisSecondData = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[zData])))');
+    new Chart(DoubleAxisCtx, {
+        type: 'line',
+        data: {
+            labels: doubleAxisLabels,
+            datasets: [
+                {
+                    label: '@Html.Raw(yData)',
+                    data: doubleAxisdata,
+                    borderWidth: 2.5
+                },
+                {
+                    label: '@Html.Raw(zData)',
+                    data: doubleAxisSecondData,
+                    borderWidth: 2.5
+                }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+}
+else
+{
+<script>
+    const ctx = document.getElementById('chart');
+    let chartType = '@Html.Raw(chartType)';
+    let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData].ToString())))');
+    let data = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData].ToString())))');
+
+    new Chart(ctx, {
+        type: chartType,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '@Html.Raw(yData)',
+                data: data,
+                borderWidth: 2.5
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+}

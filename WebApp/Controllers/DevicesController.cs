@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
-using WebApp.DataTransferObjects;
+using WebApp.Models;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Controllers
@@ -35,15 +35,14 @@ namespace WebApp.Controllers
                     deviceName = devicesNames.First();
 
                 int entriesCount = await _devicesService.GetDeviceRowsCountAsync(token, deviceName);
-                DevicesDataTransferObject viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize);
+                DevicesData viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize);
                 viewModel.DeviceNames = devicesNames;
 
-                TempData["CurrentDevice"] = deviceName;
-                TempData["PageNumber"] = pageNumber;
-                TempData["TotalPages"] = (int)Math.Ceiling((double)entriesCount / pagingSize);
-                TempData["EntriesCount"] = entriesCount;
-                TempData["LastEntry"] = viewModel.Data.Last()["Created"].ToString();
-
+                TempDataExtensions.Put(TempData, "CurrentDevice", deviceName);
+                TempDataExtensions.Put(TempData, "PageNumber", pageNumber.ToString());
+                TempDataExtensions.Put(TempData, "TotalPages", ((int)Math.Ceiling((double)entriesCount / pagingSize)).ToString());
+                TempDataExtensions.Put(TempData, "EntriesCount", entriesCount.ToString());
+                TempDataExtensions.Put(TempData, "LastEntry", viewModel.Data.Last()["Created"].ToString());
 
                 return View(viewModel);
             }
@@ -57,6 +56,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPost]
         public IActionResult SetChartConfiguration(IFormCollection formData)
         {
             TempDataExtensions.Put(TempData, "CurrentDevice", formData["deviceName"]);
