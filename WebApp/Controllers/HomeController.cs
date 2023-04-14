@@ -13,6 +13,11 @@ namespace WebApp.Controllers
             tempData[key] = JsonConvert.SerializeObject(value);
         }
 
+        public static void Put(ITempDataDictionary tempData, string key, string value)
+        {
+            tempData[key] = value;
+        }
+
         public static T Get<T>(ITempDataDictionary tempData, string key) where T : class
         {
             object o;
@@ -20,6 +25,15 @@ namespace WebApp.Controllers
 
             tempData.Keep();
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
+        }
+
+        public static string Get(ITempDataDictionary tempData, string key)
+        {
+            object o;
+            tempData.TryGetValue(key, out o);
+
+            tempData.Keep();
+            return o == null ? null : (string)o;
         }
     }
 

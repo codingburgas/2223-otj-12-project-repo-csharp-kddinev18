@@ -57,6 +57,17 @@ namespace WebApp.Controllers
             }
         }
 
+        public IActionResult SetChartConfiguration(IFormCollection formData)
+        {
+            TempDataExtensions.Put(TempData, "CurrentDevice", formData["deviceName"]);
+            TempDataExtensions.Put(TempData, "ChartType", formData["ChartType"]);
+            TempDataExtensions.Put(TempData, "XData", formData["XData"]);
+            TempDataExtensions.Put(TempData, "YData", formData["YData"]);
+            TempDataExtensions.Put(TempData, "ZData", formData["ZData"]);
+
+            return RedirectToAction("Index", new { deviceName = formData["deviceName"] });
+        }
+
         [HttpPost]
         public async Task<IActionResult> PostDataToDevice()
         {

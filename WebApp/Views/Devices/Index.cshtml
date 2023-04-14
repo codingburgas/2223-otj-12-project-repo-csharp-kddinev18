@@ -1,17 +1,19 @@
 ﻿@using System.Text.Json.Nodes;
+@using WebApp.Controllers;
 @model WebApp.DataTransferObjects.DevicesDataTransferObject
 
 @{
     ViewData["Title"] = "Devices";
 }
 @{
-    string currentDeviceName = TempData["CurrentDevice"].ToString();
-    int pageNumber = int.Parse(TempData["PageNumber"].ToString());
-    int totalPages = int.Parse(TempData["TotalPages"].ToString());
+    string currentDeviceName = TempDataExtensions.Get(TempData, "CurrentDevice");
+    int pageNumber = int.Parse(TempDataExtensions.Get(TempData, "PageNumber"));
+    int totalPages = int.Parse(TempDataExtensions.Get(TempData, "TotalPages"));
+    int entriesCount = int.Parse(TempDataExtensions.Get(TempData, "EntriesCount"));
+    DateTime lastEntry = DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
+
     int previousPage = pageNumber - 1;
     int nextPage = pageNumber + 1;
-    int entriesCount = int.Parse(TempData["EntriesCount"].ToString());
-    DateTime lastEntry = DateTime.Parse(TempData["LastEntry"].ToString());
     DateTime tempDate = DateTime.Now;
 }
 
@@ -84,6 +86,125 @@
             </div>
         </div>
         <br/>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="card-header ">
+                        <h5 class="card-title">Chart View</h5>
+                        <form asp-asp-controller="Dashboard" asp-action="SetChartArguments">
+                            <input type="hidden" name="deviceName" value="@currentDeviceName" />
+                            <div class="d-flex justify-content-between align-items-center form-group">
+                                <div class="p-2 bd-highlight">
+                                    <label>Choose a chart type:</label>
+                                    <select id="ChartType" name="ChartType">
+                                        <option value="none">None</option>
+                                        <option value="table">Table</option>
+                                        <option value="line">Line</option>
+                                        <option value="2AxisLine">Double Axis Line</option>
+                                        <option value="bar">Bar</option>
+                                        <option value="pie">Pie</option>
+                                        <option value="doughnut">Doughnut</option>
+                                        <option value="radar">Radar</option>
+                                        <option value="bubble">Bubble</option>
+                                        <option value="polarArea">PolarArea</option>
+                                        <option value="scatter">Scatter</option>
+                                    </select>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <label>Choose X data:</label>
+                                    <select id="XData" name="XData">
+                                        <option value="none">None</option>
+                                        @foreach (string infrastructure in Model.Infrastructure)
+                                        {
+                                            <option value="@infrastructure">@infrastructure</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <label>Choose Y data:</label>
+                                    <select id="YData" name="YData">
+                                        <option value="none">None</option>
+                                        @foreach (string infrastructure in Model.Infrastructure)
+                                        {
+                                            <option value="@infrastructure">@infrastructure</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <label>Choose Z data:</label>
+                                    <select id="ZData" name="ZData">
+                                        <option value="none">None</option>
+                                        @foreach (string infrastructure in Model.Infrastructure)
+                                        {
+                                            <option value="@infrastructure">@infrastructure</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <input type="submit" value="Refresh" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body ">
+                        <canvas id="chart"></canvas>
+                    </div>
+                    <div class="card-footer ">
+                        <hr>
+                        @if (totalPages > 1)
+                        {
+                            <nav>
+                                <ul class="pagination">
+                                    @if (pageNumber > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="@previousPage" asp-route-deviceName="@currentDeviceName">Previous</a></li>
+                                    }
+
+                                    @if (pageNumber > 3)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="1" asp-route-deviceName="@currentDeviceName">1</a></li>
+                                        @if (pageNumber > 4)
+                                        {
+                                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                        }
+                                    }
+
+                                    @for (int i = Math.Max(1, pageNumber - 2); i <= Math.Min(totalPages, pageNumber + 2); i++)
+                                    {
+                                        if (i == pageNumber)
+                                        {
+                                            <li class="page-item active"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="@i" asp-route-deviceName="@currentDeviceName">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="@i" asp-route-deviceName="@currentDeviceName">@i</a></li>
+                                        }
+                                    }
+
+                                    @if (pageNumber < totalPages - 2)
+                                    {
+                                        @if (pageNumber < totalPages - 3)
+                                        {
+                                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                        }
+                                        <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="@totalPages" asp-route-deviceName="@currentDeviceName">@totalPages</a></li>
+                                    }
+
+                                    @if (pageNumber < totalPages)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-area="" asp-controller="Devices" asp-action="Index" asp-route-pageNumber="@nextPage" asp-route-deviceName="@currentDeviceName">Next</a></li>
+                                    }
+                                </ul>
+                            </nav>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card ">
