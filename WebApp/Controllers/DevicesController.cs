@@ -11,7 +11,7 @@ namespace WebApp.Controllers
     {
         private IDevicesService _devicesService;
         private IDataProtector _protector;
-        private int pagingSize = 3;
+        private int pagingSize = 10;
         public DevicesController(IDevicesService devicesService, IDataProtectionProvider dataProtectionProvider, IOptions<SessionOptions> sessionOptions) : base(sessionOptions)
         {
             _devicesService = devicesService;
@@ -20,7 +20,7 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> Index(string deviceName = "", int pageNumber = 1)
         {
-            /*try
+            try
             {
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
 
@@ -34,20 +34,27 @@ namespace WebApp.Controllers
                 if(string.IsNullOrEmpty(deviceName))
                     deviceName = devicesNames.First();
 
-                TempData["CurrentDevice"] = deviceName;
-                TempData["PageNumber"] = pageNumber;
-                TempData["TotalPages"] = (int)Math.Ceiling((double)await _devicesService.GetDeviceRowsCountAsync(token, deviceName) / pagingSize);
-
+                int entriesCount = await _devicesService.GetDeviceRowsCountAsync(token, deviceName);
                 DevicesDataTransferObject viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize);
                 viewModel.DeviceNames = devicesNames;
+
+                TempData["CurrentDevice"] = deviceName;
+                TempData["PageNumber"] = pageNumber;
+                TempData["TotalPages"] = (int)Math.Ceiling((double)entriesCount / pagingSize);
+                TempData["EntriesCount"] = entriesCount;
+                TempData["LastEntry"] = viewModel.Data.Last()["Created"].ToString();
+
 
                 return View(viewModel);
             }
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
-            }*/
-            return View(new DevicesDataTransferObject());
+            }
+            catch (ArgumentNullException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost]

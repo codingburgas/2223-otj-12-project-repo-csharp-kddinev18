@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 using WebApp.DataTransferObjects;
 using WebApp.Models;
 using WebApp.Services.Interfaces;
@@ -36,11 +38,12 @@ namespace WebApp.Controllers
 
                 string token = await _authenticationService.LogInAsync(user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(token));
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+
+                HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
                 {
                     GlobalServer = true,
                     LocalServer = false
-                });
+                }));
 
                 return RedirectToAction("LogInLocalServer");
             }
@@ -98,11 +101,11 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LogInLocalServerAsync(token, user.UserName, user.Password);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+                HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
                 {
                     GlobalServer = true,
                     LocalServer = true
-                });
+                }));
 
                 return RedirectToAction("Index", "Devices");
             }
@@ -125,11 +128,11 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 await _authenticationService.SignOut(token);
                 HttpContext.Session.SetString("userToken", "");
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+                HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
                 {
                     GlobalServer = false,
                     LocalServer = false
-                });
+                }));
 
                 return RedirectToAction("Index", "Home");
             }
@@ -148,11 +151,11 @@ namespace WebApp.Controllers
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
                 string newToken = await _authenticationService.LocalServerSignOut(token);
                 HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
-                TempDataExtensions.Put(TempData, "LoggedUserInformation", new LoggedUserInformation
+                HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
                 {
                     GlobalServer = true,
                     LocalServer = false
-                });
+                }));
 
                 return RedirectToAction("Index", "Home");
             }

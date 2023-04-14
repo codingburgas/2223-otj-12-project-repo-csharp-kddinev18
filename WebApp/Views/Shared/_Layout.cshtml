@@ -1,4 +1,5 @@
 ﻿@using System.Text.Json.Nodes;
+@using System.Text.Json;
 @using WebApp.Controllers;
 <!DOCTYPE html>
 <html lang="en">
@@ -24,16 +25,16 @@
                     <li><a class="nav-link scrollto" href="#about">About</a></li>
                     <li><a class="nav-link scrollto" href="#services">Services</a></li>
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    @*@try
+                    @try
                     {
-                        @if (TempDataExtensions.Get<LoggedUserInformation>(TempData, "LoggedUserInformation").GlobalServer == true)
+                        @if (JsonSerializer.Deserialize<LoggedUserInformation>(Context.Session.GetString("LoggedUserInformation")).GlobalServer == true)
                         {
                             <li class="dropdown">
                                 <a href="#" class="getstarted scrollto" ><span>Profile</span> <i class="bi bi-chevron-down"></i></a>
                                 <ul>
-                                    <li><a href="#">Devices</a></li>
+                                    <li><a asp-controller="Devices" asp-action="Index">Devices</a></li>
                                     <li><a asp-controller="Authentication" asp-action="SignOut">Sign out</a></li>
-                                    @if (TempDataExtensions.Get<LoggedUserInformation>(TempData, "LoggedUserInformation").LocalServer == true)
+                                    @if (JsonSerializer.Deserialize<LoggedUserInformation>(Context.Session.GetString("LoggedUserInformation")).LocalServer == true)
                                     {
                                         <li><a asp-controller="Authentication" asp-action="LocalSerevrSignOut">Local Server Sign Out</a></li>
 
@@ -49,7 +50,7 @@
                     catch(Exception)
                     {
                         <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Get Started</a></li>
-                    }*@
+                    }
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav><!-- .navbar -->
