@@ -42,7 +42,8 @@ namespace WebApp.Controllers
                 TempDataExtensions.Put(TempData, "PageNumber", pageNumber.ToString());
                 TempDataExtensions.Put(TempData, "TotalPages", ((int)Math.Ceiling((double)entriesCount / pagingSize)).ToString());
                 TempDataExtensions.Put(TempData, "EntriesCount", entriesCount.ToString());
-                TempDataExtensions.Put(TempData, "LastEntry", viewModel.Data.Last()["Created"].ToString());
+                TempDataExtensions.Put(TempData, "LastEntry", viewModel.Data.First()["Created"].ToString());
+                _devicesService.FormatDates(viewModel);
 
                 return View(viewModel);
             }

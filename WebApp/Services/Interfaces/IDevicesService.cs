@@ -9,5 +9,6 @@ namespace WebApp.Services.Interfaces
         public Task<IEnumerable<string>> GetDevicesAsync(string token);
         public Task<int> GetDeviceRowsCountAsync(string token, string deviceName);
         public Task SendDataToDeviceAsync(string token, string deviceName, string data);
+        public void FormatDates(DevicesData devicesData);
     }
 }

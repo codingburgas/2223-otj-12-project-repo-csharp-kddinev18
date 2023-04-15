@@ -33,16 +33,19 @@ namespace WebApp.Services
                 HttpMethod.Get
             );
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(response);
-            DevicesData devicesData = new DevicesData()
+            return new DevicesData()
             {
                 Infrastructure = JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Infrastructure"].ToString()),
                 Data = JsonSerializer.Deserialize<IEnumerable<JsonObject>>(jObject["Data"].ToString()),
                 Name = deviceName
             };
+        }
 
+        public void FormatDates(DevicesData devicesData)
+        {
             foreach (JsonObject item in devicesData.Data)
             {
-                item["Created"] = DateTime.ParseExact(item["Created"].ToString(), "yyyy-MM-dd'T'HH:mm:ss", null).ToString("HH:mm:ss");
+                item["Created"] = DateTime.ParseExact(item["Created"].ToString(), "yyyy-MM-dd'T'HH:mm:ss.fffffff", null).ToString("HH:mm:ss");
             }
         }
 

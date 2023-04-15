@@ -100,15 +100,14 @@
                 <div class="card ">
                     <div class="card-header ">
                         <h5 class="card-title">Chart View</h5>
-                        <form asp-asp-controller="Dashboard" asp-action="SetChartArguments">
+                        <form asp-asp-controller="Devices" asp-action="SetChartConfiguration">
                             <input type="hidden" name="deviceName" value="@currentDeviceName" />
                             <div class="d-flex justify-content-between align-items-center form-group">
                                 <div class="p-2 bd-highlight">
                                     <label>Choose a chart type:</label>
                                     <select id="ChartType" name="ChartType">
                                         <option value="none">None</option>
-                                        <option value="table">Table</option>
-                                        <option value="line">Line</option>
+                                        <option value="line" selected>Line</option>
                                         <option value="2AxisLine">Double Axis Line</option>
                                         <option value="bar">Bar</option>
                                         <option value="pie">Pie</option>
@@ -211,7 +210,7 @@
             </div>
         </div>
 
-
+        <br />
         <div class="row">
             <div class="col-md-12">
                 <div class="card ">
