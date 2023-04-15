@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+﻿using System.Text.Json;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Services

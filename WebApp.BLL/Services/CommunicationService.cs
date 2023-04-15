@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -33,7 +34,7 @@ namespace WebApp.Services
 
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    return jObject["message"]?.ToString();
+                    return jObject["message"].ToString();
                 }
                 else if(httpResponse.StatusCode == (HttpStatusCode)401)
                 {

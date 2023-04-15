@@ -12,6 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebApp.BLL\WebApp.BLL.csproj" />
+    <ProjectReference Include="..\WebApp.DAL\WebApp.DAL.csproj" />
+    <ProjectReference Include="..\WebApp.DTO\WebApp.DTO.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\img\hero-img.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
