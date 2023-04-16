@@ -39,7 +39,7 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages
             // Register and set the CurrentUserId
             CurrentUserInformation.UserId = UserAuthenticationLogic.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
             CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
-            _userAuthenticationWindow.ShowMainWindow();
+            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
 
         }
     }

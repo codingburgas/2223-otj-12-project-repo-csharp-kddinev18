@@ -103,7 +103,7 @@ namespace LocalServer.BLL.Server.BLL
             }
         }
 
-        public static void ReciveClientInput(IAsyncResult asyncResult)
+        public static async void ReciveClientInput(IAsyncResult asyncResult)
         {
             TcpClient client = asyncResult.AsyncState as TcpClient;
             int reciever;
@@ -118,7 +118,7 @@ namespace LocalServer.BLL.Server.BLL
                     return;
                 }
                 // Get the data
-                ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", string.Empty), ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), _clients);
+                await ClientHandlingLogic.HandleClientInput(Encoding.ASCII.GetString(_data).Replace("\0", string.Empty), ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), _clients);
             }
             catch (Exception ex)
             {

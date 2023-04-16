@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LocalServer.BLL\LocalServer.BLL.csproj" />
     <ProjectReference Include="..\LocalServer.DAL\LocalServer.DAL.csproj" />
   </ItemGroup>
 

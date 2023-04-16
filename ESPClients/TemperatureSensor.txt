@@ -6,8 +6,8 @@
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
-const char* ssid = "****";
-const char* password = "****";
+const char* ssid = "***";
+const char* password = "***";
 
 const IPAddress serverIP(192, 168, 0, 195);  // the address to be accessed
 uint16_t serverPort = 5400;                  // server port number
@@ -32,47 +32,8 @@ void setup() {
 
   if (client.connect(serverIP, serverPort))
   {
-    client.print(R"rawliteral(
-    {
-      "Operation": "Authenticate",
-      "Name": "Temperature",
-      "Columns": [
-        {
-          "Name": "Id",
-          "Type": "int",
-          "Constraints": [
-            {
-              "Constraint": "PRIMARY KEY",
-              "AdditionalInformation": ""
-            },
-            {
-              "Constraint": "NOT NULL",
-              "AdditionalInformation": ""
-            }
-          ]
-        },
-        {
-          "Name": "Temperature",
-          "Type": "decimal(5,2)",
-          "Constraints": [
-            {
-              "Constraint": "NOT NULL",
-              "AdditionalInformation": ""
-            }
-          ]
-        },
-        {
-          "Name": "Humidity",
-          "Type": "decimal(5,2)",
-          "Constraints": [
-            {
-              "Constraint": "NOT NULL",
-              "AdditionalInformation": ""
-            }
-          ]
-        }
-      ]
-    })rawliteral");
+    client.print(R"rawliteral({"Operation":"Authenticate","Name":"Temperature","Columns":[{"Name":"Temperature","Type":"decimal(5,2)","Constraints":[{"Constraint":"NOT NULL","AdditionalInformation":""}]},{"Name":"Humidity","Type":"decimal(5,2)","Constraints":[{"Constraint":"NOT NULL","AdditionalInformation":""}]}]})rawliteral");
+    delay(2000);
     client.stop();
   }
   else

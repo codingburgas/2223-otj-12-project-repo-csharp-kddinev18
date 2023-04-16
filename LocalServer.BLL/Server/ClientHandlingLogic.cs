@@ -20,31 +20,36 @@ namespace LocalServer.BLL.Server.BLL
     public static class ClientHandlingLogic
     {
         public static DatabaseInitialiser DatabaseInitialiser { get; set; }
-        public static void HandleClientInput(string data, string ipAddress, List<TcpClient> clients)
+        public static async Task HandleClientInput(string data, string ipAddress, List<TcpClient> clients)
         {
-            JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
-            if (jObject["Operation"].ToString() == "Authenticate")
+            await Task.Run(() =>
             {
-                CreateDeviceTable(ipAddress, jObject);
-            }
-            else if (jObject["Operation"].ToString() == "Insert")
-            {
-                InsertDeviceData(ipAddress, jObject);
-            }
-            else
-            {
-                throw new Exception("Wrong operation type");
-            }
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(data);
+                if (jObject["Operation"].ToString() == "Authenticate")
+                {
+                    CreateDeviceTable(ipAddress, jObject);
+                }
+                else if (jObject["Operation"].ToString() == "Insert")
+                {
+                    InsertDeviceData(ipAddress, jObject);
+                }
+                else
+                {
+                    throw new Exception("Wrong operation type");
+                }
+            });
         }
 
         private static void InsertDeviceData(string ipAddress, JsonObject jObject)
         {
             Table table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["Name"].ToString()).First();
             List<string> insertData = new List<string>();
+            List<string> args = new List<string>();
 
-            List<string> args = JsonSerializer.Deserialize<List<string>>(jObject["Columns"].ToString());
+            args.Add(Guid.NewGuid().ToString());
             args.Add(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("IPv4Address", "=", ipAddress).Rows[0]["Id"].ToString());
+            args.AddRange(JsonSerializer.Deserialize<string[]>(jObject["Columns"].ToString()));
 
             table.Insert(args.ToArray());
             DatabaseInitialiser.Database.SaveDatabaseData();
@@ -52,7 +57,7 @@ namespace LocalServer.BLL.Server.BLL
 
         private static void CreateDeviceTable(string ipAddress, JsonObject jObject)
         {
-            if (!DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
+            if (DatabaseInitialiser.Database.Tables.Select(table => table.Name).Contains(jObject["Name"].ToString()))
             {
                 return;
             }

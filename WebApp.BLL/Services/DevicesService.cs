@@ -45,7 +45,12 @@ namespace WebApp.Services
         {
             foreach (JsonObject item in devicesData.Data)
             {
-                item["Created"] = DateTime.ParseExact(item["Created"].ToString(), "yyyy-MM-dd'T'HH:mm:ss.fffffff", null).ToString("HH:mm:ss");
+                string dateTime = item["Created"].ToString();
+                int index = dateTime.LastIndexOf(".");
+                if (index >= 0)
+                    dateTime = dateTime.Substring(0, index);
+
+                item["Created"] = DateTime.ParseExact(dateTime, "yyyy-MM-dd'T'HH:mm:ss", null).ToString("HH:mm:ss");
             }
         }
 

@@ -26,9 +26,9 @@ namespace WebApp.Controllers
 
                 IEnumerable<string> devicesNames = await _devicesService.GetDevicesAsync(token);
 
-                if(devicesNames is null)
+                if(devicesNames.Count() == 0)
                 {
-                    //return NoDevices();
+                    return RedirectToAction("NoDevices");
                 }
 
                 if(string.IsNullOrEmpty(deviceName))
@@ -55,6 +55,11 @@ namespace WebApp.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        public IActionResult NoDevices()
+        {
+            return View();
         }
 
         [HttpPost]
