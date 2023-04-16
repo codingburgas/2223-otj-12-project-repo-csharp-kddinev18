@@ -371,7 +371,7 @@ namespace LocalServer.TESTS.ORM
             table.Drop();
         }
 
-        [TestCase("d68473e7-7e8a-423e-9306-97d96e3ae8e0", new string[] { "d68473e7-7e8a-423e-9306-97d96e3ae8e0", "asdasdasd", "asdasdasd"})]
+        [TestCase("d68473e7-7e8a-423e-9306-97d96e3ae8e0", new string[] { "d68473e7-7e8a-423e-9306-97d96e3ae8e0", "asdasdasd", "asdasdasd" })]
         [TestCase("d6102451-3251-4525-9a6b-78dacda1fb3c", new string[] { "d68473e7-7e8a-423e-9306-97d96e3ae8e0" })]
         [TestCase("d6102451-3251-4525-9a6b-78dacda1fb3c", new string[] { "a" })]
         public void Should_ThrowException_When_InvokeInsertMethodWithIcorretData(string guidString, string[] data)
@@ -395,6 +395,125 @@ namespace LocalServer.TESTS.ORM
             table.Insert(data);
             // Assert
             Assert.Throws<SqlException>(() => database.SaveDatabaseData());
+
+            table.Drop();
+        }
+
+        [TestCase("d68473e7-7e8a-423e-9306-97d96e3ae8e0", "Names", "NewName")]
+        [TestCase("d6102451-3251-4525-9a6b-78dacda1fb3c", "Names1", "NewName123")]
+        [TestCase("a3dd17d3-b648-4367-90ce-f316c9c23d93", "123", "123123")]
+        public void Should_UpdateRow_When_InvokeUpdateMethod(string guidString, string personName, string updatePersonName)
+        {
+            // Arrange
+            Database database = new Database(connString);
+            Table table = new Table("Persons", database);
+            Column column = new Column("Id", "nvarchar(36)", table);
+            column.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+            Column column2 = new Column("Name", "nvarchar(64)", table);
+            column2.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+
+            table.Columns.Add(column);
+            table.Columns.Add(column2);
+
+            database.Tables.Add(table);
+
+            table.Create();
+            table.Insert(new Guid(guidString).ToString(), personName);
+            database.SaveDatabaseData();
+
+            // Act
+            table.Update("Name", updatePersonName, "Id", "=", guidString);
+            DataTable dataTable = table.Select("Id", "=", guidString);
+            // Assert
+            Assert.AreEqual(dataTable.Rows[0]["Name"].ToString(), updatePersonName);
+
+            table.Drop();
+        }
+
+        [TestCase("d68473e7-7e8a-423e-9306-97d96e3ae8e0", "Names", "NewName")]
+        [TestCase("d6102451-3251-4525-9a6b-78dacda1fb3c", "Names1", "NewName123")]
+        [TestCase("a3dd17d3-b648-4367-90ce-f316c9c23d93", "123", "123123")]
+        public void Should_ThrowException_When_InvokeUpdateMethodWithIncorrectColumnName(string guidString, string personName, string updatePersonName)
+        {
+            // Arrange
+            Database database = new Database(connString);
+            Table table = new Table("Persons", database);
+            Column column = new Column("Id", "nvarchar(36)", table);
+            column.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+            Column column2 = new Column("Name", "nvarchar(64)", table);
+            column2.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+
+            table.Columns.Add(column);
+            table.Columns.Add(column2);
+
+            database.Tables.Add(table);
+
+            table.Create();
+            table.Insert(new Guid(guidString).ToString(), personName);
+            database.SaveDatabaseData();
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => table.Update("Name123132", updatePersonName, "Id312312", "=", guidString));
+
+            table.Drop();
+        }
+
+        [TestCase("d68473e7-7e8a-423e-9306-97d96e3ae8e0", "Names", "NewName")]
+        [TestCase("d6102451-3251-4525-9a6b-78dacda1fb3c", "Names1", "NewName123")]
+        [TestCase("a3dd17d3-b648-4367-90ce-f316c9c23d93", "123", "123123")]
+        public void Should_ThrowException_When_InvokeUpdateMethodWithIncorrectExpression(string guidString, string personName, string updatePersonName)
+        {
+            // Arrange
+            Database database = new Database(connString);
+            Table table = new Table("Persons", database);
+            Column column = new Column("Id", "nvarchar(36)", table);
+            column.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+            Column column2 = new Column("Name", "nvarchar(64)", table);
+            column2.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+
+            table.Columns.Add(column);
+            table.Columns.Add(column2);
+
+            database.Tables.Add(table);
+
+            table.Create();
+            table.Insert(new Guid(guidString).ToString(), personName);
+            database.SaveDatabaseData();
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => table.Update("Name", updatePersonName, "Id", "s,jdhfgjsd", guidString));
+
+            table.Drop();
+        }
+
+        [Test]
+        public void Should_ReturnPrimaryKeys_When_InvokeGetPrimaryKeyMethod()
+        {
+            // Arrange
+            Database database = new Database(connString);
+            Table table = new Table("Persons", database);
+            Column column = new Column("Id", "nvarchar(36)", table);
+            Column column2 = new Column("Id2", "nvarchar(36)", table);
+            column.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+            column2.AddConstraint(new Tuple<string, object>("PRIMARY KEY", null));
+            Column column3 = new Column("Name", "nvarchar(64)", table);
+            column3.AddConstraint(new Tuple<string, object>("NOT NULL", null));
+
+            table.Columns.Add(column);
+            table.Columns.Add(column2);
+            table.Columns.Add(column3);
+
+            database.Tables.Add(table);
+
+            table.Create();
+
+            // Act
+
+            List<Column> columns = table.FindPrimaryKeys();
+            List<Column> columns2 = table.FindPrimaryKeysThroughQuery();
+
+            // Assert
+            Assert.That(columns.Count == 2 && columns2.Count == 2);
 
             table.Drop();
         }
