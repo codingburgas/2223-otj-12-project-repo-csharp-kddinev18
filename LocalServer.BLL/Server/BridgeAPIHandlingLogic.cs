@@ -120,9 +120,13 @@ namespace LocalServer.BLL.Server.BLL
                         {
                             response = FormatResponse(400, null, "Incorrect request", "Incorrect request", null);
                         }
+                        catch (InvalidOperationException)
+                        {
+                            response = FormatResponse(500, new Guid(jObject["RequestId"].ToString()), "The device is not connected", "The device is not connected", null);
+                        }
                         catch (Exception)
                         {
-                            response = FormatResponse(500, new Guid(jObject["RequestId"].ToString()), "Server error", "Server error", null);
+                            response = FormatResponse(500, new Guid(jObject["RequestId"].ToString()), "Local Server error", "Local Server error", null);
                         }
                         finally
                         {
@@ -210,7 +214,7 @@ namespace LocalServer.BLL.Server.BLL
             string ipAddress = DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First()
                 .Select("Name", "=", jObject["DeviceName"].ToString()).Rows[0]["IPv4Address"].ToString();
             ServerLogic.GetClient(ipAddress).GetStream().Write(Encoding.UTF8.GetBytes(jObject["Data"].ToString()));
-            return "Data sent successfully";
+            return JsonSerializer.Serialize(new { Status = "Data sent successfully" });
         }
 
         private static string GetRowsCount(string parameters)

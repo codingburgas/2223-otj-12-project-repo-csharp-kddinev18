@@ -1,4 +1,4 @@
-﻿using BridgeAPI.BLL.Interfaces;
+﻿ using BridgeAPI.BLL.Interfaces;
 using BridgeAPI.BLL.Services.Interfaces;
 using BridgeAPI.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -152,7 +152,7 @@ namespace BridgeAPI.Controllers
             }
         }
 
-        [HttpPost("SendDataToDevice")]
+        [HttpGet("SendDataToDevice")]
         public async Task<IActionResult> SendDataToDevice()
         {
             try

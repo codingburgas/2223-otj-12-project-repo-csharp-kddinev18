@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
+using System.Text.Json.Nodes;
 using WebApp.Models;
 using WebApp.Services.Interfaces;
 
@@ -42,7 +43,17 @@ namespace WebApp.Controllers
                 TempDataExtensions.Put(TempData, "PageNumber", pageNumber.ToString());
                 TempDataExtensions.Put(TempData, "TotalPages", ((int)Math.Ceiling((double)entriesCount / pagingSize)).ToString());
                 TempDataExtensions.Put(TempData, "EntriesCount", entriesCount.ToString());
-                TempDataExtensions.Put(TempData, "LastEntry", viewModel.Data.First()["Created"].ToString());
+                JsonObject jObject = viewModel.Data.FirstOrDefault();
+
+                if(jObject != null)
+                {
+                    TempDataExtensions.Put(TempData, "LastEntry", viewModel.Data.FirstOrDefault()["Created"].ToString());
+                }
+                else
+                {
+                    TempDataExtensions.Put(TempData, "LastEntry", "");
+                }
+
                 _devicesService.FormatDates(viewModel);
 
                 return View(viewModel);
@@ -75,12 +86,13 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostDataToDevice()
+        public async Task<IActionResult> PostDataToDevice(IFormCollection formData)
         {
+            string deviceName = "";
             try
             {
-                string deviceName = Request.Form["DeviceName"];
-                string postData = Request.Form["PostData"];
+                deviceName = TempDataExtensions.Get(TempData, "CurrentDevice"); 
+                string postData = formData["DeviceData"];
                 await _devicesService.SendDataToDeviceAsync(
                     _protector.Unprotect(HttpContext.Session.GetString("userToken")),
                     deviceName,
@@ -92,6 +104,10 @@ namespace WebApp.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("DeviceData", "DevicesController", new { deviceName });
             }
         }
     }

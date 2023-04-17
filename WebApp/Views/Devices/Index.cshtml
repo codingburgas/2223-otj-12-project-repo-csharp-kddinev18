@@ -12,7 +12,7 @@
     int totalPages = int.Parse(TempDataExtensions.Get(TempData, "TotalPages"));
 
     int entriesCount = int.Parse(TempDataExtensions.Get(TempData, "EntriesCount"));
-    DateTime lastEntry = DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
+    DateTime lastEntry = string.IsNullOrEmpty(TempDataExtensions.Get(TempData, "LastEntry")) ? new DateTime(1,1,1) : DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
 
     string chartType = TempDataExtensions.Get(TempData, "ChartType") ?? "line";
     string xData = TempDataExtensions.Get(TempData, "XData") ?? "Created";
@@ -209,6 +209,29 @@
                 </div>
             </div>
         </div>
+
+
+        <br />
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="card-header ">
+                        <h5 class="card-title">Send data</h5>
+                    </div>
+                    <div class="card-body ">
+                        <form asp-action="PostDataToDevice">
+                            <input id="DeviceData" name="DeviceData" style="width:100%"/>
+                            <div class="p-2 bd-highlight">
+                                <input type="submit" value="Send" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <br />
         <div class="row">
