@@ -14,10 +14,14 @@ namespace LocalServer.BLL.DataManipulation.BLL
         public Database Database { get; set; }
         private static string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurity;Integrated Security=True;MultipleActiveResultSets=true";
         private long _deleteTimer;
-        public DatabaseInitialiser(long deleteTimer)
+        public DatabaseInitialiser(long deleteTimer, string connString = "")
         {
             _deleteTimer = deleteTimer;
-            Database = new Database(_connectionString);
+            if(string.IsNullOrEmpty(connString))
+                Database = new Database(_connectionString);
+            else
+                Database = new Database(connString);
+
             CreateDefaultDatabaseStructure();
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = deleteTimer;

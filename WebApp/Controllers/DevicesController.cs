@@ -107,6 +107,7 @@ namespace WebApp.Controllers
             }
             catch (Exception)
             {
+                
                 return RedirectToAction("DeviceData", "DevicesController", new { deviceName });
             }
         }
