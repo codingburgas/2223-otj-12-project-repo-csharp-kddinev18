@@ -111,7 +111,7 @@ namespace WebApp.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return Unauthorized();
+                return RedirectToAction("Authentication", "LogIn");
             }
             catch (Exception ex)
             {
@@ -131,29 +131,6 @@ namespace WebApp.Controllers
                 HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
                 {
                     GlobalServer = false,
-                    LocalServer = false
-                }));
-
-                return RedirectToAction("Index", "Home");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return LogIn();
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> LocalSerevrSignOut()
-        {
-            try
-            {
-                string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
-                string newToken = await _authenticationService.LocalServerSignOut(token);
-                HttpContext.Session.SetString("userToken", _protector.Protect(newToken));
-                HttpContext.Session.SetString("LoggedUserInformation", JsonSerializer.Serialize(new LoggedUserInformation
-                {
-                    GlobalServer = true,
                     LocalServer = false
                 }));
 

@@ -34,11 +34,6 @@
                                 <ul>
                                     <li><a asp-controller="Devices" asp-action="Index">Devices</a></li>
                                     <li><a asp-controller="Authentication" asp-action="SignOut">Sign out</a></li>
-                                    @if (JsonSerializer.Deserialize<LoggedUserInformation>(Context.Session.GetString("LoggedUserInformation")).LocalServer == true)
-                                    {
-                                        <li><a asp-controller="Authentication" asp-action="LocalSerevrSignOut">Local Server Sign Out</a></li>
-
-                                    }
                                 </ul>
                             </li>
                         }

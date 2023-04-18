@@ -64,7 +64,8 @@ namespace WebApp.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return Unauthorized();
+                return RedirectToAction("Authentication", "LogIn");
+
             }
             catch (ArgumentNullException)
             {
@@ -109,7 +110,8 @@ namespace WebApp.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return Unauthorized();
+                return RedirectToAction("Authentication", "LogIn");
+
             }
             catch (Exception)
             {
