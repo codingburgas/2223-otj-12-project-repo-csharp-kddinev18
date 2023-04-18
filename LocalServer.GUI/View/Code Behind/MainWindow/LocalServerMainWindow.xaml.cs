@@ -1,6 +1,7 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
 using LocalServer.BLL.Server.BLL;
 using LocalServer.GUI.Models;
+using LocalServer.GUI.View.Code_Behind.Authenticate;
 using LocalServerGUI.View.Code_Behind.MainWindow.Pages;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
 using System;
@@ -49,6 +50,12 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow
             PermissionsPage = new Lazy<PermissionsPage>();
             ShowPage(UsersPage.Value);
         }
+        public static void ShowAuthenticationWindow()
+        {
+            AuthenticateWindow window = new AuthenticateWindow();
+            window.ShowDialog();
+        }
+
         // Shows a page
         public void ShowPage(Page page)
         {

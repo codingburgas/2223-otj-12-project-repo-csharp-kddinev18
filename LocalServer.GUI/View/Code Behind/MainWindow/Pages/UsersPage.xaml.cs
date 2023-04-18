@@ -181,6 +181,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the AddMembersButton is clicked
         private void AddMembersButton_Click(object sender, RoutedEventArgs e)
         {
+            LocalServerMainWindow.ShowAuthenticationWindow();
+
             // If the AddMemberWindow isn't opened, oped it, otherwise do nothing
             if (AddUserWindow.isOpened == false)
             {
@@ -192,6 +194,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            LocalServerMainWindow.ShowAuthenticationWindow();
+
             // Get the row the user clickd on
             UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Edit a uesr
@@ -205,6 +209,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the RemoveButton is clicked
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
+            LocalServerMainWindow.ShowAuthenticationWindow();
+
             // Get the row the user clickd on
             UserBindingInformation dataRow = (UserBindingInformation)UsersDataGrid.SelectedItem;
             // Remove the user

@@ -165,6 +165,7 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the EditButton is clicked
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            LocalServerMainWindow.ShowAuthenticationWindow();
             // Get the row the user clickd on
             DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Edit a uesr
@@ -178,6 +179,8 @@ namespace LocalServerGUI.View.Code_Behind.MainWindow.Pages
         // Invoked every time the RemoveButton is clicked
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
+            LocalServerMainWindow.ShowAuthenticationWindow();
+
             // Get the row the user clickd on
             DeviceBindingInformation dataRow = (DeviceBindingInformation)DevicesDataGrid.SelectedItem;
             // Remove the user

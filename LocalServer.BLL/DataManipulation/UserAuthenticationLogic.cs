@@ -213,8 +213,8 @@ namespace LocalServer.BLL.DataManipulation.BLL
             {
                 throw new Exception("Wrong credentials");
             }
-            string hashPassword = Hash(password + dataTable.Rows[0]["Id"]);
-            if (hashPassword == dataTable.Rows[0]["Password"])
+            string hashPassword = Hash(password + dataTable.Rows[0]["Salt"].ToString());
+            if (hashPassword != dataTable.Rows[0]["Password"].ToString())
             {
                 throw new Exception("Wrong credentials");
             }
