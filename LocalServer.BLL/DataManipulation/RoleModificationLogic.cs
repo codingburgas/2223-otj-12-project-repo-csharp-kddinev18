@@ -72,7 +72,7 @@ namespace LocalServer.BLL.DataManipulation.BLL
             foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)
             {
                 DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Permissions").First()
-                    .Insert(roleId.ToString(), item["DeviceId"].ToString(), "false", "false", "false", "false");
+                    .Insert(roleId.ToString(), item["Id"].ToString(), "false", "false", "false", "false");
             }
             DatabaseInitialiser.Database.SaveDatabaseData();
         }

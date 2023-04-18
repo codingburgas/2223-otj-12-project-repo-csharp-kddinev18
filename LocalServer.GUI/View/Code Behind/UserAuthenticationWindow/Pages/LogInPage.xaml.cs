@@ -1,4 +1,5 @@
 ﻿using LocalServer.BLL.DataManipulation.BLL;
+using LocalServer.BLL.Server.BLL;
 using LocalServer.GUI.Models;
 using LocalServerGUI.View.Code_Behind.UserAuthenticationWindow;
 using System;
@@ -38,10 +39,19 @@ namespace LocalServerGUI.Code_Behind.XAML.UserAuthenticationWindow.Pages
         }
         private void LogInButton_Click(object sender, RoutedEventArgs e)
         {
-            // Log in and sets CurrentUserId to the logged user id
-            CurrentUserInformation.UserId = UserAuthenticationLogic.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
-            CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
-            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
+            try
+            {
+                // Log in and sets CurrentUserId to the logged user id
+                CurrentUserInformation.UserId = UserAuthenticationLogic.LogIn(UserName.TextBox.Text, PasswordTextBox.Password);
+                CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
+                _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
+            }
+            catch (Exception exception)
+            {
+                // Show error message box
+                MessageBox.Show(exception.Message, "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
     }
 }

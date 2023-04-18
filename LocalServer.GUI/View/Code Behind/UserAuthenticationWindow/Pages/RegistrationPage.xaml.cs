@@ -36,11 +36,19 @@ namespace LocalServerGUI.View.Code_Behind.UserAuthenticationWindow.Pages
         }
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            // Register and set the CurrentUserId
-            CurrentUserInformation.UserId = UserAuthenticationLogic.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
-            CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
-            _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
-
+            try
+            {
+                // Register and set the CurrentUserId
+                CurrentUserInformation.UserId = UserAuthenticationLogic.Register(UserName.TextBox.Text, Email.TextBox.Text, PasswordTextBox.Password);
+                CurrentUserInformation.IsAdmin = UserAuthenticationLogic.IsAdmin(CurrentUserInformation.UserId);
+                _userAuthenticationWindow.ShowPage(_userAuthenticationWindow.BridgeAPILoginPage);
+            }
+            catch (Exception exception)
+            {
+                // Show error message box
+                MessageBox.Show(exception.Message, "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
     }
 }

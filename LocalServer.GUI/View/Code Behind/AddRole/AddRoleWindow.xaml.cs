@@ -34,9 +34,20 @@ namespace LocalServerGUI.View.Code_Behind.AddRole
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            RoleModificationLogic.AddRole(Role.TextBox.Text);
-            _rolesPage.UpdateDataGrid(1);
+            try
+            {
+                RoleModificationLogic.AddRole(Role.TextBox.Text);
+                _rolesPage.UpdateDataGrid(1);
+            }
+            catch (Exception exception)
+            {
+                // Show error message box
+                MessageBox.Show(exception.Message, "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
+
+
         // Invoke every time the CancelButton is clicked
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
