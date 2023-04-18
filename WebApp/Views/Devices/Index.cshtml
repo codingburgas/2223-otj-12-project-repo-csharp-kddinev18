@@ -12,16 +12,19 @@
     int totalPages = int.Parse(TempDataExtensions.Get(TempData, "TotalPages"));
 
     int entriesCount = int.Parse(TempDataExtensions.Get(TempData, "EntriesCount"));
-    DateTime lastEntry = string.IsNullOrEmpty(TempDataExtensions.Get(TempData, "LastEntry")) ? new DateTime(1,1,1) : DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
+    DateTime lastEntry = string.IsNullOrEmpty(TempDataExtensions.Get(TempData, "LastEntry")) ? new DateTime(1, 1, 1) : DateTime.Parse(TempDataExtensions.Get(TempData, "LastEntry"));
 
     string chartType = TempDataExtensions.Get(TempData, "ChartType") ?? "line";
     string xData = TempDataExtensions.Get(TempData, "XData") ?? "Created";
     string yData = TempDataExtensions.Get(TempData, "YDara") ?? Model.Infrastructure.Skip(1).First();
-    string zData = TempDataExtensions.Get(TempData, "ZData");
+    string zData = TempDataExtensions.Get(TempData, "ZData") ?? "";
 
     int previousPage = pageNumber - 1;
     int nextPage = pageNumber + 1;
     DateTime tempDate = DateTime.Now;
+
+    DateTime start = TempDataExtensions.Get(TempData, "Start") == null ? DateTime.Now.AddDays(-7) : DateTime.Parse(TempDataExtensions.Get(TempData, "Start"));
+    DateTime end = TempDataExtensions.Get(TempData, "End") == null ? DateTime.Now : DateTime.Parse(TempDataExtensions.Get(TempData, "End"));
 }
 
 <div class="d-flex flex-row" style="margin:60px 0 0 0; width:100%">
@@ -49,7 +52,7 @@
     <!--Content-->
     <div class="d-flex flex-column" style="width:100%;margin: 30px 0 0 0">
         <h1>@currentDeviceName</h1>
-        <br/>
+        <br />
         <div class="d-flex flex-row justify-content-between">
 
             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -83,16 +86,35 @@
                     <div class="card-header ">
                         <div class="d-flex align-content-around">
                             <i class="ri-remixicon-line"></i>
-                            Update Now
+                            Last Entry of the page
                         </div>
                     </div>
                     <div class="card-body d-flex justify-content-center">
-                        <p class="card-title">150GB<p>
+                        @{
+                            JsonObject jObject = Model.Data.LastOrDefault();
+                            if (jObject == null)
+                            {
+                                <p class="card-title">
+                                    @{
+                                        new DateTime(1, 1, 1);
+                                    }
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-title">
+                                    @{
+                                        DateTime.Parse(jObject["Created"].ToString()).ToString("yyyy/mm/dd hh:mm:ss");
+                                    }
+                                </p>
+
+                            }
+                        }
                     </div>
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
 
 
         <div class="row">
@@ -106,7 +128,6 @@
                                 <div class="p-2 bd-highlight">
                                     <label>Choose a chart type:</label>
                                     <select id="ChartType" name="ChartType">
-                                        <option value="none">None</option>
                                         <option value="line" selected>Line</option>
                                         <option value="2AxisLine">Double Axis Line</option>
                                         <option value="bar">Bar</option>
@@ -121,7 +142,6 @@
                                 <div class="p-2 bd-highlight">
                                     <label>Choose X data:</label>
                                     <select id="XData" name="XData">
-                                        <option value="none">None</option>
                                         @foreach (string infrastructure in Model.Infrastructure)
                                         {
                                             <option value="@infrastructure">@infrastructure</option>
@@ -131,7 +151,6 @@
                                 <div class="p-2 bd-highlight">
                                     <label>Choose Y data:</label>
                                     <select id="YData" name="YData">
-                                        <option value="none">None</option>
                                         @foreach (string infrastructure in Model.Infrastructure)
                                         {
                                             <option value="@infrastructure">@infrastructure</option>
@@ -141,12 +160,16 @@
                                 <div class="p-2 bd-highlight">
                                     <label>Choose Z data:</label>
                                     <select id="ZData" name="ZData">
-                                        <option value="none">None</option>
                                         @foreach (string infrastructure in Model.Infrastructure)
                                         {
                                             <option value="@infrastructure">@infrastructure</option>
                                         }
                                     </select>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <label>Timespan:</label>
+                                    <input type="date" id="Start" name="Start" value="@start.ToString("yyyy-MM-dd")" min="0001-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                    <input type="date" id="End" name="End" value="@end.ToString("yyyy-MM-dd")" min="0001-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                                 </div>
                                 <div class="p-2 bd-highlight">
                                     <input type="submit" value="Refresh" class="btn btn-primary" />
@@ -222,7 +245,7 @@
                     </div>
                     <div class="card-body ">
                         <form asp-action="PostDataToDevice">
-                            <input id="DeviceData" name="DeviceData" style="width:100%"/>
+                            <input id="DeviceData" name="DeviceData" style="width:100%" />
                             <div class="p-2 bd-highlight">
                                 <input type="submit" value="Send" class="btn btn-primary" />
                             </div>
@@ -331,62 +354,62 @@
 
 @if (chartType == "2AxisLine")
 {
-<script>
-    const DoubleAxisCtx = document.getElementById('chart');
-    let doubleAxisLabels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData])))');
-    let doubleAxisdata = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData])))');
-    let doubleAxisSecondData = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[zData])))');
-    new Chart(DoubleAxisCtx, {
-        type: 'line',
-        data: {
-            labels: doubleAxisLabels,
-            datasets: [
-                {
-                    label: '@Html.Raw(yData)',
-                    data: doubleAxisdata,
-                    borderWidth: 2.5
-                },
-                {
-                    label: '@Html.Raw(zData)',
-                    data: doubleAxisSecondData,
-                    borderWidth: 2.5
-                }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    <script>
+        const DoubleAxisCtx = document.getElementById('chart');
+        let doubleAxisLabels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData])))');
+        let doubleAxisdata = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData])))');
+        let doubleAxisSecondData = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[zData])))');
+        new Chart(DoubleAxisCtx, {
+            type: 'line',
+            data: {
+                labels: doubleAxisLabels,
+                datasets: [
+                    {
+                        label: '@Html.Raw(yData)',
+                        data: doubleAxisdata,
+                        borderWidth: 2.5
+                    },
+                    {
+                        label: '@Html.Raw(zData)',
+                        data: doubleAxisSecondData,
+                        borderWidth: 2.5
+                    }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 }
 else
 {
-<script>
-    const ctx = document.getElementById('chart');
-    let chartType = '@Html.Raw(chartType)';
-    let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData].ToString())))');
-    let data = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData].ToString())))');
+    <script>
+        const ctx = document.getElementById('chart');
+        let chartType = '@Html.Raw(chartType)';
+        let labels = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[xData].ToString())))');
+        let data = JSON.parse('@Html.Raw(JsonSerializer.Serialize(Model.Data.Select(data=>data[yData].ToString())))');
 
-    new Chart(ctx, {
-        type: chartType,
-        data: {
-            labels: labels,
-            datasets: [{
-                label: '@Html.Raw(yData)',
-                data: data,
-                borderWidth: 2.5
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+        new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '@Html.Raw(yData)',
+                    data: data,
+                    borderWidth: 2.5
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 }

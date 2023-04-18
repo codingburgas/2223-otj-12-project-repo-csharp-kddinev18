@@ -34,7 +34,7 @@ namespace BridgeAPI.BLL.Services
             return ValidateResponse(response);
         }
 
-        public async Task<JsonObject> GetDeviceDataAsync(Guid tokenId, string deviceName, int pagingSize, int skipAmount)
+        public async Task<JsonObject> GetDeviceDataAsync(Guid tokenId, string deviceName, int pagingSize, int skipAmount, string startdate, string endDate)
         {
             string response = await Server.LocalServerCommunication
             (
@@ -46,7 +46,9 @@ namespace BridgeAPI.BLL.Services
                     {
                         DeviceName = deviceName,
                         PagingSize = pagingSize,
-                        SkipAmount = skipAmount
+                        SkipAmount = skipAmount,
+                        Start = startdate,
+                        End = endDate
                     }
                 })
             );
@@ -70,7 +72,7 @@ namespace BridgeAPI.BLL.Services
             return ValidateResponse(response);
         }
 
-        public async Task<JsonObject> GetRowsCountAsync(Guid tokenId, string deviceName)
+        public async Task<JsonObject> GetRowsCountAsync(Guid tokenId, string deviceName, string startDate, string endDate)
         {
             string response = await Server.LocalServerCommunication
             (
@@ -81,6 +83,8 @@ namespace BridgeAPI.BLL.Services
                     Arguments = new
                     {
                         DeviceName = deviceName,
+                        Start = startDate,
+                        End = endDate
                     }
                 })
             );

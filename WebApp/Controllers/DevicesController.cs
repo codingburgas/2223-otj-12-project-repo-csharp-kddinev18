@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Drawing.Printing;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using WebApp.Models;
 using WebApp.Services.Interfaces;
@@ -35,8 +36,11 @@ namespace WebApp.Controllers
                 if(string.IsNullOrEmpty(deviceName))
                     deviceName = devicesNames.First();
 
-                int entriesCount = await _devicesService.GetDeviceRowsCountAsync(token, deviceName);
-                DevicesData viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize);
+                DateTime start = TempDataExtensions.Get(TempData, "Start") == null ? DateTime.Now.AddDays(-7) : DateTime.Parse(TempDataExtensions.Get(TempData, "Start"));
+                DateTime end = TempDataExtensions.Get(TempData, "End") == null ? DateTime.Now.AddDays(1) : DateTime.Parse(TempDataExtensions.Get(TempData, "End")).AddDays(1);
+
+                int entriesCount = await _devicesService.GetDeviceRowsCountAsync(token, deviceName, start, end);
+                DevicesData viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize, start, end);
                 viewModel.DeviceNames = devicesNames;
 
                 TempDataExtensions.Put(TempData, "CurrentDevice", deviceName);
@@ -81,6 +85,8 @@ namespace WebApp.Controllers
             TempDataExtensions.Put(TempData, "XData", formData["XData"]);
             TempDataExtensions.Put(TempData, "YData", formData["YData"]);
             TempDataExtensions.Put(TempData, "ZData", formData["ZData"]);
+            TempDataExtensions.Put(TempData, "Start", formData["Start"]);
+            TempDataExtensions.Put(TempData, "End", formData["End"]);
 
             return RedirectToAction("Index", new { deviceName = formData["deviceName"] });
         }

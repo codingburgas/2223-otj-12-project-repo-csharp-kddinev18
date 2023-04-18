@@ -73,6 +73,34 @@ namespace LocalServer.TESTS.DataManipulation
             Assert.Throws<ArgumentException>(() => { UserAuthenticationLogic.Register(userName, email, password); });
         }
 
+        [TestCase("kddinev18", "kddinev18@abv.bg", "Password1!1!")]
+        [TestCase("TATinevich", "TATinevich@as", "sdf^%$fgDtrw543SDF")]
+        [TestCase("MilkoMilchev", "MilkoMilchev@abv.bg", "MilkoMilchev234#$")]
+        public void Should_GetUserId_When_InvokeLogInMethod(string userName, string email, string password)
+        {
+            // Arrange
+            Guid userId = UserAuthenticationLogic.Register(userName, email, password);
 
+            // Act
+            Guid newUserId = UserAuthenticationLogic.LogIn(userName, password);
+
+            // Assert
+            Assert.AreEqual(userId, newUserId);
+        }
+
+        [TestCase("kddinev18", "kddinev18@abv.bg", "Password1!1!")]
+        [TestCase("TATinevich", "TATinevich@as", "sdf^%$fgDtrw543SDF")]
+        [TestCase("MilkoMilchev", "MilkoMilchev@abv.bg", "MilkoMilchev234#$")]
+        public void Should_ThrowException_When_InvokeLogInMethodWithWringCredentials(string userName, string email, string password)
+        {
+            // Arrange
+            UserAuthenticationLogic.Register(userName, email, password);
+
+            // Act
+            UserAuthenticationLogic.LogIn(userName, password);
+
+            // Assert
+            Assert.Throws<Exception>(() => { UserAuthenticationLogic.LogIn(userName+"asdasdasdasdas", password); });
+        }
     }
 }

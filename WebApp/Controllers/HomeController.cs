@@ -33,7 +33,14 @@ namespace WebApp.Controllers
             tempData.TryGetValue(key, out o);
 
             tempData.Keep();
-            return o == null ? null : (string)o;
+            try
+            {
+                return o == null ? null : (string)o;
+            }
+            catch (Exception)
+            {
+                return ((DateTime)o).ToString("yyyy-MM-dd");
+            }
         }
     }
 

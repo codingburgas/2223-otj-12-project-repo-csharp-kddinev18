@@ -14,7 +14,7 @@ namespace WebApp.Services
             _communicationService = communicationService;
         }
 
-        public async Task<DevicesData> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount)
+        public async Task<DevicesData> GetDeviceDataAsync(string token, string deviceName, int pagingSize, int skipAmount, DateTime start, DateTime end)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetDeviceData",
@@ -26,7 +26,9 @@ namespace WebApp.Services
                         {
                             DeviceName = deviceName,
                             PagingSize = pagingSize,
-                            SkipAmount = skipAmount
+                            SkipAmount = skipAmount,
+                            Start = start.ToString("yyyy-MM-dd"),
+                            End = end.ToString("yyyy-MM-dd")
                         }
                     }
                 ),
@@ -70,7 +72,7 @@ namespace WebApp.Services
             return JsonSerializer.Deserialize<IEnumerable<string>>(jObject["Devices"].ToString());
         }
 
-        public async Task<int> GetDeviceRowsCountAsync(string token, string deviceName)
+        public async Task<int> GetDeviceRowsCountAsync(string token, string deviceName, DateTime start, DateTime end)
         {
             string response = await _communicationService.SendRequestAsync(
                 "DeviceData/GetRowsCount",
@@ -78,7 +80,11 @@ namespace WebApp.Services
                     new
                     {
                         Token = token,
-                        Arguments = new { DeviceName = deviceName }
+                        Arguments = new { 
+                            DeviceName = deviceName, 
+                            Start = start.ToString("yyyy-MM-dd"), 
+                            End = end.ToString("yyyy-MM-dd") 
+                        }
                     }
                 ),
                 HttpMethod.Get

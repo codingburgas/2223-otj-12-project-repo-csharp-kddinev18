@@ -189,7 +189,7 @@ namespace LocalServer.BLL.Server.BLL
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
 
             DataTable table = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First()
-                .Select("", "", "", int.Parse(jObject["PagingSize"].ToString()), int.Parse(jObject["SkipAmount"].ToString()));
+                .Select("", "", "", int.Parse(jObject["PagingSize"].ToString()), int.Parse(jObject["SkipAmount"].ToString()), true, $"Created > \'{jObject["Start"].ToString()}\' AND Created < \'{jObject["End"].ToString()}\'");
 
             table.Columns.Remove("Id");
             table.Columns.Remove("DeviceId");
@@ -220,7 +220,7 @@ namespace LocalServer.BLL.Server.BLL
         private static string GetRowsCount(string parameters)
         {
             JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(parameters);
-            return JsonSerializer.Serialize(new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First().GetRowsCount() });
+            return JsonSerializer.Serialize(new { Count = DatabaseInitialiser.Database.Tables.Where(table => table.Name == jObject["DeviceName"].ToString()).First().GetRowsCount(true, $"Created > \'{jObject["Start"].ToString()}\' AND Created < \'{jObject["End"].ToString()}\'") });
         }
 
         private static string Authenticate(string parameters)

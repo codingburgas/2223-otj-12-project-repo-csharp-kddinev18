@@ -43,7 +43,9 @@ namespace BridgeAPI.Controllers
                         userToken.TokenId,
                         jObject["DeviceName"].ToString(),
                         int.Parse(jObject["PagingSize"].ToString()),
-                        int.Parse(jObject["SkipAmount"].ToString())
+                        int.Parse(jObject["SkipAmount"].ToString()),
+                        jObject["Start"].ToString(),
+                        jObject["End"].ToString()
                     )),
                     null,
                     null
@@ -128,7 +130,9 @@ namespace BridgeAPI.Controllers
                     JsonSerializer.Serialize(
                     await _localServerCommunicationService.GetRowsCountAsync(
                         userToken.TokenId,
-                        jObject["DeviceName"].ToString()
+                        jObject["DeviceName"].ToString(),
+                        jObject["Start"].ToString(),
+                        jObject["End"].ToString()
                     )),
                     null,
                     null

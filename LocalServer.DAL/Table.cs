@@ -55,7 +55,7 @@ namespace LocalServer.DAL
             }
             Database.Tables.Remove(this);
         }
-        public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int skipAmount = 0)
+        public DataTable Select(string columnName = "", string expression = "", string value = "", int pagingSize = 0, int skipAmount = 0, bool isTrusted = false, string whereClause = "")
         {
             string query = string.Empty;
             string paging = pagingSize != 0 ? $"ORDER BY {string.Join(", ", FindPrimaryKeys().Select(column => $"[{column.Name}]"))} DESC OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
@@ -63,14 +63,31 @@ namespace LocalServer.DAL
 
             if (columnName == string.Empty && expression == string.Empty && value == string.Empty)
             {
-                query = $"SELECT {columns} FROM [{Name}] {paging};";
-                using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                if (isTrusted)
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    paging = pagingSize != 0 ? $"ORDER BY [Created] DESC OFFSET ({skipAmount}) ROWS FETCH NEXT ({pagingSize}) ROWS ONLY" : "";
+                    query = $"SELECT {columns} FROM [{Name}] WHERE {whereClause} {paging};";
+                    using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
                     {
-                        DataTable table = new DataTable();
-                        table.Load(reader);
-                        return table;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            DataTable table = new DataTable();
+                            table.Load(reader);
+                            return table;
+                        }
+                    }
+                }
+                else
+                {
+                    query = $"SELECT {columns} FROM [{Name}] {paging};";
+                    using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            DataTable table = new DataTable();
+                            table.Load(reader);
+                            return table;
+                        }
                     }
                 }
             }
@@ -108,9 +125,15 @@ namespace LocalServer.DAL
                 }
             }
         }
-        public int GetRowsCount()
+        public int GetRowsCount(bool isWithWhereClause = false, string whereClause = "")
         {
-            string query = $"SELECT COUNT({FindPrimaryKeys().Select(column => column.Name).First()}) FROM [{Name}]";
+            string query;
+
+            if(isWithWhereClause)
+                query = $"SELECT COUNT({FindPrimaryKeys().Select(column => column.Name).First()}) FROM [{Name}] WHERE {whereClause}";
+            else
+                query = $"SELECT COUNT({FindPrimaryKeys().Select(column => column.Name).First()}) FROM [{Name}]";
+
             using (SqlCommand command = new SqlCommand(query, Database.GetConnection()))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
