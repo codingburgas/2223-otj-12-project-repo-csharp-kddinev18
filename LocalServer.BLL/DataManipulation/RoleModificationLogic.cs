@@ -64,9 +64,9 @@ namespace LocalServer.BLL.DataManipulation.BLL
 
         public static void AddRole(string name)
         {
-            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert(name);
+            DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First().Insert(Guid.NewGuid().ToString(), name);
             DatabaseInitialiser.Database.SaveDatabaseData();
-            int roleId = int.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
+            Guid roleId = Guid.Parse(DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Roles").First()
                 .Select("Name", "=", name).Rows[0]["Id"].ToString());
 
             foreach (DataRow item in DatabaseInitialiser.Database.Tables.Where(table => table.Name == "Devices").First().Select().Rows)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LocalServer.TESTS.DataManipulation
 {
-    public class UserManipulationLogicTest
+    public class UserModifierLogicTest
     {
         private DatabaseInitialiser _databaseInitialiser;
         private readonly string connString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IOTHomeSecurityTest;Integrated Security=True;MultipleActiveResultSets=true";
