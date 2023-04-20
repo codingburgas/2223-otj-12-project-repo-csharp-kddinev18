@@ -21,30 +21,30 @@
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a class="nav-link scrollto" href="#about">About</a></li>
-                    <li><a class="nav-link scrollto" href="#services">Services</a></li>
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Начална страница</a></li>
+                    <li><a class="nav-link scrollto" href="#about">За приложението</a></li>
+                    <li><a class="nav-link scrollto" href="#services">Услуги</a></li>
+                    <li><a class="nav-link scrollto" href="#contact">Свържете се с нас</a></li>
                     @try
                     {
                         @if (JsonSerializer.Deserialize<LoggedUserInformation>(Context.Session.GetString("LoggedUserInformation")).GlobalServer == true)
                         {
                             <li class="dropdown">
-                                <a href="#" class="getstarted scrollto" ><span>Profile</span> <i class="bi bi-chevron-down"></i></a>
+                                <a href="#" class="getstarted scrollto" ><span>Профил</span> <i class="bi bi-chevron-down"></i></a>
                                 <ul>
-                                    <li><a asp-controller="Devices" asp-action="Index">Devices</a></li>
-                                    <li><a asp-controller="Authentication" asp-action="SignOut">Sign out</a></li>
+                                    <li><a asp-controller="Devices" asp-action="Index">Устройства</a></li>
+                                    <li><a asp-controller="Authentication" asp-action="SignOut">Отписване</a></li>
                                 </ul>
                             </li>
                         }
                         else
                         {
-                            <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Get Started</a></li>
+                            <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Започнете</a></li>
                         }
                     }
                     catch(Exception)
                     {
-                        <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Get Started</a></li>
+                        <li><a class="getstarted scrollto" asp-controller="Authentication" asp-action="LogIn">Започнете</a></li>
                     }
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>

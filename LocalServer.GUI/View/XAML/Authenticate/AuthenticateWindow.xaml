@@ -7,20 +7,20 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="AddMemberWindow" Height="400" Width="350"
+        Title="AddMemberWindow" Height="260" Width="350"
         WindowStartupLocation="CenterOwner" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
     <Border Background="#eff2f7" CornerRadius="30" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <StackPanel x:Name="RegisterPanel" Width="350">
             <StackPanel Margin="20 30">
-                <TextBlock Text="Authenticate" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="UserName"/>
+                <TextBlock Text="Оторизиране" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="Потребителско име"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <Icon:PackIconMaterial Kind="FormTextboxPassword" Style="{StaticResource textBoxIcon}"/>
                     <PasswordBox x:Name="PasswordTextBox" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
                 </StackPanel>
                 <StackPanel Margin="20" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Register"/>
+                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Вписване"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

@@ -8,17 +8,17 @@
         xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Topmost="True" 
-        Title="AddMemberWindow" Height="220" Width="350"
+        Title="AddMemberWindow" Height="220" Width="400"
         WindowStartupLocation="CenterOwner" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
     <Border Background="#eff2f7" CornerRadius="30" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <StackPanel x:Name="RegisterPanel" Width="350" Height="400" VerticalAlignment="Top">
-            <StackPanel Margin="20 30">
-                <TextBlock Text="Add a Role" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <userControls:TextBoxControl x:Name="Role" TextBoxIcon="Tag" TextBoxHintText="Role Name"/>
+            <StackPanel Margin="10 30">
+                <TextBlock Text="Добавяне на роля" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <userControls:TextBoxControl x:Name="Role" TextBoxIcon="Tag" TextBoxHintText="Име на роля"/>
                 <StackPanel Margin="20" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="CancelButton" Click="CancelButton_Click" Content="Cancel" Margin="0 0 50 0"/>
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="AddButton_Click" Content="Add"/>
+                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="CancelButton" Click="CancelButton_Click" Content="Отказ" Margin="0 0 50 0"/>
+                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="AddButton_Click" Content="Добавяне"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

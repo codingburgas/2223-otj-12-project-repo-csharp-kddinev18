@@ -14,18 +14,18 @@
     <Border Background="#eff2f7" CornerRadius="30" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <StackPanel x:Name="RegisterPanel" Width="350">
             <StackPanel Margin="20 30">
-                <TextBlock Text="Register a" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <TextBlock Text="User" Margin="0 -5 0 5" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="UserName"/>
-                <userControls:TextBoxControl x:Name="Email" TextBoxIcon="Email" TextBoxHintText="Email"/>
-                <userControls:TextBoxControl x:Name="Role" TextBoxIcon="Compass" TextBoxHintText="Role"/>
+                <TextBlock Text="Регистриране на" Margin="0 0 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <TextBlock Text="потребител" Margin="0 -5 0 5" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="Потребителско име"/>
+                <userControls:TextBoxControl x:Name="Email" TextBoxIcon="Email" TextBoxHintText="Емаил"/>
+                <userControls:TextBoxControl x:Name="Role" TextBoxIcon="Compass" TextBoxHintText="Роля"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <Icon:PackIconMaterial Kind="FormTextboxPassword" Style="{StaticResource textBoxIcon}"/>
                     <PasswordBox x:Name="PasswordTextBox" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
                 </StackPanel>
                 <StackPanel Margin="20" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="CancelButton" Click="CancelButton_Click" Content="Cancel" Margin="0 0 50 0"/>
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Register"/>
+                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="CancelButton" Click="CancelButton_Click" Content="Отгаз" Margin="0 0 50 0"/>
+                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Добавяне"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

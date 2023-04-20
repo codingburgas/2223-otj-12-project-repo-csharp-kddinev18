@@ -25,14 +25,14 @@
         </Grid.RowDefinitions>
 
         <!--Page Title-->
-        <TextBlock Text="Roles" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+        <TextBlock Text="Роли" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
         <!--Add Button-->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 10">
             <Button Style="{StaticResource addButton}"  x:Name="AddRolesButton" Click="AddRolesButton_Click" Margin="0 0 0 0" >
                 <StackPanel Orientation="Horizontal">
                     <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
-                    <TextBlock Text="Add new Role"/>
+                    <TextBlock Text="Добавяне на роля"/>
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource topButton}" Margin="30 0 0 0" Background="#dcdcdc" HorizontalAlignment="Right" Click="RefreshButton_Click">
@@ -44,8 +44,8 @@
         <Separator Height="1" Grid.Row="3" Background="#dae2ea" Margin="0 -1 0 10"/>
 
         <!--Counter Title-->
-        <TextBlock Text="Roles List:" Grid.Row="4" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Text="Filter:" Grid.Row="4" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <TextBlock Text="Листа на ролите:" Grid.Row="4" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Text="Филтър:" Grid.Row="4" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
         <!--Filter Textbox-->
         <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4" Margin="0 0 20 0">

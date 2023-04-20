@@ -119,7 +119,11 @@ namespace BridgeAPI.BLL
                 IResponseFormatterService responseFormatterService = scope.ServiceProvider.GetRequiredService<IResponseFormatterService>();
                 
                 string response = responseFormatterService.FormatResponseToString(400, "General Error", ex.Message, null);
-                client.Client.Send(Encoding.UTF8.GetBytes(response));
+                try
+                {
+                    client.Client.Send(Encoding.UTF8.GetBytes(response));
+                }
+                catch (Exception) { }
             }
             finally
             {

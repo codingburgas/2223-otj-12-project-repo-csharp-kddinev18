@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <!--Page Title-->
-        <TextBlock Text="Permissions" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+        <TextBlock Text="Разрешения" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 0 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
         <!--Add Button-->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 10">
@@ -38,7 +38,7 @@
         <Separator Height="1" Grid.Row="3" Background="#dae2ea" Margin="0 -1 0 10"/>
 
         <!--Counter Title-->
-        <TextBlock Text="Permissions List:" Grid.Row="4" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Text="Листа на разрешенията:" Grid.Row="4" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         <!--Members Datagrid-->
         <DataGrid Grid.Row="5" x:Name="PermissionsDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">

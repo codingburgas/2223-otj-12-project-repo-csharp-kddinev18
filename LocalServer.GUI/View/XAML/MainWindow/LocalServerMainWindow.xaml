@@ -37,7 +37,7 @@
                             <Button x:Name="UsersButton" Style="{StaticResource menuButton}" Click="UsersButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Users"/>
+                                    <TextBlock Text="Потребители"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -46,7 +46,7 @@
                             <Button x:Name="DevicesButton" Style="{StaticResource menuButton}" Click="DevicesButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Memory" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Devices"/>
+                                    <TextBlock Text="Устройства"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -55,7 +55,7 @@
                             <Button x:Name="RolesButton" Style="{StaticResource menuButton}" Click="RolesButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Ballot" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Roles"/>
+                                    <TextBlock Text="Роли"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -64,7 +64,7 @@
                             <Button x:Name="PermissionsButton" Style="{StaticResource menuButton}" Click="PermissionsButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="AccountEdit" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Permissions"/>
+                                    <TextBlock Text="Разрешения"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>

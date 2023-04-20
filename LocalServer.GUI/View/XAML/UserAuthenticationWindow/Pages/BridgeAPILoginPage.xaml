@@ -13,21 +13,18 @@
     <Grid>
         <StackPanel x:Name="LoginPanel" Width="350">
             <StackPanel Margin="20 40">
-                <TextBlock Text="Connect" Margin="0 30 0 10" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="UserName"/>
+                <TextBlock Text="Свързване" Margin="0 30 0 10" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="Потребителско име"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <Icon:PackIconMaterial Kind="FormTextboxPassword" Style="{StaticResource textBoxIcon}"/>
                     <PasswordBox x:Name="PasswordTextBox" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
                 </StackPanel>
-                <Button Margin="20" Grid.Column="1" Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="LogIn" x:Name="ConnectButton" Click="ConnectButton_Click" Content="Connect"/>
+                <Button Margin="20" Grid.Column="1" Width="120" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="LogIn" x:Name="ConnectButton" Click="ConnectButton_Click" Content="Свързване"/>
                 <Grid Margin="30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Don't have an account yet?" Foreground="#2b2b2b" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Grid.Column="0"/>
-                    <Button Width="70" Height="30" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" x:Name="OpenRegistrationFormButton" Click="OpenRegistrationFormButton_Click" Content="Register" FontSize="10" Grid.Column="1"/>
                 </Grid>
             </StackPanel>
         </StackPanel>

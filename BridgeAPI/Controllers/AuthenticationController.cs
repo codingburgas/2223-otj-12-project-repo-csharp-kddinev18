@@ -117,7 +117,7 @@ namespace BridgeAPI.Controllers
             }
         }
 
-        [HttpPost("Register")]
+        [HttpGet("Register")]
         public async Task<IActionResult> Register()
         {
             try

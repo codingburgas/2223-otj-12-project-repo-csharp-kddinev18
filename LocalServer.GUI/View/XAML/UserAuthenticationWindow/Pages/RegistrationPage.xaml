@@ -13,15 +13,15 @@
     <Grid>
         <StackPanel x:Name="RegisterPanel" Width="350">
             <StackPanel Margin="20 40">
-                <TextBlock Text="Register" Margin="0 30 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
-                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="UserName"/>
-                <userControls:TextBoxControl x:Name="Email" TextBoxIcon="Email" TextBoxHintText="Email"/>
+                <TextBlock Text="Регистрация" Margin="0 30 0 0" Foreground="#2b2b2b" TextAlignment="Center" FontSize="40" FontFamily="Archive"/>
+                <userControls:TextBoxControl x:Name="UserName" TextBoxIcon="Account" TextBoxHintText="Потребителско име"/>
+                <userControls:TextBoxControl x:Name="Email" TextBoxIcon="Email" TextBoxHintText="Имейл"/>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <Icon:PackIconMaterial Kind="FormTextboxPassword" Style="{StaticResource textBoxIcon}"/>
                     <PasswordBox x:Name="PasswordTextBox" Margin="10 0" materialDesign:HintAssist.Hint="********" Foreground="#2b2b2b" Width="250"/>
                 </StackPanel>
                 <StackPanel Margin="10" HorizontalAlignment="Center">
-                    <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Register"/>
+                    <Button Width="130" Height="40" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" ToolTip="Register" x:Name="RegisterButton" Click="RegisterButton_Click" Content="Регистрация"/>
                 </StackPanel>
                 <Grid Margin="30">
                     <Grid.ColumnDefinitions>
@@ -29,8 +29,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Already have an account?" Foreground="#2b2b2b" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Grid.Column="0"/>
-                    <Button Width="70" Height="30" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" x:Name="OpenLogInFormButton" Click="OpenLogInFormButton_Click" Content="LogIn" FontSize="10" Grid.Column="1"/>
+                    <TextBlock Text="Вече имате профил?" Foreground="#2b2b2b" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Grid.Column="0"/>
+                    <Button Width="90" Height="30" Style="{StaticResource MaterialDesignRaisedButton}" materialDesign:ButtonAssist.CornerRadius="10" BorderBrush="#4D49BF" Background="#4E6BBF" Foreground="White" x:Name="OpenLogInFormButton" Click="OpenLogInFormButton_Click" Content="Вписване" FontSize="10" Grid.Column="1"/>
                 </Grid>
             </StackPanel>
         </StackPanel>

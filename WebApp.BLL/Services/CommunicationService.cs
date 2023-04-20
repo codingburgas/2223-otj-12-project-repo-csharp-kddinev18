@@ -34,7 +34,7 @@ namespace WebApp.Services
 
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    return jObject["message"].ToString();
+                    return jObject["message"] == null ? "" : jObject["message"].ToString();
                 }
                 else if(httpResponse.StatusCode == (HttpStatusCode)401)
                 {
