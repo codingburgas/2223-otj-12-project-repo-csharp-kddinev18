@@ -15,11 +15,13 @@ namespace BridgeAPI.Controllers
         private ITokenService _tokenService;
         private IResponseFormatterService _responseFormatterService;
         private ILocalServerCommunicationService _localServerCommunicationService;
-        public DeviceDataController(ITokenService tokenService, IResponseFormatterService responseFormatterService, ILocalServerCommunicationService localServerCommunicationService)
+        private IAuthenticationService _authenticationService;
+        public DeviceDataController(ITokenService tokenService, IResponseFormatterService responseFormatterService, ILocalServerCommunicationService localServerCommunicationService, IAuthenticationService authenticationService)
         {
             _tokenService = tokenService;
             _responseFormatterService = responseFormatterService;
             _localServerCommunicationService = localServerCommunicationService;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet("GetDeviceData")]
@@ -177,6 +179,47 @@ namespace BridgeAPI.Controllers
                         userToken.TokenId,
                         jObject["DeviceName"].ToString(),
                         jObject["Data"].ToString()
+                    )),
+                    null,
+                    null
+                );
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return _responseFormatterService.FormatResponse(401, ex.Message, ex.Message, null);
+            }
+            catch (JsonException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (NullReferenceException)
+            {
+                return _responseFormatterService.FormatResponse(400, "Incorrect request", "Incorrect request", null);
+            }
+            catch (Exception ex)
+            {
+                return _responseFormatterService.FormatResponse(500, ex.Message, ex.Message, null);
+            }
+        }
+
+        [HttpGet("GetImage")]
+        public async Task<IActionResult> GetImage()
+        {
+            try
+            {
+                string request;
+                using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8))
+                {
+                    request = await reader.ReadToEndAsync();
+                }
+                JsonObject jObject = JsonSerializer.Deserialize<JsonObject>(request);
+                Token userToken = await _tokenService.CeckAuthentication(jObject, true);
+
+                return _responseFormatterService.FormatResponse(
+                    200,
+                    JsonSerializer.Serialize(
+                    await _authenticationService.GetUserImage(
+                        userToken.GlobalServerId
                     )),
                     null,
                     null

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using WebApp.DataTransferObjects;
@@ -70,7 +72,7 @@ namespace WebApp.Controllers
                     return Register();
                 }
 
-                string token = await _authenticationService.RegisterAsync(user.UserName, user.Email, user.Password);
+                string token = await _authenticationService.RegisterAsync(user.UserName, user.Email, user.Password, user.Image);
                 HttpContext.Session.SetString("userToken", _protector.Protect(token));
 
                 return RedirectToAction("LogIn");

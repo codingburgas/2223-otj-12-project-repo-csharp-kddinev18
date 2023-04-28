@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json.Nodes;
 using WebApp.Models;
 
 namespace WebApp.Services.Interfaces
@@ -10,5 +11,6 @@ namespace WebApp.Services.Interfaces
         public Task<int> GetDeviceRowsCountAsync(string token, string deviceName, DateTime start, DateTime end);
         public Task SendDataToDeviceAsync(string token, string deviceName, string data);
         public void FormatDates(DevicesData devicesData);
+        public Task<byte[]> GetImage(string token);
     }
 }

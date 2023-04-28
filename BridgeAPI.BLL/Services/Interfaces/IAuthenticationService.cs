@@ -11,5 +11,6 @@ namespace BridgeAPI.BLL.Interfaces
     {
         public Task<IResponseDataTransferObject> LogInAsync(IRequestDataTransferObject requestObject);
         public Task<bool> RegisterAsync(IRequestDataTransferObject requestObject);
+        public Task<byte[]> GetUserImage(Guid id);
     }
 }

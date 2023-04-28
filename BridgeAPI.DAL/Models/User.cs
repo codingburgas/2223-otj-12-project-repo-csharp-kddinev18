@@ -18,6 +18,7 @@ namespace BridgeAPI.DAL.Models
             Email = dataTrasferObject.Email;
             Password = dataTrasferObject.Password;
             Salt = dataTrasferObject.Salt;
+            Image = dataTrasferObject.Image;
         }
         public Guid Id { get; set; }
         public string UserName { get; set; }
@@ -25,5 +26,6 @@ namespace BridgeAPI.DAL.Models
         public string Password { get; set; }
         public string Salt { get; set; }
         public DateTime DateRegisterd { get; set; } = DateTime.Now;
+        public byte[] Image { get; set; }
     }
 }

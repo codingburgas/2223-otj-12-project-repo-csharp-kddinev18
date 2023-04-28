@@ -15,5 +15,6 @@ namespace BridgeAPI.DAL.Repositories.Interfaces
         Task<string> GetUserSalt(IRequestDataTransferObject user);
         Task<bool> UpdateUserAsync(Guid userId);
         Task<bool> DeleteUserAsync(Guid userId);
+        public Task<byte[]> GetUserImage(Guid userId);
     }
 }

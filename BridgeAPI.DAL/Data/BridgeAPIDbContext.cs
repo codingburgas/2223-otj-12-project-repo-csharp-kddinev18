@@ -32,6 +32,8 @@ namespace BridgeAPI.DAL.Data
                 // Set the property DateRegisterd to have type datetime in the database
                 entity.Property(e => e.DateRegisterd).HasColumnType("datetime2(7)");
 
+                entity.Property(e => e.Image).HasColumnType("varbinary(max)");
+
                 // Set the property Email to have type nvarchar(256) in the database
                 entity.Property(e => e.Email)
                     .IsRequired()

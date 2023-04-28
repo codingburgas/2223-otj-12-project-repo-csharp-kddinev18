@@ -106,5 +106,10 @@ namespace BridgeAPI.BLL
                 throw new Exception("General error");
             }
         }
+
+        public async Task<byte[]> GetUserImage(Guid id)
+        {
+            return await _repository.GetUserImage(id);
+        }
     }
 }

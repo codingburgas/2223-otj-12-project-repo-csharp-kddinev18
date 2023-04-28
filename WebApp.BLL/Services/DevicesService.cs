@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using System.Collections;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebApp.Models;
@@ -106,6 +109,23 @@ namespace WebApp.Services
                 ),
                 HttpMethod.Get
             );
+        }
+
+        public async Task<byte[]> GetImage(string token)
+        {
+            string response = await _communicationService.SendRequestAsync(
+                "DeviceData/GetImage",
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        Token = token,
+                    }
+                ),
+                HttpMethod.Get
+            );
+            if (response == "null")
+                return null;
+            return Encoding.UTF8.GetBytes(response);
         }
     }
 }

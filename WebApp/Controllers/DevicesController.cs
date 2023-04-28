@@ -25,7 +25,7 @@ namespace WebApp.Controllers
             try
             {
                 string token = _protector.Unprotect(HttpContext.Session.GetString("userToken"));
-
+                
                 IEnumerable<string> devicesNames = await _devicesService.GetDevicesAsync(token);
 
                 if(devicesNames.Count() == 0)
@@ -42,6 +42,7 @@ namespace WebApp.Controllers
                 int entriesCount = await _devicesService.GetDeviceRowsCountAsync(token, deviceName, start, end);
                 DevicesData viewModel = await _devicesService.GetDeviceDataAsync(token, deviceName, pagingSize, (pageNumber - 1) * pagingSize, start, end);
                 viewModel.DeviceNames = devicesNames;
+                viewModel.Image = await _devicesService.GetImage(token);
 
                 TempDataExtensions.Put(TempData, "CurrentDevice", deviceName);
                 TempDataExtensions.Put(TempData, "PageNumber", pageNumber.ToString());

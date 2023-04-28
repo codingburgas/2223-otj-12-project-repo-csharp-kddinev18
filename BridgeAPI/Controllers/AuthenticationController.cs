@@ -132,7 +132,8 @@ namespace BridgeAPI.Controllers
                 {
                     UserName = jObject["UserName"].ToString(),
                     Email = jObject["Password"].ToString(),
-                    Password = jObject["Password"].ToString()
+                    Password = jObject["Password"].ToString(),
+                    Image = Encoding.ASCII.GetBytes(jObject["Image"].ToString())
                 });
                 return _responseFormatterService.FormatResponse(200, null, null, null);
             }

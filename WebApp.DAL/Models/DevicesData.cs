@@ -8,5 +8,6 @@ namespace WebApp.Models
         public string Name { get; set; }
         public IEnumerable<string> Infrastructure { get; set; }
         public IEnumerable<JsonObject> Data { get; set; }
+        public byte[] Image { get; set; }
     }
 }

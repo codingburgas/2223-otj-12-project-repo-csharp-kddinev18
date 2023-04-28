@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 using WebApp.Services.Interfaces;
 
 namespace WebApp.Services
@@ -25,15 +26,26 @@ namespace WebApp.Services
             );
         }
 
-        public async Task<string> RegisterAsync(string userName, string email, string password)
+        public async Task<string> RegisterAsync(string userName, string email, string password, IFormFile image)
         {
+            byte[] bytes = null;
+            if (image != null)
+            {
+                long length = image.Length;
+
+                using Stream fileStream = image.OpenReadStream();
+                bytes = new byte[length];
+                fileStream.Read(bytes, 0, (int)image.Length);
+            }
+
             return await _communicationService.SendRequestAsync(
                 "Authentication/Register",
                 JsonSerializer.Serialize(
                     new {
                         UserName = userName,
                         Email = email,
-                        Password = password
+                        Password = password,
+                        Image = bytes
                     }
                 ),
                 HttpMethod.Get

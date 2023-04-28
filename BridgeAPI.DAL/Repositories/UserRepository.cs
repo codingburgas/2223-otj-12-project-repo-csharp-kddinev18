@@ -44,6 +44,16 @@ namespace BridgeAPI.DAL.Repositories
             return true;
         }
 
+        public async Task<byte[]> GetUserImage(Guid userId)
+        {
+            User user = await _context.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new ArgumentException("Cannot find the user you have requested for deletion");
+            }
+            return user.Image;
+        }
+
         public async Task<IResponseDataTransferObject> GetUserAsync(IRequestDataTransferObject user)
         {
             UserRequestDataTransferObject dataTrasferObject = user as UserRequestDataTransferObject;
