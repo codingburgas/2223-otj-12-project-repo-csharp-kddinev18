@@ -105,18 +105,17 @@ namespace WebApp.Controllers
                     deviceName,
                     postData
                 );
-                return RedirectToAction("DeviceData", "DevicesController", new { deviceName });
+                return RedirectToAction("Index", new { deviceName });
 
             }
             catch (UnauthorizedAccessException)
             {
-                return RedirectToAction("Authentication", "LogIn");
+                return RedirectToAction("LogIn", "Authentication");
 
             }
             catch (Exception)
             {
-                
-                return RedirectToAction("DeviceData", "DevicesController", new { deviceName });
+                return RedirectToAction("Index", new { deviceName });
             }
         }
     }
